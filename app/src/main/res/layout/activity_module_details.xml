@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/page_color"
+    tools:context=".Activities.Classroom.Activities.Module_Details_Activity">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical">
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:id="@+id/linear"
+           android:gravity="center"
+           >
+
+           <androidx.appcompat.widget.Toolbar
+               android:id="@+id/searchToolBar"
+               android:layout_width="match_parent"
+               android:layout_height="?actionBarSize"
+               android:background="@color/page_color"
+               android:paddingStart="@dimen/_18ssp"
+               android:paddingEnd="@dimen/_1sdp"
+               app:title="Modules" />
+
+
+       </LinearLayout>
+
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:padding="@dimen/_5sdp"
+           android:orientation="horizontal">
+
+           <TextView
+               android:layout_width="0dp"
+               android:layout_weight="1"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="@dimen/_5sdp"
+               android:text="Android Studio"
+               android:textSize="@dimen/_15ssp"
+               android:textColor="@color/black"
+               android:textStyle="bold"
+               android:id="@+id/title"/>
+
+           <LinearLayout
+               android:layout_width="0dp"
+               android:layout_weight="1"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:gravity="end">
+
+               <ImageView
+                   android:id="@+id/mark"
+                   android:layout_width="@dimen/_25sdp"
+                   android:layout_height="@dimen/_25sdp"
+                   android:layout_marginEnd="@dimen/_10sdp"
+                   android:src="@drawable/check" />
+
+               <ImageView
+                   android:id="@+id/edit"
+                   android:layout_width="@dimen/_25sdp"
+                   android:layout_height="@dimen/_25sdp"
+                   android:layout_marginEnd="@dimen/_10sdp"
+                   android:src="@drawable/editing"/>
+           </LinearLayout>
+
+
+       </LinearLayout>
+       <androidx.cardview.widget.CardView
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/_160sdp"
+           app:cardCornerRadius="@dimen/_8sdp"
+           app:cardElevation="@dimen/_5sdp"
+           android:layout_margin="@dimen/_8sdp"
+           >
+
+           <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+               android:id="@+id/video_view"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               app:autoPlay="false" />
+
+       </androidx.cardview.widget.CardView>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:layout_margin="@dimen/_8sdp">
+
+           <TextView
+               android:id="@+id/descryption"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="However, for relatively small video files around 20 MB, the performance benefits of using streams may be less significant compared to handling larger files. If your use case involves only small video files and simplicity is a priority, you could consider using the built-in fs.readFile() and fs.writeFile() functions instead of streams. These functions load the entire file into memory at once, which may be acceptable for small file sizes."/>
+
+       </LinearLayout>
+
+   </LinearLayout>
+</androidx.core.widget.NestedScrollView>
