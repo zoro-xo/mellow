@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_Group"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+        android:id="@+id/classNameRV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_toStartOf="@+id/spinner1"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageButton
+            android:id="@+id/dummy_icon"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/background_class"
+            android:src="@drawable/ic_repo_24"
+            app:tint="@color/white_constant" />
+
+        <TextView
+            android:id="@+id/tv_ClassTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="25dp"
+            android:layout_toEndOf="@+id/dummy_icon"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter_semibold"
+            android:maxLines="1"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            app:drawableEndCompat="@drawable/drop_down" />
+
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/spinner1"
+        android:layout_width="40dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:background="@drawable/menu_xxx"
+        android:spinnerMode="dropdown" />
+
+</RelativeLayout>
+

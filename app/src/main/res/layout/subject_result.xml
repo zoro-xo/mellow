@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/full_marks"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:weightSum="5">
+
+
+    <!--First layout layout -->
+    <LinearLayout
+        android:id="@+id/firstLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/border">
+
+        <!--Subject textview -->
+        <TextView
+            android:id="@+id/subject_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="English"
+            android:textAlignment="center"
+            android:textAppearance="@style/mid_text"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+    <!--Sec layout -->
+    <LinearLayout
+        android:id="@+id/SecPart"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/border">
+
+        <!--upper layout -->
+        <LinearLayout
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!--lastone layout -->
+            <LinearLayout
+                android:id="@+id/lasneLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <!--Subject textview -->
+                <TextView
+                    android:id="@+id/theory_full_marks"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="80"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/valTV"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+            <!--lastsec layout -->
+            <LinearLayout
+                android:id="@+id/lastsecLyout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <!--Project textview -->
+                <TextView
+                    android:id="@+id/practical_full_marks"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="20"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/valTV"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--Third layout -->
+    <LinearLayout
+        android:id="@+id/ThirdPart"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/border">
+
+        <!--upper layout -->
+        <LinearLayout
+            android:id="@+id/bottomLa"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!--lastone layout -->
+            <LinearLayout
+                android:id="@+id/lastoneLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <!--Subject textview -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="24"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/valTV"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+            <!--lastsec layout -->
+            <LinearLayout
+                android:id="@+id/lastsecLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <!--Project textview -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="6"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/valTV"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!--Forth layout -->
+    <LinearLayout
+        android:id="@+id/ForthPart"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/border">
+
+        <!--upper layouttt -->
+        <LinearLayout
+            android:id="@+id/upperLayouttt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!--Marks textview -->
+            <TextView
+                android:id="@+id/theory_marks"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="34"
+                android:textAlignment="center"
+                android:textAppearance="@style/valTV"
+                android:textSize="16sp"
+                android:background="@drawable/border"/>
+
+            <!--Marks textview -->
+            <TextView
+                android:id="@+id/practical_marks"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="20"
+                android:textAlignment="center"
+                android:textAppearance="@style/valTV"
+                android:textSize="16sp"
+                android:background="@drawable/border"/>
+
+            <!--Marks textview -->
+            <TextView
+                android:id="@+id/total_marks"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="54"
+                android:textAlignment="center"
+                android:textAppearance="@style/valTV"
+                android:textSize="16sp"
+                android:background="@drawable/border"/>
+
+        </LinearLayout>
+
+        <!--bottom layouttt -->
+        <LinearLayout
+            android:id="@+id/bottomLayouttt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!--Subject textview -->
+            <TextView
+                android:id="@+id/numb_words"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="(Fifty four)"
+                android:textAlignment="center"
+                android:textAppearance="@style/mid_text"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--Six layout -->
+    <LinearLayout
+        android:id="@+id/SixPart"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/border">
+
+        <!--Subject textview -->
+        <TextView
+            android:id="@+id/grade"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="B"
+            android:textAlignment="center"
+            android:textAppearance="@style/mid_text"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

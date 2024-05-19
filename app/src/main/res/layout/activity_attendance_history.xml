@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/page_color"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true"
+    tools:context=".Activities.RightPanel.Attendance_History">
+
+    <LinearLayout
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/page_color"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <ImageButton
+            android:id="@+id/btn_Back"
+            style="@style/SelectableItemBackgroundBorderless"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_arrow_left_24"
+            app:tint="@color/iconSecondaryColor"
+            android:contentDescription="@string/attend_contentDescription"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="30dp"
+            android:fontFamily="@font/inter_semibold"
+            android:text="@string/attendance"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:paddingStart="10dp"
+            android:paddingEnd="1dp"
+            android:paddingTop="10dp"
+            android:id="@+id/tv_titleAttendance"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_ShowAttend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layoutAnimation="@anim/layout_from_right"/>
+</LinearLayout>

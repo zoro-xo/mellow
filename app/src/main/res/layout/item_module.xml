@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingStart="16dp">
+
+        <TextView
+            android:id="@+id/module_name"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/lock_icon"
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+
+            android:layout_height="24dp"
+            android:src="@drawable/ic_lock"
+            android:backgroundTint="@color/grey"/>
+
+        <ImageView
+            android:id="@+id/module_menu"
+            android:layout_width="33dp"
+            android:layout_height="@dimen/_20sdp"
+
+            android:layout_weight="0.1"
+            android:backgroundTint="@color/grey"
+            android:src="@drawable/option" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

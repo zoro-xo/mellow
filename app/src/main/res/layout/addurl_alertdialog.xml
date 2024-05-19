@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/_8sdp"
+    app:cardElevation="@dimen/_3sdp"
+    android:layout_margin="@dimen/_5sdp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_10sdp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:text="Add Url"
+            android:gravity="center"
+            android:textSize="@dimen/_15sdp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/input_box_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/addUrl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="Add Video Url"
+                android:inputType="text"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_11sdp"
+                android:textColor="@color/black"
+                android:textColorHint="#AAAAAB" />
+
+        </LinearLayout>
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/Add"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:backgroundTint="@color/teal"
+            android:background="@drawable/sign_enabled"
+            android:text="Add Url"
+            android:textColor="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:backgroundTint="@color/grey"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:background="@drawable/sign_enabled"
+            android:text="Cancel"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

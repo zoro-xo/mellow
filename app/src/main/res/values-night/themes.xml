@@ -1,0 +1,92 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Cllasify" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/text_white</item>
+        <!--Enable window content transitions for sharedAnimation-->
+        <item name="android:windowContentTransitions">true</item>
+        <!--Activity transitions-->
+        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/page_color</item>
+        <!-- Customize your theme here. -->
+
+        <item name="android:navigationBarColor">@color/page_color</item>
+    </style>
+
+
+    <!--Set all animation files for activity transitions-->
+    <style name="ActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
+
+    <!-- Ripple effect color select -->
+    <style name="SelectableItemTheme">
+        <item name="colorControlHighlight">@color/iconPrimaryColor</item>
+    </style>
+    <!-- Ripple effect borderless -->
+    <style name="SelectableItemBackgroundBorderless">
+        <item name="android:theme">@style/SelectableItemTheme</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+    <!-- Ripple effect border -->
+    <style name="SelectableItemBackground">
+        <item name="android:theme">@style/SelectableItemTheme</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+
+    <!--Calender style-->
+    <style name="calender_style" parent="ThemeOverlay.AppCompat.Dialog">
+        <item name="android:textColorPrimaryInverse">@color/btn_text_black</item> <!-- header date, month color && calendar text highlight color -->
+        <item name="android:textColorSecondaryInverse">@color/iconPrimaryColor</item> <!-- header year color -->
+        <item name="android:datePickerStyle">@style/header_Color</item>
+        <item name="android:windowBackground">@drawable/calendar_background</item> <!--calendar background-->
+        <item name="android:colorControlActivated">@color/purple</item>             <!--selected day-->
+        <item name="android:textColorPrimary">@color/text_color</item>                <!--days of the month-->
+        <item name="android:textColorSecondary">@color/colorAccent</item>               <!--days of the week-->
+        <item name="android:buttonBarPositiveButtonStyle">@style/AppTheme.Alert.Button.Positive</item> <!--Calender positive style-->
+        <item name="android:buttonBarNegativeButtonStyle">@style/AppTheme.Alert.Button.Negative</item>   <!--Calender negative style-->
+        <item name="android:buttonBarNeutralButtonStyle">@style/AppTheme.Alert.Button.Neutral</item>       <!--Calender neutral style-->
+    </style>
+
+    <!--Calender header color-->
+    <style name="header_Color" parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="android:headerBackground">@color/calender_head</item> <!-- header background color -->
+    </style>
+
+    <!--Calender positive button style-->
+    <style name="AppTheme.Alert.Button.Positive" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/purple</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/inter_medium</item>
+    </style>
+
+    <!--Calender negative button style-->
+    <style name="AppTheme.Alert.Button.Negative" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/purple</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/inter_medium</item>
+    </style>
+
+    <!--Calender neutral button style-->
+    <style name="AppTheme.Alert.Button.Neutral" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/purple</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/inter_medium</item>
+    </style>
+
+
+</resources>
