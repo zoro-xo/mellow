@@ -3,34 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/_14sdp">
+    android:layout_marginBottom="20dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/arrow_Icon"
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow_down_24dp" />
         <TextView
             android:id="@+id/set_name"
-            android:layout_width="0dp"
-            android:layout_weight="0.8"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/_14sdp"
+            android:layout_toEndOf="@+id/arrow_Icon"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/inter_semibold"
+            android:textColor="@color/text_white"
+            android:textSize="15sp"
+            android:text="New Set"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/menu_set"
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:layout_height="@dimen/_20sdp"
+            android:layout_width="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_height="wrap_content"
             android:src="@drawable/option" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/modules_recycler_view"

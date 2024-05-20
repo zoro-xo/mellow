@@ -89,7 +89,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
             }
         });
 
-        holder.binding.btnOpen.setOnClickListener(new View.OnClickListener() {
+        holder.binding.courseLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(context,Course_List.class);

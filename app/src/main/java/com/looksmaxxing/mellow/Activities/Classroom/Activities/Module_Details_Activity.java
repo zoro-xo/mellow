@@ -52,7 +52,7 @@ public class Module_Details_Activity extends AppCompatActivity {
 //        }
 
 
-        binding.edit.setOnClickListener(new View.OnClickListener() {
+        binding.courseMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent editIntent = new Intent(Module_Details_Activity.this, Edit_Module_Activity.class);
