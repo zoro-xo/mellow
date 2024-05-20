@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
@@ -33,11 +32,10 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.looksmaxxing.mellow.Activities.Classroom.fragments.PaymentBottomSheet;
 import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
+import com.looksmaxxing.mellow.ModelClasses.User;
 import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.Utility.NetworkBroadcast;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -56,8 +54,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -155,23 +151,38 @@ public class getStarted extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started);
 //        setTheme(R.style.Theme_Cllasify);
-
         videoView = findViewById(R.id.video_view);
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.cllasify_intro);
-        videoView.setVideoURI(uri);
-        videoView.start();
-
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.setLooping(true);
-            }
-        });
-
+        loadVideo();
         checkDarkLightDefault();
         checkDarkLightDefaultStatusBar();
+        configurations();
+        broadcastReceiver = new NetworkBroadcast();
+        registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        progressBar = findViewById(R.id.SignInProgress);
+        adMob();
 
-        Window window = getWindow();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            firebaseAuth = FirebaseAuth.getInstance();
+            currentUser = firebaseAuth.getCurrentUser();
+            assert currentUser != null;
+            userID = currentUser.getUid();
+
+        } //            Toast.makeText(this, "User Not ", Toast.LENGTH_SHORT).show();
+
+        btn_SignIn = findViewById(R.id.btn_SignIn);
+        btn_SignIn.setOnClickListener(view -> {
+            // Configure Google Sign In
+            signInGoogle();
+        });
+    }
+
+    private void adMob() {
+        //initialize() AdMob
+        MobileAds.initialize(this, initializationStatus -> {
+        });
+    }
+
+    private void configurations() {
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
             getWindow().setFlags(
@@ -186,7 +197,6 @@ public class getStarted extends AppCompatActivity {
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
             );
         }
-
         if (Build.VERSION.SDK_INT >= 21) {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false);
@@ -198,71 +208,35 @@ public class getStarted extends AppCompatActivity {
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
             );
         }
-
-
-        broadcastReceiver = new NetworkBroadcast();
-        registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
-        progressBar = findViewById(R.id.SignInProgress);
-
-        //initialize() AdMob
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
-            }
-        });
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-
-            firebaseAuth = FirebaseAuth.getInstance();
-            currentUser = firebaseAuth.getCurrentUser();
-            assert currentUser != null;
-            userID = currentUser.getUid();
-
-        }
-        btn_SignIn = findViewById(R.id.btn_SignIn);
-        btn_SignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // Configure Google Sign In
-                GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
-                        GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("351525579518-d25phcu7mupuacvnq625fn8p9pk3firu.apps.googleusercontent.com")
-                        .requestEmail()
-                        .build();
-
-                progressBar.setVisibility(View.VISIBLE);
-
-                googleSignInClient = GoogleSignIn.getClient(getStarted.this, googleSignInOptions);
-
-                Intent intent = googleSignInClient.getSignInIntent();
-
-                startActivityForResult(intent, 100);
-
-            }
-        });
     }
 
-    @Override
-    protected void onDestroy() {
-        videoView.stopPlayback();
-        super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
+    private void loadVideo() {
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.cllasify_intro);
+        videoView.setVideoURI(uri);
+        videoView.start();
+        videoView.setOnPreparedListener(mediaPlayer -> mediaPlayer.setLooping(true));
     }
+
+    private void signInGoogle() {
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("351525579518-d25phcu7mupuacvnq625fn8p9pk3firu.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+
+        progressBar.setVisibility(View.VISIBLE);
+        googleSignInClient = GoogleSignIn.getClient(getStarted.this, googleSignInOptions);
+        Intent intent = googleSignInClient.getSignInIntent();
+        startActivityForResult(intent, 100);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 //        Toast.makeText(getStarted.this, "on activity result called", Toast.LENGTH_SHORT).show();
-
         if (requestCode == 100) {
-//            Toast.makeText(getStarted.this, "100", Toast.LENGTH_SHORT).show();
-
             Task<GoogleSignInAccount> signInAccountTask = GoogleSignIn
                     .getSignedInAccountFromIntent(data);
-//            Toast.makeText(getStarted.this, "checking", Toast.LENGTH_SHORT).show();
-
-
             if (signInAccountTask.isSuccessful()) {
                 try {
                     GoogleSignInAccount googleSignInAccount = signInAccountTask.getResult(ApiException.class);
@@ -273,15 +247,7 @@ public class getStarted extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-//                                    submitLoginData();
-                                    PaymentBottomSheet bottomSheetDialogFragment = new PaymentBottomSheet();
-                                    bottomSheetDialogFragment.setCancelable(false);
-                                    bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
-                                    progressBar.setVisibility(View.GONE);
-
-
-                                    Log.i("shitt0", "login successful,el");
-
+                                    submitLoginData();
                                 } else {
                                     Log.i("shitt22", task.getException().toString());
                                     Toast.makeText(getStarted.this, "Authentication Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -308,61 +274,68 @@ public class getStarted extends AppCompatActivity {
         }
     }
 
+    private void showPaymentSheet() {
+        PaymentBottomSheet bottomSheetDialogFragment = new PaymentBottomSheet(userID);
+        bottomSheetDialogFragment.setCancelable(false);
+        bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+        progressBar.setVisibility(View.GONE);
+        Log.i("shitt0", "login successful,el");
+    }
+
     private void submitLoginData() {
-
-
-        StorageReference storageReference;
-        storageReference = FirebaseStorage.getInstance().getReference();
-
         Calendar calenderCC = Calendar.getInstance();
         SimpleDateFormat simpleDateFormatCC = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
         final String udateTimeCC = simpleDateFormatCC.format(calenderCC.getTime());
 
         FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.e("FCM", "Token retrieval failed", task.getException());
+                        return;
+                    }
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    if (currentUser == null) {
+                        Log.e("Auth", "Current user is null");
+                        return;
+                    }
+                    this.userID = currentUser.getUid();
+                    String name = currentUser.getDisplayName();
+                    String userEmailID = currentUser.getEmail();
+                    Uri userPhoto = currentUser.getPhotoUrl();
+                    String token = task.getResult();
 
-//                            Toast.makeText(getStarted.this, "Token Failed" + task.getException().toString(), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                        String userID = currentUser.getUid();
-                        String Name = currentUser.getDisplayName();
-                        String userEmailID = currentUser.getEmail();
-                        Uri userPhoto = currentUser.getPhotoUrl();
+                    DatabaseReference refUserRegister = FirebaseDatabase.getInstance().getReference()
+                            .child("Users")
+                            .child("Registration")
+                            .child(userID);
 
-                        // Get new FCM registration token
-                        String token = task.getResult();
-                        DatabaseReference refUserRegister = FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(userID);
-                        refUserRegister.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (!(snapshot.exists())) {
-                                    refUserRegister.child("Name").setValue(Name);
-                                    refUserRegister.child("userEmailId").setValue(userEmailID);
-                                    refUserRegister.child("userId").setValue(userID);
-                                    refUserRegister.child("dateTime").setValue(udateTimeCC);
-                                    refUserRegister.child("userStatus").setValue("");
-                                    refUserRegister.child("token").setValue(token);
+                    refUserRegister.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (!snapshot.exists()) {
+                                refUserRegister.child("Name").setValue(name);
+                                refUserRegister.child("userEmailId").setValue(userEmailID);
+                                refUserRegister.child("userId").setValue(userID);
+                                refUserRegister.child("dateTime").setValue(udateTimeCC);
+                                refUserRegister.child("userStatus").setValue("");
+                                refUserRegister.child("token").setValue(token);
+                                refUserRegister.child("isPaid").setValue(false);
+                                if (userPhoto != null) {
                                     refUserRegister.child("profilePic").setValue(userPhoto.toString());
+                                } else {
+                                    refUserRegister.child("profilePic").setValue(""); // or handle accordingly
                                 }
                             }
+                            checkIsPaidAndNavigate();
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                        }
 
-                            }
-                        });
-
-                        showToast();
-
-//                        Intent intent = new Intent(getStarted.this, Server_Activity.class);
-//                        intent.putExtra("splash", "stop");
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        startActivity(intent);
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Log the error for debugging purposes
+                            Log.e("Database", "Error retrieving user data", error.toException());
+                        }
+                    });
                 });
 
     }
@@ -379,16 +352,45 @@ public class getStarted extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-
         super.onStart();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-
-            Intent intent = new Intent(getStarted.this, Server_Activity.class);
-            intent.putExtra("splash", "stop");
-            intent.putExtra("Check", "appRestart");
-            startActivity(intent);
-            getStarted.this.overridePendingTransition(0, 0);
-        }
+        if (userID != null)
+            checkIsPaidAndNavigate();
     }
+
+    private void moveToServerActivity() {
+        Intent intent = new Intent(getStarted.this, Server_Activity.class);
+        intent.putExtra("splash", "stop");
+        intent.putExtra("Check", "appRestart");
+        startActivity(intent);
+        getStarted.this.overridePendingTransition(0, 0);
+    }
+
+    private void checkIsPaidAndNavigate() {
+        progressBar.setVisibility(View.VISIBLE);
+        DatabaseReference refUserName = FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(userID);
+
+        refUserName.get().addOnCompleteListener(task -> {
+            progressBar.setVisibility(View.GONE);
+            if (!task.isSuccessful()) {
+                Log.e("firebase", "Error getting data", task.getException());
+                return;
+            }
+            User user = task.getResult().getValue(User.class);
+//            assert user != null;
+            if (user != null && user.getIsPaid()) {
+                showToast();
+                moveToServerActivity();
+            } else {
+                showPaymentSheet();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        videoView.stopPlayback();
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
+    }
+
 }

@@ -19,19 +19,21 @@ import com.looksmaxxing.mellow.databinding.FragmentPaymentBottomSheetBinding;
 public class PaymentBottomSheet extends BottomSheetDialogFragment {
 
     FragmentPaymentBottomSheetBinding binding;
+    String userID;
+
+    public PaymentBottomSheet(String userID) {
+        this.userID = userID;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentPaymentBottomSheetBinding.inflate(inflater, container, false);
-        binding.btnPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(requireContext(), PaymentsActivity.class);
-                startActivity(intent);
-
-            }
+        binding.btnPay.setOnClickListener(view -> {
+            Intent intent = new Intent(requireContext(), PaymentsActivity.class);
+            intent.putExtra("userId",this.userID);
+            startActivity(intent);
         });
 
 

@@ -9,11 +9,12 @@ public class User {
     private String userEmailId;
     private String userId;
     private String userStatus;
+    private boolean isPaid;
 
     public User() {
     }
 
-    public User(String name, String dateTime, String profilePic, String token, String userEmailId, String userId, String userStatus) {
+    public User(String name, String dateTime, String profilePic, String token, String userEmailId, String userId, String userStatus, boolean isPaid) {
         Name = name;
         this.dateTime = dateTime;
         this.profilePic = profilePic;
@@ -21,10 +22,11 @@ public class User {
         this.userEmailId = userEmailId;
         this.userId = userId;
         this.userStatus = userStatus;
+        this.isPaid = isPaid;
     }
 
-    public TeacherAttendanceModel toTeacherAttendanceModel(boolean present,String day){
-        return new TeacherAttendanceModel(userId,Name,userEmailId,day,present);
+    public TeacherAttendanceModel toTeacherAttendanceModel(boolean present, String day) {
+        return new TeacherAttendanceModel(userId, Name, userEmailId, day, present);
     }
 
     public String getName() {
@@ -83,6 +85,14 @@ public class User {
         this.userStatus = userStatus;
     }
 
+    public boolean getIsPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(boolean isPaid) {
+        this.isPaid = isPaid;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -92,6 +102,7 @@ public class User {
                 ", token='" + token + '\'' +
                 ", userEmailId='" + userEmailId + '\'' +
                 ", userId='" + userId + '\'' +
+                ", isPaid='" + isPaid + '\'' +
                 ", userStatus='" + userStatus + '\'' +
                 '}';
     }

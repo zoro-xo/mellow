@@ -39,6 +39,9 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.looksmaxxing.mellow.Activities.Settings.Documentation_Videos;
 import com.looksmaxxing.mellow.Activities.Settings.Privacy;
 import com.looksmaxxing.mellow.Activities.Settings.Terms;
@@ -394,9 +397,7 @@ public class AccountSetting_Activity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 FirebaseAuth.getInstance().signOut();
-                                                Intent i = new Intent(AccountSetting_Activity.this, getStarted.class);
-                                                startActivity(i);
-                                                (AccountSetting_Activity.this).overridePendingTransition(0, 0);
+                                                signOutFromGoogle();
 
                                                 Toast.makeText(AccountSetting_Activity.this, "You are Logged Out", Toast.LENGTH_LONG).show();
 
@@ -417,6 +418,23 @@ public class AccountSetting_Activity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void signOutFromGoogle() {
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("351525579518-d25phcu7mupuacvnq625fn8p9pk3firu.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+
+        googleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                // Revoke access to clear the cache
+                Intent i = new Intent(AccountSetting_Activity.this, getStarted.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
