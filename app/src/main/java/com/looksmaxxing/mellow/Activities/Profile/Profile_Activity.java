@@ -418,6 +418,9 @@ public class Profile_Activity extends AppCompatActivity {
                     case R.id.bottom_nav_notification:
                         startActivity(new Intent(Profile_Activity.this, Notification_Activity.class));
                         Profile_Activity.this.overridePendingTransition(0, 0);
+                    case R.id.bottom_nav_class:
+                        startActivity(new Intent(Profile_Activity.this, Classroom_Activity.class));
+                        Profile_Activity.this.overridePendingTransition(0, 0);
 
                         break;
                     case R.id.bottom_nav_profile:
