@@ -2386,7 +2386,8 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 //                        shimmer_effect.setVisibility(View.VISIBLE);
                     } else {
                         Log.d("CHKJOINEDORADDGRP", "onDataChange: Not available");
-                        ll_AddJoinGrp.setVisibility(View.VISIBLE);
+//                        ll_AddJoinGrp.setVisibility(View.VISIBLE);
+                        Toast.makeText(Server_Activity.this, "Pay to be added", Toast.LENGTH_SHORT).show();
                         shimmer_effect.setVisibility(View.GONE);
                     }
                 }
