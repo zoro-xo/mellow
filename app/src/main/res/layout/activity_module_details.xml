@@ -37,15 +37,16 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="@dimen/_25sdp"
                     android:layout_height="@dimen/_25sdp"
-                    app:cardCornerRadius="5dp"
-                    android:layout_marginStart="@dimen/_10sdp">
+                    android:layout_marginStart="@dimen/_10sdp"
+                    app:cardCornerRadius="5dp">
+
                     <ImageView
                         android:id="@+id/course_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:elevation="2dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/mellow_logo"/>
+                        android:src="@drawable/mellow_logo" />
                 </androidx.cardview.widget.CardView>
 
 
@@ -54,13 +55,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:paddingStart="10dp"
                     android:elevation="2dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/youtube_sans_dark_extrabold"
                     android:maxLines="1"
+                    android:paddingStart="10dp"
                     android:paddingEnd="@dimen/_10sdp"
-                    android:text="Experimental schosdhzgjlkfgsdkhghdaskhjfgkhjsdgfkhgol"
                     android:textColor="@color/text_white"
                     android:textSize="@dimen/_12sdp" />
             </LinearLayout>
@@ -89,25 +89,24 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/module_toolbar"
             android:layout_gravity="center_vertical"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
             android:elevation="2dp"
             android:ellipsize="end"
             android:fontFamily="@font/youtube_sans_dark_extrabold"
             android:maxLines="2"
-            android:text="Experimental school"
+            android:paddingStart="20dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="15dp"
             android:textColor="@color/text_white"
-            android:textSize="@dimen/_18sdp"  />
+            android:textSize="@dimen/_18sdp" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/player"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_160sdp"
+            android:layout_below="@+id/title"
             android:layout_margin="@dimen/_8sdp"
             app:cardCornerRadius="@dimen/_8sdp"
-            android:layout_below="@+id/title"
             app:cardElevation="@dimen/_5sdp">
 
             <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -123,11 +122,9 @@
             android:id="@+id/descryption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
             android:layout_below="@+id/player"
-            android:text="However, for relatively small video files around 20 MB, the performance benefits of using streams may be less significant compared to handling larger files. If your use case involves only small video files and simplicity is a priority, you could consider using the built-in fs.readFile() and fs.writeFile() functions instead of streams. These functions load the entire file into memory at once, which may be acceptable for small file sizes." />
-
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp" />
 
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>

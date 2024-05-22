@@ -10,16 +10,18 @@
     <item
         android:id="@+id/bottom_nav_discover"
         android:title="@string/tab_explore"
+        android:visible="false"
         android:icon="@drawable/ic_explore"
         app:cnb_iconColor="@color/purple"/>
     <item
         android:id="@+id/bottom_nav_class"
-        android:title="Class"
+        android:title="Classroom"
         android:icon="@drawable/ic_about"
         app:cnb_iconColor="@color/purple"/>
     <item
         android:id="@+id/bottom_nav_notification"
         android:title="@string/tab_notification"
+        android:visible="false"
         android:icon="@drawable/ic_menu_notifications"
         app:cnb_iconColor="@color/purple"/>
     <item

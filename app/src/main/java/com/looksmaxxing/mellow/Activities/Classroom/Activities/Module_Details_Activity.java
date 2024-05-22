@@ -2,6 +2,7 @@ package com.looksmaxxing.mellow.Activities.Classroom.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -114,7 +115,7 @@ public class Module_Details_Activity extends AppCompatActivity {
                     String videoUrl = dataSnapshot.child("videoUrl").getValue(String.class);
 
                     if (moduleContent != null && moduleName != null && videoUrl != null) {
-                        binding.descryption.setText(moduleContent);
+                        binding.descryption.setText(Html.fromHtml(moduleContent));
                         binding.videoView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
                             @Override
                             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
