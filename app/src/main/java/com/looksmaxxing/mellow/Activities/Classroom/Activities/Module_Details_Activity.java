@@ -19,6 +19,7 @@ import com.looksmaxxing.mellow.databinding.ActivityModuleDetailsBinding;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,10 +122,66 @@ public class Module_Details_Activity extends AppCompatActivity {
                                 youTubePlayer.loadVideo(videoId, 0);
                             }
 
-                            @Override
-                            public void onError(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerError error) {
-                                super.onError(youTubePlayer, error);
-                                Toast.makeText(Module_Details_Activity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+
+                            public void onVideoDuration(@NonNull YouTubePlayer youTubePlayer, float duration) {
+                                // Now we have the duration of the video
+                                int videoDuration = (int) duration;
+
+                                Toast.makeText(Module_Details_Activity.this, ""+duration, Toast.LENGTH_SHORT).show();
+                                youTubePlayer.addListener(new YouTubePlayerListener() {
+                                    @Override
+                                    public void onVideoLoadedFraction(@NonNull YouTubePlayer youTubePlayer, float v) {
+
+                                    }
+
+                                    @Override
+                                    public void onVideoId(@NonNull YouTubePlayer youTubePlayer, @NonNull String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onVideoDuration(@NonNull YouTubePlayer youTubePlayer, float v) {
+
+                                    }
+
+                                    @Override
+                                    public void onStateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerState playerState) {
+
+                                    }
+
+                                    @Override
+                                    public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+
+                                    }
+
+                                    @Override
+                                    public void onPlaybackRateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlaybackRate playbackRate) {
+
+                                    }
+
+                                    @Override
+                                    public void onPlaybackQualityChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlaybackQuality playbackQuality) {
+
+                                    }
+
+                                    @Override
+                                    public void onApiChange(@NonNull YouTubePlayer youTubePlayer) {
+
+                                    }
+
+                                    @Override
+                                    public void onCurrentSecond(@NonNull YouTubePlayer youTubePlayer, float second) {
+                                        int currentSecond = (int) second;
+//                                        updateProgressBar(currentSecond, videoDuration);
+                                    }
+
+                                    @Override
+                                    public void onError(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerError error) {
+                                        Toast.makeText(Module_Details_Activity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    // Other overridden methods can be left empty
+                                });
                             }
                         });
                     } else {

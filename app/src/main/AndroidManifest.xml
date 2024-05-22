@@ -32,8 +32,15 @@
         android:theme="@style/Theme.Cllasify"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".Activities.Classroom.Activities.Edit_Course_Activity"
-            android:exported="false" />
+            android:name=".Activities.SplashScreenActivity"
+            android:exported="true"
+            android:theme="@style/SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities.Classroom.Activities.PaymentsActivity"
             android:exported="false" />
@@ -210,17 +217,10 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Activities.getStarted"
+            android:name=".Activities.GetStartedActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashScreen"
-            tools:ignore="LockedOrientationActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            tools:ignore="LockedOrientationActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

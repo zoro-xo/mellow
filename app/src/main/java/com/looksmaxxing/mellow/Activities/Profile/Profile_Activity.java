@@ -27,7 +27,7 @@ import com.bumptech.glide.Glide;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Classroom_Activity;
 import com.looksmaxxing.mellow.Activities.Notification_Activity;
 import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
-import com.looksmaxxing.mellow.Activities.getStarted;
+import com.looksmaxxing.mellow.Activities.GetStartedActivity;
 import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.Utility.NetworkBroadcast;
 import com.google.android.gms.ads.LoadAdError;
@@ -259,7 +259,7 @@ public class Profile_Activity extends AppCompatActivity {
             bottomMenu();
 
         } else {
-            startActivity(new Intent(this, getStarted.class));
+            startActivity(new Intent(this, GetStartedActivity.class));
         }
 
     }

@@ -29,6 +29,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.looksmaxxing.mellow.Activities.Classroom.fragments.PaymentBottomSheet;
 import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
@@ -58,7 +60,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class getStarted extends AppCompatActivity {
+public class GetStartedActivity extends AppCompatActivity {
 
     private BroadcastReceiver broadcastReceiver;
 
@@ -75,8 +77,8 @@ public class getStarted extends AppCompatActivity {
 
     private void checkDarkLightDefault() {
 
-        String darkLightDefaultVal = getDefaults("DefaultDarkLight", getStarted.this);
-        Log.d("USERIDSA", "onCreate: " + getDefaults("DefaultDarkLight", getStarted.this));
+        String darkLightDefaultVal = getDefaults("DefaultDarkLight", GetStartedActivity.this);
+        Log.d("USERIDSA", "onCreate: " + getDefaults("DefaultDarkLight", GetStartedActivity.this));
         if (darkLightDefaultVal != null) {
             if (darkLightDefaultVal.equals("Dark")) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -112,20 +114,11 @@ public class getStarted extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finishAffinity();
         finish();
     }
 
-    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
 
     @Override
     protected void onPostResume() {
@@ -155,25 +148,27 @@ public class getStarted extends AppCompatActivity {
         loadVideo();
         checkDarkLightDefault();
         checkDarkLightDefaultStatusBar();
-        configurations();
         broadcastReceiver = new NetworkBroadcast();
         registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         progressBar = findViewById(R.id.SignInProgress);
         adMob();
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            firebaseAuth = FirebaseAuth.getInstance();
-            currentUser = firebaseAuth.getCurrentUser();
-            assert currentUser != null;
-            userID = currentUser.getUid();
-
-        } //            Toast.makeText(this, "User Not ", Toast.LENGTH_SHORT).show();
-
+        getFirebaseInstance();
+        //Toast.makeText(this, "User Not ", Toast.LENGTH_SHORT).show();
         btn_SignIn = findViewById(R.id.btn_SignIn);
         btn_SignIn.setOnClickListener(view -> {
             // Configure Google Sign In
             signInGoogle();
         });
+
+    }
+
+    private void getFirebaseInstance() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            firebaseAuth = FirebaseAuth.getInstance();
+            currentUser = firebaseAuth.getCurrentUser();
+            assert currentUser != null;
+            userID = currentUser.getUid();
+        }
     }
 
     private void adMob() {
@@ -182,33 +177,6 @@ public class getStarted extends AppCompatActivity {
         });
     }
 
-    private void configurations() {
-        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-            );
-        }
-        if (Build.VERSION.SDK_INT >= 19) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-            );
-        }
-        if (Build.VERSION.SDK_INT >= 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-            getWindow().setNavigationBarColor(Color.TRANSPARENT);
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-            );
-        }
-    }
 
     private void loadVideo() {
         Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.cllasify_intro);
@@ -224,7 +192,7 @@ public class getStarted extends AppCompatActivity {
                 .build();
 
         progressBar.setVisibility(View.VISIBLE);
-        googleSignInClient = GoogleSignIn.getClient(getStarted.this, googleSignInOptions);
+        googleSignInClient = GoogleSignIn.getClient(GetStartedActivity.this, googleSignInOptions);
         Intent intent = googleSignInClient.getSignInIntent();
         startActivityForResult(intent, 100);
     }
@@ -243,19 +211,19 @@ public class getStarted extends AppCompatActivity {
                     if (googleSignInAccount != null) {
                         AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
                         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                        firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(getStarted.this, new OnCompleteListener<AuthResult>() {
+                        firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(GetStartedActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     submitLoginData();
                                 } else {
                                     Log.i("shitt22", task.getException().toString());
-                                    Toast.makeText(getStarted.this, "Authentication Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(GetStartedActivity.this, "Authentication Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
                     } else {
-                        Toast.makeText(getStarted.this, "Google account null", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GetStartedActivity.this, "Google account null", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -275,11 +243,14 @@ public class getStarted extends AppCompatActivity {
     }
 
     private void showPaymentSheet() {
-        PaymentBottomSheet bottomSheetDialogFragment = new PaymentBottomSheet(userID);
-        bottomSheetDialogFragment.setCancelable(false);
-        bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
-        progressBar.setVisibility(View.GONE);
-        Log.i("shitt0", "login successful,el");
+        if (!isFinishing() && !isDestroyed()) {
+            PaymentBottomSheet bottomSheetDialogFragment = new PaymentBottomSheet(userID);
+            bottomSheetDialogFragment.setCancelable(false);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(bottomSheetDialogFragment, bottomSheetDialogFragment.getTag());
+            transaction.commitAllowingStateLoss();
+        }
     }
 
     private void submitLoginData() {
@@ -358,19 +329,21 @@ public class getStarted extends AppCompatActivity {
     }
 
     private void moveToServerActivity() {
-        Intent intent = new Intent(getStarted.this, Server_Activity.class);
+        Intent intent = new Intent(GetStartedActivity.this, Server_Activity.class);
         intent.putExtra("splash", "stop");
         intent.putExtra("Check", "appRestart");
         startActivity(intent);
-        getStarted.this.overridePendingTransition(0, 0);
+        GetStartedActivity.this.overridePendingTransition(0, 0);
     }
 
     private void checkIsPaidAndNavigate() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null)
+            progressBar.setVisibility(View.VISIBLE);
         DatabaseReference refUserName = FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(userID);
 
         refUserName.get().addOnCompleteListener(task -> {
-            progressBar.setVisibility(View.GONE);
+            if (progressBar != null)
+                progressBar.setVisibility(View.GONE);
             if (!task.isSuccessful()) {
                 Log.e("firebase", "Error getting data", task.getException());
                 return;

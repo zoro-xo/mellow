@@ -45,7 +45,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.looksmaxxing.mellow.Activities.Settings.Documentation_Videos;
 import com.looksmaxxing.mellow.Activities.Settings.Privacy;
 import com.looksmaxxing.mellow.Activities.Settings.Terms;
-import com.looksmaxxing.mellow.Activities.getStarted;
+import com.looksmaxxing.mellow.Activities.GetStartedActivity;
 import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.Utility.NetworkBroadcast;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -431,7 +431,7 @@ public class AccountSetting_Activity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 // Revoke access to clear the cache
-                Intent i = new Intent(AccountSetting_Activity.this, getStarted.class);
+                Intent i = new Intent(AccountSetting_Activity.this, GetStartedActivity.class);
                 startActivity(i);
             }
         });

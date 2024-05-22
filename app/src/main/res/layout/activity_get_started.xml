@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/page_color"
     android:id="@+id/mainLayout"
-    tools:context=".Activities.getStarted">
+    tools:context=".Activities.GetStartedActivity">
 
     <VideoView
         android:id="@+id/video_view"
