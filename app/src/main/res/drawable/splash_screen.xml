@@ -4,8 +4,7 @@
     <item
         android:width="@dimen/_120sdp"
         android:height="@dimen/_120sdp"
-
-        android:drawable="@drawable/mellow"
+        android:drawable="@drawable/mellow_icon"
         android:gravity="center" />
 
 </layer-list>

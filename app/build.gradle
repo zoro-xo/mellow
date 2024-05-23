@@ -157,6 +157,10 @@ dependencies {
     //Result-pdf
     implementation 'com.github.Gkemon:Android-XML-to-PDF-Generator:2.6.8'
 
+    //Text - editor
+    implementation 'jp.wasabeef:richeditor-android:2.0.0'
+
+
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'
