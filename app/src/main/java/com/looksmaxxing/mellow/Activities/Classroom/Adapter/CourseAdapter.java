@@ -233,7 +233,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         private final TextView courseName;
         private final TextView courseToolBarName;
         private final RecyclerView setsRecyclerView;
-        ImageView courseMenu, courseImage;
+        ImageView courseMenu, courseImage,search;
 
         public CourseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -243,7 +243,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             courseImage = itemView.findViewById(R.id.course_image);
             progressBar = itemView.findViewById(R.id.progressBar);
             tvProgressBar = itemView.findViewById(R.id.tvProgressText);
-
+             search=itemView.findViewById(R.id.search);
             setsRecyclerView = itemView.findViewById(R.id.sets_recycler_view);
         }
 
@@ -255,7 +255,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             tvProgressBar.setText(progress+"");
             Glide.with(context).load(course.getImageUrl())
                     .into(courseImage);
-
+              search.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View view) {
+                      Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
+                  }
+              });
 //            AdminChecker.checkIfUserIsAdmin(new AdminChecker.AdminCheckCallback() {
 //                @Override
 //                public void onAdminCheck(boolean isAdmin) {

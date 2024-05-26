@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SelectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp">
+    android:orientation="horizontal">
 
 
     <LinearLayout
@@ -15,31 +15,38 @@
 
         <TextView
             android:id="@+id/module_name"
+            style="@style/SelectableItemBackground"
             android:layout_width="0dp"
-            android:layout_weight="0.7"
             android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:fontFamily="@font/inter_regular"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="1dp"
+            android:paddingBottom="15dp"
+            android:text="@string/theme"
+            android:textColor="@color/text_color"
             android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/lock_icon"
             android:layout_width="0dp"
-            android:layout_weight="0.1"
-
             android:layout_height="24dp"
-            android:src="@drawable/ic_lock"
-            android:backgroundTint="@color/grey"/>
+            android:layout_gravity="center"
+            android:layout_weight="0.1"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_lock" />
 
         <ImageView
             android:id="@+id/module_menu"
             android:layout_width="33dp"
             android:layout_height="@dimen/_20sdp"
-
+            android:layout_gravity="center"
             android:layout_weight="0.1"
             android:backgroundTint="@color/grey"
             android:src="@drawable/option" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>

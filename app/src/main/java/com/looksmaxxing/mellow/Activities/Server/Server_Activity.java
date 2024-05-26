@@ -58,8 +58,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.discord.panels.OverlappingPanelsLayout;
+import com.discord.panels.PanelState;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Classroom_Activity;
-import com.looksmaxxing.mellow.Activities.Classroom.fragments.PaymentBottomSheet;
+import com.looksmaxxing.mellow.Activities.GetStartedActivity;
 import com.looksmaxxing.mellow.Activities.Notification_Activity;
 import com.looksmaxxing.mellow.Activities.Profile.Profile_Activity;
 import com.looksmaxxing.mellow.Activities.RightPanel.Attendance_Activity;
@@ -69,7 +99,6 @@ import com.looksmaxxing.mellow.Activities.RightPanel.Notice;
 import com.looksmaxxing.mellow.Activities.Routine.All_Routine;
 import com.looksmaxxing.mellow.Activities.Routine.priority_subject.Priority_Subject;
 import com.looksmaxxing.mellow.Activities.Server.PDFBACK.OnBackPressedListener;
-import com.looksmaxxing.mellow.Activities.getStarted;
 import com.looksmaxxing.mellow.Adapters.Adapter_All_Friends;
 import com.looksmaxxing.mellow.Adapters.Adapter_ClassGroup;
 import com.looksmaxxing.mellow.Adapters.Adaptor_FriendsList;
@@ -88,6 +117,7 @@ import com.looksmaxxing.mellow.ModelClasses.FriendsListClass;
 import com.looksmaxxing.mellow.ModelClasses.Subject_Details_Model;
 import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.Utility.Constant;
+import com.looksmaxxing.mellow.Utility.GroupJoinHelper;
 import com.looksmaxxing.mellow.Utility.NetworkBroadcast;
 import com.looksmaxxing.mellow.Utility.SharePref;
 import com.discord.panels.OverlappingPanelsLayout;
@@ -141,27 +171,24 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Server_Activity extends AppCompatActivity implements PaymentResultWithDataListener, ExternalWalletListener {
 
-    private BroadcastReceiver broadcastReceiver;
-
-
-    //Database References
-    DatabaseReference refuserPersonalGroup, refuserAllGroup, refChatDashboard,
-            refuserPublicGroup, refAllGroup, refOtherUserPublicGroup, refUserStatus,
-            refSearchShowGroup, refShowUserPublicGroup, refShowUserPrivateGroup,
-            refShowUserAllGroup, refShowUserJoinedGroup, refTeachStud, refChildGroup, checkFriends,
-            refGroupSubsList, refGrpMemberList, refClassTeacherList, reference, allDoubtReference, addedOrJoinedGroup;
-
-    //RecyclerViews
-    RecyclerView rv_UserPublicGroupTitle, rv_OtherPublicGroupTitle, rv_GrpMemberList, rv_GrpTeacherList,
-            recyclerViewClassList, endPanelAllFriendsRecyclerView, rvFriendsList;
+    public static final String defaultGrpPushId = "Uni_Group_No_6_AS";
+    public static final String defaultSubGrpName = "Android";
+    public static final String defaultClassPshId = "-Nya-cHm99tT6_hqSsxh";
+    public static final String defaultAdminGrpId = "M6EXJZaTtmg9iCRW3ueH61fQdNN2";
+    public static final String defaultGrpAdminUsrName = "Anand Raj";
+    public static final String defaultGrpName = "AS";
+    private static final String TAG = "ChatActivity";
+    public static String defaultNotiPushId = "Joining B Reqno_2";
     public static RecyclerView rv_ChatDashboard;
+    protected OnBackPressedListener onBackPressedListener;
+    //Database References
+    DatabaseReference refuserPersonalGroup, refuserAllGroup, refChatDashboard, refuserPublicGroup, refAllGroup, refOtherUserPublicGroup, refUserStatus, refSearchShowGroup, refShowUserPublicGroup, refShowUserPrivateGroup, refShowUserAllGroup, refShowUserJoinedGroup, refTeachStud, refChildGroup, checkFriends, refGroupSubsList, refGrpMemberList, refClassTeacherList, reference, allDoubtReference, addedOrJoinedGroup;
+    //RecyclerViews
+    RecyclerView rv_UserPublicGroupTitle, rv_OtherPublicGroupTitle, rv_GrpMemberList, rv_GrpTeacherList, recyclerViewClassList, endPanelAllFriendsRecyclerView, rvFriendsList;
 
     ///Lists
-
     //List Class Group Model Class
-    List<Class_Group> list_GroupTitle, list_UserPrivateGroupTitle, list_UserPublicGroupTitle,
-            list_OtherUserPublicGroupTitle, list_SubChild, list_ChatDashboard, list_DoubtDashboard,
-            list_Friend, list_ChatListDashboard, list_NewChatDashboard;
+    List<Class_Group> list_GroupTitle, list_UserPrivateGroupTitle, list_UserPublicGroupTitle, list_OtherUserPublicGroupTitle, list_SubChild, list_ChatDashboard, list_DoubtDashboard, list_Friend, list_ChatListDashboard, list_NewChatDashboard;
 
     List<Class_Student_Details> listGrpMemberList, listGrpTeacherList, listFriendList;
     List<String> allFriendsList;
@@ -186,9 +213,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     RelativeLayout friendToolBar;
 
     //Linear Layouts
-    LinearLayout onlyAdminLayout, groupSection, ll_AddJoinGrp, ll_ChatDoubtDashboard,
-            endPanelLinearLayout, friendSection, rightPanelMems, rightPanelMember,
-            ib_servSettings, btn_lteachattend, FriendListText, btn_joinNotification, btn_lteachFees, btn_routineStructure, btn_result, btn_subjectPriority, btn_lnotice, btn_studentFees, btn_studentRoutine;
+    LinearLayout onlyAdminLayout, groupSection, ll_AddJoinGrp, ll_ChatDoubtDashboard, endPanelLinearLayout, friendSection, rightPanelMems, rightPanelMember, ib_servSettings, btn_lteachattend, FriendListText, btn_joinNotification, btn_lteachFees, btn_routineStructure, btn_result, btn_subjectPriority, btn_lnotice, btn_studentFees, btn_studentRoutine;
 
 
     //Buttons
@@ -203,10 +228,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     BottomNavigationView bottomNavigationView;
     TextView tv_GroupMember, adminListText, FriendListTextt;
     FirebaseDatabase refFriendList;
-
-    private int currentProgress = 0;
-    private ProgressBar uploadProgressBar;
-
     String GroupCategory;
     GoogleSignInClient googleSignInClient;
     Calendar calenderCC = Calendar.getInstance();
@@ -217,40 +238,29 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     Uri userPhoto;
     String userID, userEmailID, userName;
     OverlappingPanelsLayout overlappingPanels;
-
-
     ImageView imageViewAddPanelAddGroup;
     Class_Group userAddGroupClass, userSubsGroupClass;
     EditText et_FrndP_text, et_ctext;
-    TextView tv_UserPublicTitle, tv_OtherTitle,
-            textViewGroupName,
-            tv_FrndP_Title, textViewSubjectName, uploadPercentage;
-
-
+    TextView tv_UserPublicTitle, tv_OtherTitle, textViewGroupName, tv_FrndP_Title, textViewSubjectName, uploadPercentage;
     FragmentManager fragmentManager;
     DoubtFragment doubtFragment;
     Friend_Chat_Activity friendChatFragment;
     WebView_Fragment webView_fragment;
-
-
     //SwipeRefreshLayout
     SwipeRefreshLayout swipeRefreshLayout;
-
     String displayName;
-
     boolean checkLoad;
-
     //Chat_Activity
-    private static final String TAG = "ChatActivity";
     ValueEventListener seenListener, readLiveMessageListener, readLiveDoubtListener;
-    private MessageAdapter messageAdapter;
-    private boolean onScreen;
     boolean flag = false;
     boolean flagFriend = false;
     boolean pdf_flag = false;
+    private BroadcastReceiver broadcastReceiver;
+    private int currentProgress = 0;
+    private ProgressBar uploadProgressBar;
+    private MessageAdapter messageAdapter;
+    private boolean onScreen;
     private Uri fileUri;
-
-    protected OnBackPressedListener onBackPressedListener;
     private ShimmerFrameLayout shimmer_effect;
 
     public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
@@ -961,8 +971,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             List<String> weekList = Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
 
 
-            DatabaseReference dbRoutineStructure = FirebaseDatabase.getInstance().getReference().child("Groups")
-                    .child("Routine").child(groupPushId).child("allSchedule").child(classUniPushId);
+            DatabaseReference dbRoutineStructure = FirebaseDatabase.getInstance().getReference().child("Groups").child("Routine").child(groupPushId).child("allSchedule").child(classUniPushId);
 
 
             btn_routineStructure.setOnClickListener(new View.OnClickListener() {
@@ -1353,8 +1362,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                             if (snapshot.exists() && !(upiId.isEmpty())) {
 
 
-                                DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference()
-                                        .child("Groups").child("All_GRPs").child(groupPushId).child(classUniPushId).child("classStudentList").child(userID).child("annualFees");
+                                DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child("Groups").child("All_GRPs").child(groupPushId).child(classUniPushId).child("classStudentList").child(userID).child("annualFees");
 
                                 dbReference.addValueEventListener(new ValueEventListener() {
                                     @Override
@@ -1428,11 +1436,9 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
                 dialog.create();
 
-                DatabaseReference firebaseDatabaseUnsendMSG = FirebaseDatabase.getInstance().getReference()
-                        .child("Groups").child("Chat_Message").child(groupPushId).child(classUniPushId).child(subjectUniPushId);
+                DatabaseReference firebaseDatabaseUnsendMSG = FirebaseDatabase.getInstance().getReference().child("Groups").child("Chat_Message").child(groupPushId).child(classUniPushId).child(subjectUniPushId);
 
-                DatabaseReference firebaseDatabaseUnsendMSGDoc = FirebaseDatabase.getInstance().getReference()
-                        .child("Groups").child("Documents").child(groupPushId).child(classUniPushId).child(subjectUniPushId).child("All_Document");
+                DatabaseReference firebaseDatabaseUnsendMSGDoc = FirebaseDatabase.getInstance().getReference().child("Groups").child("Documents").child(groupPushId).child(classUniPushId).child(subjectUniPushId).child("All_Document");
 
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
@@ -1565,8 +1571,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                 dialog.getWindow().setGravity(Gravity.BOTTOM);
                 dialog.create();
 
-                DatabaseReference firebaseDatabaseUnsendMSG = FirebaseDatabase.getInstance().getReference()
-                        .child("Groups").child("Chat_Message").child(groupPushId).child(classUniPushId).child(subjectUniPushId);
+                DatabaseReference firebaseDatabaseUnsendMSG = FirebaseDatabase.getInstance().getReference().child("Groups").child("Chat_Message").child(groupPushId).child(classUniPushId).child(subjectUniPushId);
 
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
@@ -1768,8 +1773,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             showDoubt(groupPushId, classUniPushId, subjectUniPushId);
         }
         if (subjectUniPushId != null && classUniPushId != null) {
-            DatabaseReference databaseReferenceCHKSUBJECT = FirebaseDatabase.getInstance().getReference().child("Groups").child("All_GRPs").child(groupPushId).child(classUniPushId)
-                    .child("classSubjectData").child(subjectUniPushId);
+            DatabaseReference databaseReferenceCHKSUBJECT = FirebaseDatabase.getInstance().getReference().child("Groups").child("All_GRPs").child(groupPushId).child(classUniPushId).child("classSubjectData").child(subjectUniPushId);
             databaseReferenceCHKSUBJECT.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1790,8 +1794,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
 
         if (subjectUniPushId != null) {
-            DatabaseReference refGetSubjectN = FirebaseDatabase.getInstance().getReference().child("Groups").child("All_GRPs").child(groupPushId)
-                    .child(classUniPushId).child("classSubjectData").child(subjectUniPushId);
+            DatabaseReference refGetSubjectN = FirebaseDatabase.getInstance().getReference().child("Groups").child("All_GRPs").child(groupPushId).child(classUniPushId).child("classSubjectData").child(subjectUniPushId);
             refGetSubjectN.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1929,8 +1932,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                                                               }
 
                                                               @Override
-                                                              public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String
-                                                                      previousChildName) {
+                                                              public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
                                                               }
 
@@ -2048,14 +2050,12 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         //Endpanel
         showGrpMemberList.setOnItemClickListener(new Adaptor_ShowGrpMember.OnItemClickListener() {
             @Override
-            public void AddFrndDialog(String adminGroupID, String adminEmailID, String
-                    adminUserName, String pushId) {
+            public void AddFrndDialog(String adminGroupID, String adminEmailID, String adminUserName, String pushId) {
                 sentInvitation(adminGroupID, adminUserName, "AddFriend");
             }
 
             @Override
-            public void FollowFriendDialog(String adminGroupID, String adminEmailID, String
-                    adminUserName, String pushId) {
+            public void FollowFriendDialog(String adminGroupID, String adminEmailID, String adminUserName, String pushId) {
                 sentInvitation(adminGroupID, adminUserName, "FollowFriend");
             }
 
@@ -2070,14 +2070,11 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     }
 
     private void sendPdf() {
-
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("application/pdf");
         startActivityForResult(Intent.createChooser(intent, "Select PDF File"), 438);
-
     }
-
 
     public void checkDarkLightDefaultStatusBar() {
         switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
@@ -2322,7 +2319,10 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         super.onCreate(savedInstanceState);
         checkDarkLightDefaultStatusBar();
         setContentView(R.layout.activity_server);
-
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            initFirebase();
+            addUserInDefaultGrp();
+        }
         init();
 /*
         Window window = getWindow();
@@ -2343,17 +2343,12 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         broadcastReceiver = new NetworkBroadcast();
         registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-
         SharePref sharePref = new SharePref(this);
-
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
-            firebaseAuth = FirebaseAuth.getInstance();
-            currentUser = firebaseAuth.getCurrentUser();
-            assert currentUser != null;
-            userID = currentUser.getUid();
-
+            initFirebase();
             setup();
+
 /*
             if (getIntent().hasExtra("panelState")) {
 
@@ -2383,6 +2378,14 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                     if (snapshot.exists()) {
                         Log.d("CHKJOINEDORADDGRP", "onDataChange: available");
                         ll_AddJoinGrp.setVisibility(View.GONE);
+                        shimmer_effect.stopShimmer();
+                        shimmer_effect.setVisibility(View.GONE);
+                        recyclerViewClassList.setVisibility(View.GONE);
+                        friendToolBar.setVisibility(View.GONE);
+                        textViewSubjectName.setVisibility(View.VISIBLE);
+                        textViewSubjectName.setVisibility(View.VISIBLE);
+                        setReference(defaultGrpPushId, defaultSubGrpName, "LC", "0", defaultClassPshId, "-Nya-dyeMOJ97lsBgTF6", defaultGrpName);
+
 //                        shimmer_effect.setVisibility(View.VISIBLE);
                     } else {
                         Log.d("CHKJOINEDORADDGRP", "onDataChange: Not available");
@@ -2390,6 +2393,8 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                         Toast.makeText(Server_Activity.this, "Pay to be added", Toast.LENGTH_SHORT).show();
                         shimmer_effect.setVisibility(View.GONE);
                     }
+
+
                 }
 
                 @Override
@@ -2397,8 +2402,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
                 }
             });
-
-
             ib_pdf_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -2433,10 +2436,8 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                 }
             };
 
-
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
             itemTouchHelper.attachToRecyclerView(rv_OtherPublicGroupTitle);
-
 
             swipe_left.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -2445,7 +2446,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                     overlappingPanels.openStartPanel();
                 }
             });
-
 
             swipe_right.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -2506,7 +2506,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                 }
             });
 
-
             overlappingPanels.registerStartPanelStateListeners(new OverlappingPanelsLayout.PanelStateListener() {
                 @Override
                 public void onPanelStateChange(@NonNull PanelState panelState) {
@@ -2524,30 +2523,13 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                     }
                 }
             });
-
             bottomNavigationView.setSelectedItemId(R.id.bottom_nav_home);
             SharePref.setDataPref(Constant.USER_ID, userID);
-            userEmailID = currentUser.getEmail();
-            userPhoto = currentUser.getPhotoUrl();
-            userName = currentUser.getDisplayName();
-
-
-            GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
-                    GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("61526858520-djs6utqbssvf5p5iqnki3buievn9ufhg.apps.googleusercontent.com")
-                    .requestEmail()
-                    .build();
+            addUserInDefaultGrp();
+            GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("61526858520-djs6utqbssvf5p5iqnki3buievn9ufhg.apps.googleusercontent.com").requestEmail().build();
             googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
-
-
             bottomMenu();
-
-
-            firebaseAuth = FirebaseAuth.getInstance();
-            currentUser = firebaseAuth.getCurrentUser();
-            assert currentUser != null;
-            userID = currentUser.getUid();
-
-
+            initFirebase();
             refSearchShowGroup = FirebaseDatabase.getInstance().getReference().child("Groups").child("All_Universal_Group").child(userID);
             refShowUserPrivateGroup = FirebaseDatabase.getInstance().getReference().child("Groups").child("User_Private_Group").child(userID);
             refShowUserPublicGroup = FirebaseDatabase.getInstance().getReference().child("Groups").child("User_Public_Group").child(userID);
@@ -2558,12 +2540,9 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             refGroupSubsList = FirebaseDatabase.getInstance().getReference().child("Groups").child("User_Subscribed_Groups");
             refOtherUserPublicGroup = FirebaseDatabase.getInstance().getReference().child("Groups").child("All_Universal_Group");
             refUserStatus = FirebaseDatabase.getInstance().getReference().child("Registration");
-
-
             checkFriends = FirebaseDatabase.getInstance().getReference().child("Users").child("Friends");
 
             Log.d("TAG", "onCreate: " + checkFriends);
-
 
 //            rv_ChatDashboard.setLayoutManager(new LinearLayoutManager(this));
 
@@ -2573,17 +2552,12 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             Left Panel
 
              */
-
             //add server option clicked(+)
-            imageViewAddPanelAddGroup.setOnClickListener(view ->
-
-            {
+            imageViewAddPanelAddGroup.setOnClickListener(view -> {
                 Intent intent = new Intent(Server_Activity.this, Create_Server.class);
                 startActivity(intent);
             });
-
             chatListDashboard();
-
             ImageViewRecentChat.setOnClickListener(view ->
 
             {
@@ -2600,18 +2574,13 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                 btn_routineStructure.setVisibility(View.VISIBLE);
                 btn_result.setVisibility(View.VISIBLE);
                 btn_subjectPriority.setVisibility(View.VISIBLE);
-
                 btn_studentFees.setVisibility(View.GONE);
                 btn_studentRoutine.setVisibility(View.GONE);
-
                 imageViewAddPanelAddGroup.setVisibility(View.GONE);
                 endPanelAllFriendsRecyclerView.setVisibility(View.VISIBLE);
                 textViewGroupName.setText("Recent Chats");
-
                 groupSection.setVisibility(View.GONE);
-
-//                    rvFriendsList.setVisibility(View.VISIBLE);
-
+//              rvFriendsList.setVisibility(View.VISIBLE);
                 rvFriendsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 rvFriendsList.setAdapter(adaptor_friendsList);
 
@@ -2692,8 +2661,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                             flagFriend = true;
                         }
                         friendChatFragment = new Friend_Chat_Activity();
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.below_toolbar, friendChatFragment).addToBackStack(friendChatFragment.getClass().getSimpleName()).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.below_toolbar, friendChatFragment).addToBackStack(friendChatFragment.getClass().getSimpleName()).commit();
 
                         friendToolBar.setVisibility(View.VISIBLE);
                         textViewSubjectName.setVisibility(View.GONE);
@@ -2740,7 +2708,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                 });
 
             });
-
             refShowUserJoinedGroup.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -2769,7 +2736,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
                 }
             });
-
             refShowUserAllGroup.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -2798,64 +2764,72 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             /*
                 Center Panel
              */
-
             uploadPercentage = findViewById(R.id.percentage);
-
-            ib_csubmit =
-
-                    findViewById(R.id.ib_csubmit);
-
-            et_ctext =
-
-                    findViewById(R.id.et_ctext);
-
-            btn_cAddGroup =
-
-                    findViewById(R.id.btn_caddgroup);
-
-            btn_cJoinGroup =
-
-                    findViewById(R.id.btn_cjoingroup);
-
-            ll_bottom_send =
-
-                    findViewById(R.id.ll_bottom_send);
-
-
-            btn_cJoinGroup.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Server_Activity.this, Discover_Activity.class);
-                    startActivity(intent);
-                }
+            ib_csubmit = findViewById(R.id.ib_csubmit);
+            et_ctext = findViewById(R.id.et_ctext);
+            btn_cAddGroup = findViewById(R.id.btn_caddgroup);
+            btn_cJoinGroup = findViewById(R.id.btn_cjoingroup);
+            ll_bottom_send = findViewById(R.id.ll_bottom_send);
+            btn_cJoinGroup.setOnClickListener(v -> {
+                Intent intent = new Intent(Server_Activity.this, Discover_Activity.class);
+                startActivity(intent);
             });
+            btn_cAddGroup.setOnClickListener(view -> {
 
-            btn_cAddGroup.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Intent intent = new Intent(Server_Activity.this, Create_Server.class);
-                    startActivity(intent);
+                Intent intent = new Intent(Server_Activity.this, Create_Server.class);
+                startActivity(intent);
 
 //                    createGroupDialog();
-                }
             });
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
             /*
                 Right Panel
              */
-
-
             showOtherUserGroupRV();
-
         } else {
-            startActivity(new Intent(this, getStarted.class));
+            startActivity(new Intent(this, GetStartedActivity.class));
             this.finish();
         }
+    }
+
+    private void initFirebase() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+        assert currentUser != null;
+        userID = currentUser.getUid();
+        userEmailID = currentUser.getEmail();
+        userPhoto = currentUser.getPhotoUrl();
+        userName = currentUser.getDisplayName();
+    }
+
+    private void addUserInDefaultGrp() {
+        DatabaseReference checkJoined = FirebaseDatabase.getInstance().getReference().child("Groups").child("UserAddedOrJoinedGrp").child(userID).child(defaultGrpPushId).child("addedOrJoined");
+        checkJoined.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // The user has joined the group
+                    String checkJoined = dataSnapshot.getValue(String.class);
+                    System.out.println("User has joined the group: " + checkJoined);
+                } else {
+                    GroupJoinHelper.sentGroupJoinInvitation(Server_Activity.this, userID, userName, userEmailID, "", defaultAdminGrpId, defaultGrpAdminUsrName, defaultGrpName, defaultGrpPushId, defaultSubGrpName, defaultClassPshId, "StudentJoin");
+                    // The user has not joined the group
+//                    Class_Group userQuestions = new Class_Group("",defaultGrpAdminUsrName,defaultAdminGrpId,defaultGrpName,"Uni_Group_No_6_AS");
+//                    list_OtherUserPublicGroupTitle.add(userQuestions);
+//                    showOtherUserPublicGroupAdaptor.notifyDataSetChanged();
+
+                    System.out.println("User has not joined the group.");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors
+                System.err.println("Database error: " + databaseError.getMessage());
+                init();
+            }
+        });
 
 
     }
@@ -3012,8 +2986,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                     Toast.makeText(Server_Activity.this, "Enter text", Toast.LENGTH_SHORT).show();
                 }
                 if (!addDoubt.isEmpty() && !addTopic.isEmpty()) {
-                    DatabaseReference allDoubtReference = FirebaseDatabase.getInstance().getReference().
-                            child("Groups").child("Doubt").child(groupPushId).child(subGroupPushId).child(groupClassSubjects).child("All_Doubt");
+                    DatabaseReference allDoubtReference = FirebaseDatabase.getInstance().getReference().child("Groups").child("Doubt").child(groupPushId).child(subGroupPushId).child(groupClassSubjects).child("All_Doubt");
 
                     String[] pushValue = reference.push().toString().split("/");
 
@@ -3055,8 +3028,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                         public void onCancelled(@NonNull DatabaseError error) {
                         }
                     });
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().
-                            child("Groups").child("Doubt").child(groupPushId).child(subGroupPushId).child(groupClassSubjects).child("Topic");
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Groups").child("Doubt").child(groupPushId).child(subGroupPushId).child(groupClassSubjects).child("Topic");
                     reference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -3126,20 +3098,18 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
 
         DatabaseReference userJoinedOrAddServer = FirebaseDatabase.getInstance().getReference().child("Groups").child("UserAddedOrJoinedGrp").child(userID);
-        userJoinedOrAddServer.orderByChild("grpPosition").addListenerForSingleValueEvent(new ValueEventListener() {
+        userJoinedOrAddServer.orderByChild("grpPosition").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Log.i("UserAddedOrJoinedGrpPUSHIDS", "" + dataSnapshot.getKey());
+                    Log.i("UserAddedOrJoinedGrpPUSHIDS", dataSnapshot.getKey());
 
                     String UserAddedOrJoinedGrpPUSHIDS = dataSnapshot.getKey();
                     if (dataSnapshot.exists() && UserAddedOrJoinedGrpPUSHIDS != null) {
 
-                        if (Objects.equals(dataSnapshot.child("addedOrJoined").getValue(), "Added")
-                                || Objects.equals(dataSnapshot.child("addedOrJoined").getValue(), "TeacherJoin")) {
+                        if (Objects.equals(dataSnapshot.child("addedOrJoined").getValue(), "Added") || Objects.equals(dataSnapshot.child("addedOrJoined").getValue(), "TeacherJoin")) {
 
-                            DatabaseReference databaseReferenceCHKADMIN = FirebaseDatabase.getInstance().getReference()
-                                    .child("Groups").child("Check_Group_Admins").child(UserAddedOrJoinedGrpPUSHIDS).child("classAdminList");
+                            DatabaseReference databaseReferenceCHKADMIN = FirebaseDatabase.getInstance().getReference().child("Groups").child("Check_Group_Admins").child(UserAddedOrJoinedGrpPUSHIDS).child("classAdminList");
 
                             databaseReferenceCHKADMIN.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -3179,7 +3149,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
                         } else {
                             DatabaseReference databaseReferenceGetUserJoinedClass = FirebaseDatabase.getInstance().getReference().child("Groups").child("All_User_Group_Class").child(UserAddedOrJoinedGrpPUSHIDS);
-                            databaseReferenceGetUserJoinedClass.addListenerForSingleValueEvent(new ValueEventListener() {
+                            databaseReferenceGetUserJoinedClass.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot01) {
                                     if (snapshot01.child(userID).child("classUniPushId").exists()) {
@@ -3192,6 +3162,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                                                     String check = otherSnap.child("User_Subscribed_Groups").child(userID).child("subsStatus").getValue().toString();
                                                     if (check.equals("Class Member")) {
                                                         Class_Group userQuestions = otherSnap.getValue(Class_Group.class);
+//                                                        if (!list_OtherUserPublicGroupTitle.get(1).groupName.equals(defaultGrpName))
                                                         list_OtherUserPublicGroupTitle.add(userQuestions);
 //                                                        showOtherUserPublicGroupAdaptor.setmDatalistNew(list_OtherUserPublicGroupTitle);
                                                         showOtherUserPublicGroupAdaptor.notifyDataSetChanged();
@@ -3638,55 +3609,49 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         }
         AlertDialog.Builder alertdialogbuilder = new AlertDialog.Builder(this);
         String finalNotifyStatus = notifyStatus;
-        alertdialogbuilder.setTitle("Please confirm !!!")
-                .setMessage("Do you want to send " + req + " request to" + adminUserName + "?")
-                .setCancelable(false)
-                .setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                                final String userID = currentUser.getUid();
-                                final String userName = currentUser.getDisplayName();
-                                final String userEmail = currentUser.getEmail();
-                                final Uri userPhoto = currentUser.getPhotoUrl();
-                                DatabaseReference refjoiningReq = FirebaseDatabase.getInstance().getReference().child("Notification").child("Received_Req").child(adminGroupID);
-                                DatabaseReference refacceptingReq = FirebaseDatabase.getInstance().getReference().child("Notification").child("Submit_Req").child(userID);
+        alertdialogbuilder.setTitle("Please confirm !!!").setMessage("Do you want to send " + req + " request to" + adminUserName + "?").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                final String userID = currentUser.getUid();
+                final String userName = currentUser.getDisplayName();
+                final String userEmail = currentUser.getEmail();
+                final Uri userPhoto = currentUser.getPhotoUrl();
+                DatabaseReference refjoiningReq = FirebaseDatabase.getInstance().getReference().child("Notification").child("Received_Req").child(adminGroupID);
+                DatabaseReference refacceptingReq = FirebaseDatabase.getInstance().getReference().child("Notification").child("Submit_Req").child(userID);
 
-                                Log.d("Friend", "Admin Id: \t" + adminUserName + "\nUser Id: \t" + userName);
+                Log.d("Friend", "Admin Id: \t" + adminUserName + "\nUser Id: \t" + userName);
 
-                                refjoiningReq.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                refjoiningReq.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
 
-                                        long noofQuesinCategory = snapshot.getChildrenCount() + 1;
-                                        String push = "Joining Reqno_" + noofQuesinCategory;
+                        long noofQuesinCategory = snapshot.getChildrenCount() + 1;
+                        String push = "Joining Reqno_" + noofQuesinCategory;
 //                                        Class_Group  userAddComment= new Class_Group(dateTimeCC,userName,userID,adminGroupID, userEmail,adminEmailID,"req_sent", finalNotifyStatus);
-                                        Class_Group userAdd = new Class_Group(dateTimeCC, userName, "req_sent", userID, adminGroupID, userEmail, push, "groupName", "groupPushId", finalNotifyStatus);
-                                        refjoiningReq.child(push).setValue(userAdd);
-                                        refacceptingReq.child(push).setValue(userAdd);
+                        Class_Group userAdd = new Class_Group(dateTimeCC, userName, "req_sent", userID, adminGroupID, userEmail, push, "groupName", "groupPushId", finalNotifyStatus);
+                        refjoiningReq.child(push).setValue(userAdd);
+                        refacceptingReq.child(push).setValue(userAdd);
 
-                                        DatabaseReference checkFRNDReq = FirebaseDatabase.getInstance().getReference().child("Users").child("checkUserFriendReq").child(userID).child(adminGroupID);
-                                        checkFRNDReq.child("reqStatus").setValue("Requested");
+                        DatabaseReference checkFRNDReq = FirebaseDatabase.getInstance().getReference().child("Users").child("checkUserFriendReq").child(userID).child(adminGroupID);
+                        checkFRNDReq.child("reqStatus").setValue("Requested");
 
-                                    }
+                    }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                    }
-                                });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
 
 
-                            }
-                        })
-                .setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
         AlertDialog alert = alertdialogbuilder.create();
         alert.show();
     }
@@ -3855,8 +3820,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                 }
 
                 friendChatFragment = new Friend_Chat_Activity();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.below_toolbar, friendChatFragment).addToBackStack(friendChatFragment.getClass().getSimpleName()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.below_toolbar, friendChatFragment).addToBackStack(friendChatFragment.getClass().getSimpleName()).commit();
 
                 Bundle bundle = new Bundle();
                 bundle.putString("name", memberUserName);
@@ -3946,41 +3910,37 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alertdialogbuilder = new AlertDialog.Builder(Server_Activity.this);
-                alertdialogbuilder.setTitle("Please confirm !!!")
-                        .setMessage("Do you really want to unfollow " + memberUserName + " ? \nThis will clear the chats of You and " + memberUserName + " and will be removed from your friend list!!")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                alertdialogbuilder.setTitle("Please confirm !!!").setMessage("Do you really want to unfollow " + memberUserName + " ? \nThis will clear the chats of You and " + memberUserName + " and will be removed from your friend list!!").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                                DatabaseReference delFriends = FirebaseDatabase.getInstance().getReference().child("Users");
-                                delFriends.child("Friends").child(userID).child(memberUserId).removeValue();
-                                delFriends.child("Friends").child(memberUserId).child(userID).removeValue();
+                        DatabaseReference delFriends = FirebaseDatabase.getInstance().getReference().child("Users");
+                        delFriends.child("Friends").child(userID).child(memberUserId).removeValue();
+                        delFriends.child("Friends").child(memberUserId).child(userID).removeValue();
 
-                                delFriends.child("checkUserFriendReq").child(userID).child(memberUserId).removeValue();
+                        delFriends.child("checkUserFriendReq").child(userID).child(memberUserId).removeValue();
 
-                                DatabaseReference delFriendsRecChats = FirebaseDatabase.getInstance().getReference().child("chats");
-                                delFriendsRecChats.child("RecentChats").child(userID).child("recentChatUser").child(memberUserId).removeValue();
-                                delFriendsRecChats.child("RecentChats").child(memberUserId).child("recentChatUser").child(userID).removeValue();
+                        DatabaseReference delFriendsRecChats = FirebaseDatabase.getInstance().getReference().child("chats");
+                        delFriendsRecChats.child("RecentChats").child(userID).child("recentChatUser").child(memberUserId).removeValue();
+                        delFriendsRecChats.child("RecentChats").child(memberUserId).child("recentChatUser").child(userID).removeValue();
 
-                                String myChatRoom = userID + memberUserId;
-                                String friendChatRoom = memberUserId + userID;
+                        String myChatRoom = userID + memberUserId;
+                        String friendChatRoom = memberUserId + userID;
 
-                                delFriendsRecChats.child(myChatRoom).removeValue();
-                                delFriendsRecChats.child(friendChatRoom).removeValue();
+                        delFriendsRecChats.child(myChatRoom).removeValue();
+                        delFriendsRecChats.child(friendChatRoom).removeValue();
 
-                                unfollowAndMessage.setVisibility(View.GONE);
-                                btn_FollowFrnd.setVisibility(View.VISIBLE);
+                        unfollowAndMessage.setVisibility(View.GONE);
+                        btn_FollowFrnd.setVisibility(View.VISIBLE);
 
 
-                            }
-                        }).setNegativeButton("No",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
+                    }
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
                 AlertDialog alert = alertdialogbuilder.create();
                 alert.show();
             }
@@ -4106,8 +4066,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         } else if (requestCode == 100) {
 //            Toast.makeText(this, "100", Toast.LENGTH_SHORT).show();
 
-            Task<GoogleSignInAccount> signInAccountTask = GoogleSignIn
-                    .getSignedInAccountFromIntent(data);
+            Task<GoogleSignInAccount> signInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
 //            Toast.makeText(this, "checking", Toast.LENGTH_SHORT).show();
             if (signInAccountTask.isSuccessful()) {
                 try {
@@ -4154,8 +4113,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                 String uniPushClassId = snapshot.child("uniPushClassId").getValue().toString().trim();
                 String groupPushId = snapshot.child("clickedGroupPushId").getValue().toString().trim();
 
-                DatabaseReference allDocumentReference = FirebaseDatabase.getInstance().getReference().
-                        child("Groups").child("Documents").child(groupPushId).child(uniPushClassId).child(subjectUniPushId).child("All_Document");
+                DatabaseReference allDocumentReference = FirebaseDatabase.getInstance().getReference().child("Groups").child("Documents").child(groupPushId).child(uniPushClassId).child(subjectUniPushId).child("All_Document");
 
                 String fileUriPath = fileUri.toString();
 
@@ -4274,27 +4232,26 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         SimpleDateFormat simpleDateFormatCC = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
         final String updateTimeCC = simpleDateFormatCC.format(calenderCC.getTime());
 
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(Server_Activity.this, "Token Failed" + task.getException().toString(), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        // Get new FCM registration token
-                        String token = task.getResult();
-                        DatabaseReference refUserRegister = FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(userID);
-                        refUserRegister.child("Name").setValue(userName);
-                        refUserRegister.child("Email").setValue(userEmailID);
-                        refUserRegister.child("UserId").setValue(userID);
-                        refUserRegister.child("DateTime").setValue(updateTimeCC);
-                        refUserRegister.child("Category").setValue("Student");
-                        refUserRegister.child("userStatus").setValue("");
-                        refUserRegister.child("token").setValue(token);
-                        Toast.makeText(Server_Activity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(Server_Activity.this, "Token Failed" + task.getException().toString(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // Get new FCM registration token
+                String token = task.getResult();
+                DatabaseReference refUserRegister = FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(userID);
+                refUserRegister.child("Name").setValue(userName);
+                refUserRegister.child("Email").setValue(userEmailID);
+                refUserRegister.child("UserId").setValue(userID);
+                refUserRegister.child("DateTime").setValue(updateTimeCC);
+                refUserRegister.child("Category").setValue("Student");
+                refUserRegister.child("userStatus").setValue("");
+                refUserRegister.child("token").setValue(token);
+                Toast.makeText(Server_Activity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -4412,8 +4369,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Groups");
 
-                databaseReference.child("All_GRPs").child(groupPushId).child(uniPushClassId)
-                        .child("classStudentList").child(currUserID).child("annualFees").setValue("Paid");
+                databaseReference.child("All_GRPs").child(groupPushId).child(uniPushClassId).child("classStudentList").child(currUserID).child("annualFees").setValue("Paid");
 
             }
 

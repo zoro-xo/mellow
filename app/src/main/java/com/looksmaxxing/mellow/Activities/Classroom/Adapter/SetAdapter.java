@@ -33,9 +33,10 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
     private final List<Set> setList;
     private final Context context;
     private final SetClickListner setClickListner;
-    public String courseid;
-    AlertDialog alertDialog;
-    DeleteAlertdialogBinding deleteAlertdialogBinding;
+    private final String courseid;
+    private int expandedPosition = -1; // Track currently expanded item position
+    private AlertDialog alertDialog;
+    private DeleteAlertdialogBinding deleteAlertdialogBinding;
 
     public SetAdapter(List<Set> setList, Context context, SetClickListner setClickListner, String courseid) {
         this.setList = setList;
@@ -54,9 +55,8 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull SetViewHolder holder, int position) {
         Set set = setList.get(position);
-        int index = setList.get(position == 0 ? 0 : position - 1).getModules().size() - 1;
-        boolean isPrvsSetCompltd = position == 0 || setList.get(position == 0 ? 0 : position - 1).getModules().get(index).isWatched();
-        holder.bind(set, isPrvsSetCompltd);
+        boolean isPrvsSetCompltd = position == 0 || setList.get(position - 1).getModules().get(setList.get(position - 1).getModules().size() - 1).isWatched();
+        holder.bind(set, isPrvsSetCompltd, position == expandedPosition);
         if (!isPrvsSetCompltd) holder.moduleMenu.setVisibility(View.GONE);
         holder.moduleMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +86,15 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
                 });
 
                 popupMenu.show();
+            }
+        });
+
+        // Handle item click to expand/collapse
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expandedPosition = holder.getAdapterPosition();
+                notifyDataSetChanged();
             }
         });
     }
@@ -212,8 +221,8 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
     public class SetViewHolder extends RecyclerView.ViewHolder {
         private final TextView setName;
         private final RecyclerView modulesRecyclerView;
-        ImageView arrowIcon, moduleMenu;
-        private boolean isExpanded;
+        private final ImageView arrowIcon;
+        private final ImageView moduleMenu;
 
         public SetViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -221,39 +230,31 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
             modulesRecyclerView = itemView.findViewById(R.id.modules_recycler_view);
             arrowIcon = itemView.findViewById(R.id.arrow_Icon);
             moduleMenu = itemView.findViewById(R.id.menu_set);
-            isExpanded = false;
 
-            setName.setOnClickListener(v -> {
-                isExpanded = !isExpanded;
-                updateArrowIcon();
-                notifyDataSetChanged();
-            });
-
-            arrowIcon.setOnClickListener(v -> {
-                isExpanded = !isExpanded;
-                updateArrowIcon();
-                notifyDataSetChanged();
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        // Update expanded position and notify data change
+                        expandedPosition = expandedPosition == position ? -1 : position;
+                        notifyDataSetChanged();
+                    }
+                }
             });
         }
 
-        public void bind(Set set, boolean isPrvsSetCompltd) {
+        public void bind(Set set, boolean isPrvsSetCompltd, boolean isExpanded) {
             setName.setText(set.getSetName());
+
             if (isExpanded) {
                 modulesRecyclerView.setVisibility(View.VISIBLE);
                 ModuleAdapter moduleAdapter = new ModuleAdapter(set.getModules(), setClickListner, itemView.getContext(), set.getSetId(), isPrvsSetCompltd);
                 modulesRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
                 modulesRecyclerView.setAdapter(moduleAdapter);
-            } else {
-                modulesRecyclerView.setVisibility(View.GONE);
-            }
-
-            updateArrowIcon();
-        }
-
-        private void updateArrowIcon() {
-            if (isExpanded) {
                 arrowIcon.setRotation(0);
             } else {
+                modulesRecyclerView.setVisibility(View.GONE);
                 arrowIcon.setRotation(180);
             }
         }
