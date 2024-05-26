@@ -2,7 +2,6 @@ package com.looksmaxxing.mellow.Activities.Classroom.Adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,28 +15,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.looksmaxxing.mellow.R;
-import com.looksmaxxing.mellow.databinding.AddsetAlertdialogBinding;
-import com.looksmaxxing.mellow.databinding.DeleteAlertdialogBinding;
-import com.looksmaxxing.mellow.Activities.Classroom.Activities.Course_List;
-import com.looksmaxxing.mellow.Activities.Classroom.Models.Set;
-import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.looksmaxxing.mellow.Activities.Classroom.Models.Set;
+import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
+import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.databinding.AddsetAlertdialogBinding;
+import com.looksmaxxing.mellow.databinding.DeleteAlertdialogBinding;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
-    private List<Set> setList;
-    private Context context;
+    private final List<Set> setList;
+    private final Context context;
+    private final SetClickListner setClickListner;
+    public String courseid;
     AlertDialog alertDialog;
     DeleteAlertdialogBinding deleteAlertdialogBinding;
-    private SetClickListner setClickListner;
-    public String courseid;
 
     public SetAdapter(List<Set> setList, Context context, SetClickListner setClickListner, String courseid) {
         this.setList = setList;
@@ -56,7 +54,10 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull SetViewHolder holder, int position) {
         Set set = setList.get(position);
-        holder.bind(set);
+        int index = setList.get(position == 0 ? 0 : position - 1).getModules().size() - 1;
+        boolean isPrvsSetCompltd = position == 0 || setList.get(position == 0 ? 0 : position - 1).getModules().get(index).isWatched();
+        holder.bind(set, isPrvsSetCompltd);
+        if (!isPrvsSetCompltd) holder.moduleMenu.setVisibility(View.GONE);
         holder.moduleMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,56 +93,6 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
     @Override
     public int getItemCount() {
         return setList.size();
-    }
-
-    public class SetViewHolder extends RecyclerView.ViewHolder {
-        private TextView setName;
-        private RecyclerView modulesRecyclerView;
-        ImageView arrowIcon, moduleMenu;
-        private boolean isExpanded;
-
-        public SetViewHolder(@NonNull View itemView) {
-            super(itemView);
-            setName = itemView.findViewById(R.id.set_name);
-            modulesRecyclerView = itemView.findViewById(R.id.modules_recycler_view);
-            arrowIcon = itemView.findViewById(R.id.arrow_Icon);
-            moduleMenu = itemView.findViewById(R.id.menu_set);
-            isExpanded = false;
-
-            setName.setOnClickListener(v -> {
-                isExpanded = !isExpanded;
-                updateArrowIcon();
-                notifyDataSetChanged();
-            });
-
-            arrowIcon.setOnClickListener(v -> {
-                isExpanded = !isExpanded;
-                updateArrowIcon();
-                notifyDataSetChanged();
-            });
-        }
-
-        public void bind(Set set) {
-            setName.setText(set.getSetName());
-            if (isExpanded) {
-                modulesRecyclerView.setVisibility(View.VISIBLE);
-                ModuleAdapter moduleAdapter = new ModuleAdapter(set.getModules(), setClickListner, itemView.getContext(), set.getSetId());
-                modulesRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
-                modulesRecyclerView.setAdapter(moduleAdapter);
-            } else {
-                modulesRecyclerView.setVisibility(View.GONE);
-            }
-
-            updateArrowIcon();
-        }
-
-        private void updateArrowIcon() {
-            if (isExpanded) {
-                arrowIcon.setRotation(0);
-            } else {
-                arrowIcon.setRotation(180);
-            }
-        }
     }
 
     private void addmoduletoset(String setId, String ModuleName) {
@@ -209,7 +160,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -256,5 +207,55 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
                         Toast.makeText(context, "Failed to delete set: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    public class SetViewHolder extends RecyclerView.ViewHolder {
+        private final TextView setName;
+        private final RecyclerView modulesRecyclerView;
+        ImageView arrowIcon, moduleMenu;
+        private boolean isExpanded;
+
+        public SetViewHolder(@NonNull View itemView) {
+            super(itemView);
+            setName = itemView.findViewById(R.id.set_name);
+            modulesRecyclerView = itemView.findViewById(R.id.modules_recycler_view);
+            arrowIcon = itemView.findViewById(R.id.arrow_Icon);
+            moduleMenu = itemView.findViewById(R.id.menu_set);
+            isExpanded = false;
+
+            setName.setOnClickListener(v -> {
+                isExpanded = !isExpanded;
+                updateArrowIcon();
+                notifyDataSetChanged();
+            });
+
+            arrowIcon.setOnClickListener(v -> {
+                isExpanded = !isExpanded;
+                updateArrowIcon();
+                notifyDataSetChanged();
+            });
+        }
+
+        public void bind(Set set, boolean isPrvsSetCompltd) {
+            setName.setText(set.getSetName());
+            if (isExpanded) {
+                modulesRecyclerView.setVisibility(View.VISIBLE);
+                ModuleAdapter moduleAdapter = new ModuleAdapter(set.getModules(), setClickListner, itemView.getContext(), set.getSetId(), isPrvsSetCompltd);
+                modulesRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+                modulesRecyclerView.setAdapter(moduleAdapter);
+            } else {
+                modulesRecyclerView.setVisibility(View.GONE);
+            }
+
+            updateArrowIcon();
+        }
+
+        private void updateArrowIcon() {
+            if (isExpanded) {
+                arrowIcon.setRotation(0);
+            } else {
+                arrowIcon.setRotation(180);
+            }
+        }
     }
 }

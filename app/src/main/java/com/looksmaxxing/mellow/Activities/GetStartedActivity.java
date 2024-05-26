@@ -2,7 +2,10 @@ package com.looksmaxxing.mellow.Activities;
 
 import static com.looksmaxxing.mellow.Activities.Profile.AccountSetting_Activity.getDefaults;
 
+<<<<<<< HEAD
 import android.app.Activity;
+=======
+>>>>>>> 6c1de64 (progress done)
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,15 +14,21 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+<<<<<<< HEAD
 import android.os.Build;
+=======
+>>>>>>> 6c1de64 (progress done)
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< HEAD
 import android.view.Window;
 import android.view.WindowManager;
+=======
+>>>>>>> 6c1de64 (progress done)
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -32,11 +41,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+<<<<<<< HEAD
 import com.looksmaxxing.mellow.Activities.Classroom.fragments.PaymentBottomSheet;
 import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
 import com.looksmaxxing.mellow.ModelClasses.User;
 import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.Utility.NetworkBroadcast;
+=======
+>>>>>>> 6c1de64 (progress done)
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -56,6 +68,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+<<<<<<< HEAD
+=======
+import com.looksmaxxing.mellow.Activities.Classroom.fragments.PaymentBottomSheet;
+import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
+import com.looksmaxxing.mellow.ModelClasses.User;
+import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.Utility.NetworkBroadcast;
+>>>>>>> 6c1de64 (progress done)
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

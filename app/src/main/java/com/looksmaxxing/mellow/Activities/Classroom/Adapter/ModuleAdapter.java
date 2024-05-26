@@ -1,7 +1,6 @@
 package com.looksmaxxing.mellow.Activities.Classroom.Adapter;
 
 import android.content.Context;
-
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,29 +8,31 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.looksmaxxing.mellow.Activities.Classroom.Models.AdminChecker;
-
-import java.util.List;
-
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.looksmaxxing.mellow.R;
 
+import java.util.List;
+
 public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleViewHolder> {
     public static List<Module> moduleList;
-    private Context context;
     private static String setId;
     private static SetClickListner setClickListner;
+    private final Context context;
+    boolean isPrevsSetCompltd;
 
-    public ModuleAdapter(List<Module> moduleList, SetClickListner setClickListner, Context context, String setId) {
-        this.moduleList = moduleList;
+    public ModuleAdapter(List<Module> moduleList, SetClickListner setClickListner, Context context, String setId, boolean isPrvsSetCompltd) {
+        ModuleAdapter.moduleList = moduleList;
         this.context = context;
-        this.setClickListner=setClickListner;
-        this.setId=setId;
+        ModuleAdapter.setClickListner = setClickListner;
+        ModuleAdapter.setId = setId;
+        this.isPrevsSetCompltd = isPrvsSetCompltd;
     }
 
     @NonNull
@@ -44,7 +45,8 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
     @Override
     public void onBindViewHolder(@NonNull ModuleViewHolder holder, int position) {
         Module module = moduleList.get(position);
-        holder.bind(module);
+        boolean isPreviousVideoWatched = position == 0 ? isPrevsSetCompltd : moduleList.get(position - 1).isWatched();
+        holder.bind(module, isPreviousVideoWatched, holder);
 
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -55,7 +57,7 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
 //                context.startActivity(intent);
 //            }
 //        });
-
+        if (!isPreviousVideoWatched) holder.moduleMenu.setEnabled(false);
         holder.moduleMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,9 +98,8 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
     }
 
     public static class ModuleViewHolder extends RecyclerView.ViewHolder {
-        private TextView moduleName;
-
-         ImageView lockIcon,moduleMenu;
+        private final TextView moduleName;
+        ImageView lockIcon, moduleMenu;
 
         public ModuleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,28 +113,44 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
                     if (position != RecyclerView.NO_POSITION) {
                         Module module = moduleList.get(position);
                         if (setClickListner != null) {
-                            setClickListner.onSetClicked(setId,module.getModuleName(),module.getModuleId());
+                            setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId());
                         }
                     }
                 }
             });
         }
 
-        public void bind(Module module) {
+        public void bind(Module module, boolean isPreviousVideoWatched, ModuleViewHolder holder) {
             moduleName.setText(module.getModuleName());
 //            moduleContent.setText(module.getModuleContent());
-            AdminChecker.checkIfUserIsAdmin(new AdminChecker.AdminCheckCallback() {
+            moduleName.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onAdminCheck(boolean isAdmin) {
-                    if (isAdmin) {
-                        moduleMenu.setVisibility(View.VISIBLE);
-                        // Perform additional actions for admin users
+                public void onClick(View v) {
+                    if (isPreviousVideoWatched) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            Module module = moduleList.get(position);
+                            if (setClickListner != null) {
+                                setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId());
+                            }
+                        }
                     } else {
-                        moduleMenu.setVisibility(View.GONE);
+                        holder.itemView.setEnabled(false);
+                        Toast.makeText(v.getContext(), "This video is locked", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
-            lockIcon.setVisibility(module.isLocked() ? View.VISIBLE : View.GONE);
+//            moduleContent.setText(module.getModuleContent());
+            AdminChecker.checkIfUserIsAdmin(isAdmin -> {
+                if (isAdmin) {
+                    moduleMenu.setVisibility(View.VISIBLE);
+                    // Perform additional actions for admin users
+                } else {
+                    moduleMenu.setVisibility(View.GONE);
+                }
+            });
+
+            lockIcon.setVisibility(isPreviousVideoWatched ? View.GONE : View.VISIBLE);
         }
     }
 }

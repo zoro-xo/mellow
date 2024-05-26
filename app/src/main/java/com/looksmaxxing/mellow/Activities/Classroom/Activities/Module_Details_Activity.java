@@ -2,7 +2,6 @@ package com.looksmaxxing.mellow.Activities.Classroom.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -11,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,8 +32,9 @@ public class Module_Details_Activity extends AppCompatActivity {
     private String moduleName;
     private String courseId;
     private String setId;
-
+    FirebaseDatabase database;
     private WebView webView;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,8 @@ public class Module_Details_Activity extends AppCompatActivity {
         courseId = intent.getStringExtra("courseId");
         setId = intent.getStringExtra("setId");
         binding.title.setText(moduleName);
-
+        database = FirebaseDatabase.getInstance();
+        userID = FirebaseAuth.getInstance().getUid();
         fetchModuleDetails(moduleId);
 //            Toast.makeText(this, "set:" + setId+"course:"+courseId , Toast.LENGTH_SHORT).show();
 
@@ -80,6 +82,20 @@ public class Module_Details_Activity extends AppCompatActivity {
 
     }
 
+    private void updateModuleCompletion() {
+        DatabaseReference historyRef = database.getReference("History").child(userID);
+        DatabaseReference courseRef = database.getReference("courses").child(courseId);
+// Update module completion status
+        historyRef.child("course").child(courseId)
+                .child("sets").child(setId)
+                .child("modules").child(moduleId)
+                .child("watched").setValue(true);
+// Update module completion status inside module
+        courseRef.child("sets").child(setId)
+                .child("modules").child(moduleId)
+                .child("watched_users")
+                .child(userID).child("watched").setValue(true);
+    }
 
     private String extractVideoIdFromUrl(String videoUrl) {
         String videoId = null;
@@ -114,8 +130,8 @@ public class Module_Details_Activity extends AppCompatActivity {
                     String moduleName = dataSnapshot.child("moduleName").getValue(String.class);
                     String videoUrl = dataSnapshot.child("videoUrl").getValue(String.class);
 
-                    if (moduleContent != null && moduleName != null && videoUrl != null) {
-                        binding.descryption.setText(Html.fromHtml(moduleContent));
+                    if (moduleContent != null && moduleName != null && videoUrl != null && !videoUrl.isEmpty()) {
+                        binding.descryption.setText(moduleContent);
                         binding.videoView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
                             @Override
                             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
@@ -147,7 +163,9 @@ public class Module_Details_Activity extends AppCompatActivity {
 
                                     @Override
                                     public void onStateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerState playerState) {
-
+                                        if (playerState == PlayerConstants.PlayerState.ENDED) {
+                                            updateModuleCompletion();
+                                        }
                                     }
 
                                     @Override

@@ -7,6 +7,7 @@ public class Module {
     private boolean isLocked;
     private boolean isPublished;
     private String videoUrl;
+    private boolean isWatched;
 
     public Module(String moduleId, String moduleName, String moduleContent, boolean isLocked, boolean isPublished, String videoUrl) {
         this.moduleId = moduleId;
@@ -17,10 +18,12 @@ public class Module {
         this.videoUrl = videoUrl;
     }
 
-    public Module(String moduleId, String moduleName, boolean isLocked) {
+    public Module(String moduleId, String moduleName, boolean isLocked, boolean isWatched) {
         this.moduleId = moduleId;
         this.moduleName = moduleName;
         this.isLocked = isLocked;
+        this.isWatched = isWatched;
+
     }
 
     public boolean isPublished() {
@@ -69,5 +72,13 @@ public class Module {
 
     public void setLocked(boolean locked) {
         isLocked = locked;
+    }
+
+    public boolean isWatched() {
+        return isWatched;
+    }
+
+    public void setWatched(boolean watched) {
+        isWatched = watched;
     }
 }

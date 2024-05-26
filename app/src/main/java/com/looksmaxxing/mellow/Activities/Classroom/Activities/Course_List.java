@@ -9,6 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.looksmaxxing.mellow.Activities.Classroom.Adapter.CourseAdapter;
 import com.looksmaxxing.mellow.Activities.Classroom.Adapter.ModuleAdapter;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Course;
@@ -16,11 +22,6 @@ import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Set;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.looksmaxxing.mellow.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,10 @@ public class Course_List extends AppCompatActivity implements SetClickListner {
     public List<Course> courseList;
     ModuleAdapter moduleAdapter;
     String clickedSetId;
-    String setID;
+    int progress;
+    String userID;
     List<Module> moduleList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +46,12 @@ public class Course_List extends AppCompatActivity implements SetClickListner {
 
         courseRecyclerView = findViewById(R.id.course_recycler_view);
         courseList = new ArrayList<>();
-
+        userID = FirebaseAuth.getInstance().getUid();
         Intent intent = getIntent();
         if (intent.hasExtra("courseId")) {
             courseId = intent.getStringExtra("courseId");
-            Toast.makeText(this, "" + courseId, Toast.LENGTH_SHORT).show();
+            progress = intent.getIntExtra("progress", 0);
+            Toast.makeText(this, courseId, Toast.LENGTH_SHORT).show();
         } else {
             // Handle case where courseId is missing
             Toast.makeText(this, "Course ID is missing", Toast.LENGTH_SHORT).show();
@@ -67,7 +71,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner {
                 // Retrieve course data
                 String description = dataSnapshot.child("description").getValue(String.class);
                 String title = dataSnapshot.child("title").getValue(String.class);
-                long progress = dataSnapshot.child("progress").getValue(Long.class);
+//                long progress = dataSnapshot.child("progress").getValue(Long.class);
                 String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
 
                 boolean published = dataSnapshot.child("published").getValue(Boolean.class);
@@ -84,7 +88,9 @@ public class Course_List extends AppCompatActivity implements SetClickListner {
                     for (DataSnapshot moduleSnapshot : setSnapshot.child("modules").getChildren()) {
                         String moduleId = moduleSnapshot.getKey();
                         String moduleName = moduleSnapshot.child("moduleName").getValue(String.class);
-                        modules.add(new Module(moduleId, moduleName, false));
+                        boolean isWatched = Boolean.TRUE.equals(moduleSnapshot.child("watched_users")
+                                .child(userID).child("watched").getValue(Boolean.class));
+                        modules.add(new Module(moduleId, moduleName, false, isWatched));
                     }
 
                     sets.add(new Set(setId, setName, modules));
@@ -94,7 +100,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner {
                 courseList.add(new Course(courseId, title, description,imageUrl, sets));
 
                 // Create a new CourseAdapter with the updated courseList
-                courseAdapter = new CourseAdapter(courseList, Course_List.this, Course_List.this);
+                courseAdapter = new CourseAdapter(courseList, Course_List.this, Course_List.this, progress);
 
                 courseRecyclerView.setLayoutManager(new LinearLayoutManager(Course_List.this));
                 courseRecyclerView.setAdapter(courseAdapter);

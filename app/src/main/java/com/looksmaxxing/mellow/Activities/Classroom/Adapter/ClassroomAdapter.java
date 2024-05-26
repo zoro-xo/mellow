@@ -25,15 +25,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Course_List;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Create_Course_Activity;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.ClassroomModel;
 import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.databinding.DeleteAlertdialogBinding;
 import com.looksmaxxing.mellow.databinding.ItemClassroomCourseBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -53,17 +53,18 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
 
     @NonNull
     @Override
-    public ClassroomAdapter.Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        return new ClassroomAdapter.Viewholder(ItemClassroomCourseBinding.inflate(((Activity) parent.getContext()).getLayoutInflater()));
+        return new Viewholder(ItemClassroomCourseBinding.inflate(((Activity) parent.getContext()).getLayoutInflater()));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ClassroomAdapter.Viewholder holder, int position) {
+    public void onBindViewHolder(@NonNull Viewholder holder, int position) {
         ClassroomModel model = classroomModels.get(position);
         holder.binding.tvCourseTitle.setText(model.getTitle());
         holder.binding.tvCourseDesc.setText(model.getDescription());
         holder.binding.tvProgressText.setText(model.getProgress() + "");
+        holder.binding.progressBar.setProgress(model.getProgress());
         Glide.with(context)
                 .load(model.getImageUrl())
                 .into(holder.binding.ivCourseImage);
@@ -85,6 +86,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
             public void onClick(View view) {
                 Intent intent=new Intent(context,Course_List.class);
                 intent.putExtra("courseId",model.getCourseId());
+                intent.putExtra("progress",model.getProgress());
                 context.startActivity(intent);
             }
         });
@@ -94,6 +96,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
             public void onClick(View view) {
                 Intent intent=new Intent(context,Course_List.class);
                 intent.putExtra("courseId",model.getCourseId());
+                intent.putExtra("progress",model.getProgress());
 //                Toast.makeText(context, ""+model.getCourseId(), Toast.LENGTH_SHORT).show();
                 context.startActivity(intent);
             }

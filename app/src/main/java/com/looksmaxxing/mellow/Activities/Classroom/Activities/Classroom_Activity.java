@@ -4,15 +4,20 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.looksmaxxing.mellow.Activities.Classroom.Adapter.ClassroomAdapter;
-import com.looksmaxxing.mellow.Activities.Classroom.Models.AdminChecker;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.ClassroomModel;
 import com.looksmaxxing.mellow.Activities.Notification_Activity;
 import com.looksmaxxing.mellow.Activities.Profile.Profile_Activity;
@@ -20,20 +25,15 @@ import com.looksmaxxing.mellow.Activities.RightPanel.Discover_Activity;
 import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
 import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.databinding.ActivityClassroomBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Classroom_Activity extends AppCompatActivity   {
+public class Classroom_Activity extends AppCompatActivity {
+    private final List<ClassroomModel> courseList = new ArrayList<>();
     ActivityClassroomBinding binding;
     ClassroomAdapter adapter;
-    private List<ClassroomModel> courseList = new ArrayList<>();
+    String userID;
     private DatabaseReference databaseRef;
     private ProgressDialog progressDialog;
 
@@ -44,6 +44,7 @@ public class Classroom_Activity extends AppCompatActivity   {
         binding = ActivityClassroomBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+        userID = FirebaseAuth.getInstance().getUid();
         databaseRef = FirebaseDatabase.getInstance().getReference("courses");
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -139,14 +140,17 @@ public class Classroom_Activity extends AppCompatActivity   {
 
 
     private void fetchCourseData() {
+        DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference("History");
 
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 courseList.clear();
-                 // Show progress dialog before fetching data
+                // Show progress dialog before fetching data
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    int totalSets = 0;
+                    int setsCompleted = 0;
                     String courseId = dataSnapshot.getKey();
                     String description = dataSnapshot.child("description").getValue(String.class);
                     String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
@@ -155,8 +159,9 @@ public class Classroom_Activity extends AppCompatActivity   {
                     String selectedAccess = dataSnapshot.child("selectedAccess").getValue(String.class);
                     String title = dataSnapshot.child("title").getValue(String.class);
 
-                    ClassroomModel classroomModel = new ClassroomModel(title, description, imageUrl, courseId, selectedAccess, "",progress, published);
-
+                    ClassroomModel classroomModel = new ClassroomModel(title, description, imageUrl, courseId, selectedAccess, "", progress, published);
+                    int courseProgress = calculateProgress(dataSnapshot, totalSets, setsCompleted);
+                    classroomModel.setProgress(courseProgress);
                     courseList.add(classroomModel);
                 }
 
@@ -176,6 +181,26 @@ public class Classroom_Activity extends AppCompatActivity   {
                 Toast.makeText(Classroom_Activity.this, "Failed to fetch data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private int calculateProgress(DataSnapshot dataSnapshot, int totalSets, int setsCompleted) {
+        for (DataSnapshot setSnapshot : dataSnapshot.child("sets").getChildren()) {
+            int totalModulesInset = 0;
+            totalSets++;
+            int completedModules = 0;
+            for (DataSnapshot moduleSnapshot : setSnapshot.child("modules").getChildren()) {
+                totalModulesInset++;
+                Boolean watched = moduleSnapshot.child("watched_users")
+                        .child(userID).child("watched").getValue(Boolean.class);
+                if (watched != null && watched) {
+                    completedModules++;
+                }
+            }
+            if (totalModulesInset > 0 && totalModulesInset == completedModules) {
+                setsCompleted++;
+            }
+        }
+        return (totalSets > 0) ? (setsCompleted * 100 / totalSets) : 0;
     }
 
 }

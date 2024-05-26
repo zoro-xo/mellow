@@ -59,6 +59,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Classroom_Activity;
+import com.looksmaxxing.mellow.Activities.Classroom.fragments.PaymentBottomSheet;
 import com.looksmaxxing.mellow.Activities.Notification_Activity;
 import com.looksmaxxing.mellow.Activities.Profile.Profile_Activity;
 import com.looksmaxxing.mellow.Activities.RightPanel.Attendance_Activity;
@@ -68,7 +69,7 @@ import com.looksmaxxing.mellow.Activities.RightPanel.Notice;
 import com.looksmaxxing.mellow.Activities.Routine.All_Routine;
 import com.looksmaxxing.mellow.Activities.Routine.priority_subject.Priority_Subject;
 import com.looksmaxxing.mellow.Activities.Server.PDFBACK.OnBackPressedListener;
-import com.looksmaxxing.mellow.Activities.GetStartedActivity;
+import com.looksmaxxing.mellow.Activities.getStarted;
 import com.looksmaxxing.mellow.Adapters.Adapter_All_Friends;
 import com.looksmaxxing.mellow.Adapters.Adapter_ClassGroup;
 import com.looksmaxxing.mellow.Adapters.Adaptor_FriendsList;
@@ -2852,7 +2853,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             showOtherUserGroupRV();
 
         } else {
-            startActivity(new Intent(this, GetStartedActivity.class));
+            startActivity(new Intent(this, getStarted.class));
             this.finish();
         }
 
