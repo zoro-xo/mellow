@@ -53,8 +53,7 @@
                     android:layout_height="70dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="100dp"
-                    android:padding="5dp"
-                    android:src="@mipmap/ic_launcher_round" />
+                    android:src="@drawable/mellow_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -73,8 +72,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="100dp"
-                android:fontFamily="@font/inter_regular"
-                android:text="@string/started_explore"
+                android:fontFamily="@font/youtube_sans_semibold"
+                android:text="Communities for"
                 android:textAllCaps="false"
                 android:textColor="@color/text_background_color"
                 android:textSize="35sp" />
@@ -84,10 +83,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/inter_semibold"
-                android:text="@string/education"
+                android:fontFamily="@font/youtube_sans_semibold"
+                android:text="Looksmaxxers."
                 android:textColor="@color/text_color"
-                android:textSize="30sp" />
+                android:textSize="35sp" />
 
         </LinearLayout>
 
