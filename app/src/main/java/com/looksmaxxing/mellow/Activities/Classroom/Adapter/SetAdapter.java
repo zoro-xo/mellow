@@ -19,9 +19,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Set;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.Utility.UserUtils;
 import com.looksmaxxing.mellow.databinding.AddsetAlertdialogBinding;
 import com.looksmaxxing.mellow.databinding.DeleteAlertdialogBinding;
 
@@ -58,6 +60,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
         boolean isPrvsSetCompltd = position == 0 || setList.get(position - 1).getModules().get(setList.get(position - 1).getModules().size() - 1).isWatched();
         holder.bind(set, isPrvsSetCompltd, position == expandedPosition);
         if (!isPrvsSetCompltd) holder.moduleMenu.setVisibility(View.GONE);
+
         holder.moduleMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,6 +91,8 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
                 popupMenu.show();
             }
         });
+
+
 
         // Handle item click to expand/collapse
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -256,6 +261,13 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
             } else {
                 modulesRecyclerView.setVisibility(View.GONE);
                 arrowIcon.setRotation(180);
+            }
+
+            boolean isAdmin = UserUtils.isAdmin();
+            if (isAdmin) {
+                moduleMenu.setVisibility(View.VISIBLE);
+            } else {
+                moduleMenu.setVisibility(View.GONE);
             }
         }
     }

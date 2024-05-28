@@ -3,6 +3,7 @@ package com.looksmaxxing.mellow.Activities.Classroom.Activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -30,7 +31,6 @@ public class Edit_Module_Activity extends AppCompatActivity {
     private String moduleName;
     private String courseId;
     private String setId;
-    String newVideoUrl;
     private Spinner spinner;
     private RichEditor mEditor;
     private TextView mPreview;
@@ -121,39 +121,56 @@ public class Edit_Module_Activity extends AppCompatActivity {
             String newCourseDesc = binding.convertedText.getText().toString();
             String newVideoUrl = binding.vidUrl.getText().toString();
 
-            if (newModuleName.isEmpty()) {
-                Toast.makeText(this, "Module name cannot be empty", Toast.LENGTH_SHORT).show();
-                return;
+            if (moduleName.isEmpty()  ) {
+                Toast.makeText(Edit_Module_Activity.this, "Please enter Module Name", Toast.LENGTH_SHORT).show();
+            }else if(newVideoUrl.isEmpty()){
+                Toast.makeText(Edit_Module_Activity.this, "Please enter Video URL", Toast.LENGTH_SHORT).show();
+
+            }else if(!isValidUrl(newVideoUrl)){
+                Toast.makeText(Edit_Module_Activity.this, "Please enter a valid Video URL", Toast.LENGTH_SHORT).show();
+
+            }else if(newCourseDesc.isEmpty()){
+                Toast.makeText(Edit_Module_Activity.this, "Please enter Module Descryption", Toast.LENGTH_SHORT).show();
+
             }
-            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference moduleRef = rootRef.child("courses").child(courseId);
 
-            String setPath = "/sets/" + setId;
-            String path = (moduleId != null) ? setPath + "/modules/" + moduleId : setPath;
+            else {
+                // Proceed with saving logic
+                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                DatabaseReference moduleRef = rootRef.child("courses").child(courseId);
 
-            Map<String, Object> updates = new HashMap<>();
-            if (moduleId != null) {
-                updates.put("moduleName", newModuleName);
-                updates.put("moduleContent", newCourseDesc); // Add course description
-                updates.put("videoUrl", newVideoUrl);
-            } else
-                updates.put("setName", newModuleName);
+                String setPath = "/sets/" + setId;
+                String path = (moduleId != null) ? setPath + "/modules/" + moduleId : setPath;
 
-            Map<String, Object> childUpdates = new HashMap<>();
-            childUpdates.put(path, updates);
+                Map<String, Object> updates = new HashMap<>();
+                if (moduleId != null) {
+                    updates.put("moduleName", newModuleName);
+                    updates.put("moduleContent", newCourseDesc); // Add course description
+                    updates.put("videoUrl", newVideoUrl);
+                } else
+                    updates.put("setName", newModuleName);
 
-            moduleRef.updateChildren(childUpdates)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(Edit_Module_Activity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(Edit_Module_Activity.this, "Something went wrong" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        });
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put(path, updates);
+
+                moduleRef.updateChildren(childUpdates)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(Edit_Module_Activity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(Edit_Module_Activity.this, "Something went wrong" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            }
+                  });
 
 
     }
 
+
+    private boolean isValidUrl(String url) {
+        // Use Patterns class to check if the URL is valid
+        return Patterns.WEB_URL.matcher(url).matches();
+    }
     public void editTV() {
 
         mEditor = (RichEditor) findViewById(R.id.editor);

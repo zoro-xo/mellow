@@ -1,5 +1,7 @@
 package com.looksmaxxing.mellow.Activities.Classroom.Activities;
 
+import static android.webkit.URLUtil.isValidUrl;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +27,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.You
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Module_Details_Activity extends AppCompatActivity {
+public class Module_Details_Activity extends AppCompatActivity  {
     ActivityModuleDetailsBinding binding;
 
     private String moduleId;
@@ -55,6 +57,9 @@ public class Module_Details_Activity extends AppCompatActivity {
 
 //        }
 
+
+
+        binding.courseToolBarName.setText(moduleName);
 
         binding.courseMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,72 +141,15 @@ public class Module_Details_Activity extends AppCompatActivity {
                             @Override
                             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
                                 String videoId = extractVideoIdFromUrl(videoUrl);
-                                youTubePlayer.loadVideo(videoId, 0);
+
+                                if (videoId != null && !videoId.isEmpty()) {
+                                    youTubePlayer.loadVideo(videoId, 0);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Invalid Video URL", Toast.LENGTH_SHORT).show();
+                                }
                             }
 
 
-                            public void onVideoDuration(@NonNull YouTubePlayer youTubePlayer, float duration) {
-                                // Now we have the duration of the video
-                                int videoDuration = (int) duration;
-
-                                Toast.makeText(Module_Details_Activity.this, ""+duration, Toast.LENGTH_SHORT).show();
-                                youTubePlayer.addListener(new YouTubePlayerListener() {
-                                    @Override
-                                    public void onVideoLoadedFraction(@NonNull YouTubePlayer youTubePlayer, float v) {
-
-                                    }
-
-                                    @Override
-                                    public void onVideoId(@NonNull YouTubePlayer youTubePlayer, @NonNull String s) {
-
-                                    }
-
-                                    @Override
-                                    public void onVideoDuration(@NonNull YouTubePlayer youTubePlayer, float v) {
-
-                                    }
-
-                                    @Override
-                                    public void onStateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerState playerState) {
-                                        if (playerState == PlayerConstants.PlayerState.ENDED) {
-                                            updateModuleCompletion();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-
-                                    }
-
-                                    @Override
-                                    public void onPlaybackRateChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlaybackRate playbackRate) {
-
-                                    }
-
-                                    @Override
-                                    public void onPlaybackQualityChange(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlaybackQuality playbackQuality) {
-
-                                    }
-
-                                    @Override
-                                    public void onApiChange(@NonNull YouTubePlayer youTubePlayer) {
-
-                                    }
-
-                                    @Override
-                                    public void onCurrentSecond(@NonNull YouTubePlayer youTubePlayer, float second) {
-                                        int currentSecond = (int) second;
-//                                        updateProgressBar(currentSecond, videoDuration);
-                                    }
-
-                                    @Override
-                                    public void onError(@NonNull YouTubePlayer youTubePlayer, @NonNull PlayerConstants.PlayerError error) {
-                                        Toast.makeText(Module_Details_Activity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    // Other overridden methods can be left empty
-                                });
-                            }
                         });
                     } else {
                         showAddModuleMessage();
@@ -226,5 +174,7 @@ public class Module_Details_Activity extends AppCompatActivity {
         binding.descryption.setText("Add Module");
         // Optionally hide or show other UI elements as needed
     }
+
+
 
 }

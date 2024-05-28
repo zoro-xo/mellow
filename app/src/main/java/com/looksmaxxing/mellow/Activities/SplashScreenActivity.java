@@ -16,18 +16,23 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
 import com.looksmaxxing.mellow.ModelClasses.User;
 import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.Utility.UserUtils;
 
-@SuppressLint("CustomSplashScreen")
+//@SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
@@ -39,6 +44,9 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+
+        checkAdminStatus();
         checkDarkLightDefault();
         checkDarkLightDefaultStatusBar();
         configurations();
@@ -133,6 +141,39 @@ public class SplashScreenActivity extends AppCompatActivity {
             userID = currentUser.getUid();
         }
     }
+    private void checkAdminStatus() {
+        DatabaseReference adminRef = FirebaseDatabase.getInstance().getReference().child("AppAdmin");
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        Toast.makeText(this, ""+currentUserId, Toast.LENGTH_SHORT).show();
+        adminRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userId = userSnapshot.getKey();
+                    if (userId != null && userId.equals(currentUserId)) {
+                        Boolean isAdmin = userSnapshot.child("Admin").getValue(Boolean.class);
+                        if (isAdmin != null && isAdmin) {
+                            Toast.makeText(SplashScreenActivity.this, "User is Admin", Toast.LENGTH_SHORT).show();
+
+                            UserUtils.setAdmin(true);
+                            // Save admin status to a static variable if needed
+                            // Example: AdminUtils.setAdmin(true);
+                            return; // Exit loop if admin found
+                        }else {
+//                            Toast.makeText(SplashScreenActivity.this, "User is No Admin", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("SplashScreenActivity", "Error fetching admin status: " + databaseError.getMessage());
+            }
+        });
+    }
+
 
     private void checkIsPaidAndNavigate() {
 
@@ -173,4 +214,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void showPaymentSheet() {
         // Show payment sheet logic
     }
+
+
 }

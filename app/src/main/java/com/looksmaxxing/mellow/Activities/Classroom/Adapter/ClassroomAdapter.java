@@ -32,6 +32,7 @@ import com.looksmaxxing.mellow.Activities.Classroom.Activities.Course_List;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Create_Course_Activity;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.ClassroomModel;
 import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.Utility.UserUtils;
 import com.looksmaxxing.mellow.databinding.DeleteAlertdialogBinding;
 import com.looksmaxxing.mellow.databinding.ItemClassroomCourseBinding;
 
@@ -61,6 +62,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
         ClassroomModel model = classroomModels.get(position);
+        boolean isPrevsCourseCompleted = position == 0 || classroomModels.get(position - 1).getProgress() == 100;
         holder.binding.tvCourseTitle.setText(model.getTitle());
         holder.binding.tvCourseDesc.setText(model.getDescription());
         holder.binding.tvProgressText.setText(model.getProgress() + "");
@@ -68,6 +70,13 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
         Glide.with(context)
                 .load(model.getImageUrl())
                 .into(holder.binding.ivCourseImage);
+
+        boolean isAdmin = UserUtils.isAdmin();
+        if (isAdmin) {
+            holder.binding.menu.setVisibility(View.VISIBLE);
+        } else {
+            holder.binding.menu.setVisibility(View.GONE);
+        }
 
 //        AdminChecker.checkIfUserIsAdmin(new AdminChecker.AdminCheckCallback() {
 //            @Override
@@ -84,26 +93,35 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(context,Course_List.class);
-                intent.putExtra("courseId",model.getCourseId());
-                intent.putExtra("progress",model.getProgress());
-                context.startActivity(intent);
+                if (isPrevsCourseCompleted) {
+                    Intent intent = new Intent(context, Course_List.class);
+                    intent.putExtra("courseId", model.getCourseId());
+                    intent.putExtra("progress", model.getProgress());
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, "This course is Locked", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         holder.binding.courseLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(context,Course_List.class);
-                intent.putExtra("courseId",model.getCourseId());
-                intent.putExtra("progress",model.getProgress());
+                if (isPrevsCourseCompleted) {
+                    Intent intent = new Intent(context, Course_List.class);
+                    intent.putExtra("courseId", model.getCourseId());
+                    intent.putExtra("progress", model.getProgress());
 //                Toast.makeText(context, ""+model.getCourseId(), Toast.LENGTH_SHORT).show();
-                context.startActivity(intent);
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, "This course is Locked", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-
-
+        if (!isPrevsCourseCompleted) {
+            holder.binding.lockIcon.setImageResource(R.drawable.ic_lock);
+        }
         holder.binding.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,23 +133,23 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.option1:
-                                Intent intent=new Intent(context, Create_Course_Activity.class);
-                                intent.putExtra("EDIT_MODE",true);
+                                Intent intent = new Intent(context, Create_Course_Activity.class);
+                                intent.putExtra("EDIT_MODE", true);
                                 intent.putExtra("CREATE_MODE", false);
-                                intent.putExtra("CourseId",model.getCourseId());
-                                intent.putExtra("title",model.getTitle());
-                                intent.putExtra("desc",model.getDescription());
-                                intent.putExtra("image",model.getImageUrl());
-                                intent.putExtra("access",model.getSelectedAccess());
-                                intent.putExtra("published",model.isPublished());
+                                intent.putExtra("CourseId", model.getCourseId());
+                                intent.putExtra("title", model.getTitle());
+                                intent.putExtra("desc", model.getDescription());
+                                intent.putExtra("image", model.getImageUrl());
+                                intent.putExtra("access", model.getSelectedAccess());
+                                intent.putExtra("published", model.isPublished());
                                 context.startActivity(intent);
                                 return true;
                             case R.id.option2:
                                 showCustomDialog(model.getCourseId());
                                 return true;
-//                            case R.id.option3:
-//                                // Handle option 3 click
-//                                return true;
+                            case R.id.option3:
+                                deleteCourse(model.getCourseId());
+                                return true;
 //                            case R.id.option4:
 //                                // Handle option 4 click
 //                                return true;
@@ -145,7 +163,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
             }
         });
 
-        loadImageIntoBlurView(model.getImageUrl(), holder.binding.blurView,50f);
+        loadImageIntoBlurView(model.getImageUrl(), holder.binding.blurView, 50f);
 
 
     }
@@ -153,16 +171,6 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
     @Override
     public int getItemCount() {
         return classroomModels.size();
-    }
-
-    public class Viewholder extends RecyclerView.ViewHolder {
-
-        ItemClassroomCourseBinding binding;
-
-        public Viewholder(@NonNull ItemClassroomCourseBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
     }
 
     private void showCustomDialog(String courseId) {
@@ -206,6 +214,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
                     }
                 });
     }
+
     private void loadImageIntoBlurView(String imageUrl, BlurView blurView, float blurRadius) {
         // Load the image using Glide
         Glide.with(context)
@@ -251,6 +260,15 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
         return blurredBitmap;
     }
 
+    public class Viewholder extends RecyclerView.ViewHolder {
+
+        ItemClassroomCourseBinding binding;
+
+        public Viewholder(@NonNull ItemClassroomCourseBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+    }
 
 
 }

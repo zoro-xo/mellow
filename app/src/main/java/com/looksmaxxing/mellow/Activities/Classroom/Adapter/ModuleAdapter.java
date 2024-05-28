@@ -17,6 +17,7 @@ import com.looksmaxxing.mellow.Activities.Classroom.Models.AdminChecker;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.Utility.UserUtils;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
     private static SetClickListner setClickListner;
     private final Context context;
     boolean isPrevsSetCompltd;
+
 
     public ModuleAdapter(List<Module> moduleList, SetClickListner setClickListner, Context context, String setId, boolean isPrvsSetCompltd) {
         ModuleAdapter.moduleList = moduleList;
@@ -69,17 +71,7 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.option1:
-                                //edit
-                                return true;
-                            case R.id.option2:
-                                //edit
 
-                                return true;
-                            case R.id.option3:
-                                // Handle option 3 click
-                                return true;
-                            case R.id.option4:
-                                // Handle option 4 click
                                 return true;
                             default:
                                 return false;
@@ -123,10 +115,11 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
         public void bind(Module module, boolean isPreviousVideoWatched, ModuleViewHolder holder) {
             moduleName.setText(module.getModuleName());
 //            moduleContent.setText(module.getModuleContent());
+
             moduleName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isPreviousVideoWatched) {
+                    if (UserUtils.isAdmin()) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             Module module = moduleList.get(position);
@@ -135,20 +128,38 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
                             }
                         }
                     } else {
-                        holder.itemView.setEnabled(false);
-                        Toast.makeText(v.getContext(), "This video is locked", Toast.LENGTH_SHORT).show();
+                        if (isPreviousVideoWatched) {
+                            int position = getAdapterPosition();
+                            if (position != RecyclerView.NO_POSITION) {
+                                Module module = moduleList.get(position);
+                                if (setClickListner != null) {
+                                    setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId());
+                                }
+                            }
+                        } else {
+                            holder.itemView.setEnabled(false);
+                            Toast.makeText(v.getContext(), "This video is locked", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
+
 //            moduleContent.setText(module.getModuleContent());
-            AdminChecker.checkIfUserIsAdmin(isAdmin -> {
-                if (isAdmin) {
+//            AdminChecker.checkIfUserIsAdmin(isAdmin -> {
+//                if (isAdmin) {
+//                    moduleMenu.setVisibility(View.VISIBLE);
+//                    // Perform additional actions for admin users
+//                } else {
+//                    moduleMenu.setVisibility(View.GONE);
+//                }
+//            });
+
+            boolean isAdmin = UserUtils.isAdmin();
+            if (isAdmin) {
                     moduleMenu.setVisibility(View.VISIBLE);
-                    // Perform additional actions for admin users
-                } else {
+            } else {
                     moduleMenu.setVisibility(View.GONE);
-                }
-            });
+            }
 
             lockIcon.setVisibility(isPreviousVideoWatched ? View.GONE : View.VISIBLE);
         }

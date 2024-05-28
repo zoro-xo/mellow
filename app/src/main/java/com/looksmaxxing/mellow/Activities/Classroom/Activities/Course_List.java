@@ -22,12 +22,15 @@ import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Set;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.databinding.ActivityCourseListBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Course_List extends AppCompatActivity implements SetClickListner {
+public class Course_List extends AppCompatActivity implements SetClickListner, CourseAdapter.ActivityFinishListener {
     private RecyclerView courseRecyclerView;
+
+    ActivityCourseListBinding binding;
     private CourseAdapter courseAdapter;
     private String courseId;
     public List<Course> courseList;
@@ -41,13 +44,16 @@ public class Course_List extends AppCompatActivity implements SetClickListner {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_list);
-
+        binding=ActivityCourseListBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         courseRecyclerView = findViewById(R.id.course_recycler_view);
         courseList = new ArrayList<>();
         userID = FirebaseAuth.getInstance().getUid();
         Intent intent = getIntent();
+
+
+
         if (intent.hasExtra("courseId")) {
             courseId = intent.getStringExtra("courseId");
             progress = intent.getIntExtra("progress", 0);
@@ -57,6 +63,8 @@ public class Course_List extends AppCompatActivity implements SetClickListner {
             Toast.makeText(this, "Course ID is missing", Toast.LENGTH_SHORT).show();
             return; // Exit the method
         }
+
+
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference courseRef = rootRef.child("courses").child(courseId);
@@ -137,7 +145,16 @@ public class Course_List extends AppCompatActivity implements SetClickListner {
         private void updateCourseData (List < Course > updatedCourseList) {
             courseAdapter.updateDataSet(updatedCourseList);
         }
+
+
+    @Override
+    public void onBackButtonClicked() {
+        Toast.makeText(Course_List.this, "Back button clicked in Adapter!", Toast.LENGTH_SHORT).show();
+
+        startActivity(new Intent(Course_List.this, Classroom_Activity.class));
+        finish();
     }
+}
 
 
 

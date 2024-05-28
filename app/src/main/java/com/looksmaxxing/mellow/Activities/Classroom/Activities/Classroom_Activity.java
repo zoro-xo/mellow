@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.looksmaxxing.mellow.Activities.Profile.Profile_Activity;
 import com.looksmaxxing.mellow.Activities.RightPanel.Discover_Activity;
 import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
 import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.Utility.UserUtils;
 import com.looksmaxxing.mellow.databinding.ActivityClassroomBinding;
 
 import java.util.ArrayList;
@@ -50,6 +52,13 @@ public class Classroom_Activity extends AppCompatActivity {
         progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(false);
 
+
+        boolean isAdmin = UserUtils.isAdmin();
+        if (isAdmin) {
+                    binding.fabAddCourse.setVisibility(View.VISIBLE);
+        } else {
+                    binding.fabAddCourse.setVisibility(View.GONE);
+        }
 //        AdminChecker.checkIfUserIsAdmin(new AdminChecker.AdminCheckCallback() {
 //            @Override
 //            public void onAdminCheck(boolean isAdmin) {

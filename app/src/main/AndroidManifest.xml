@@ -48,6 +48,9 @@
             android:name=".Activities.Classroom.Activities.Edit_Module_Activity"
             android:exported="false" />
         <activity
+            android:name=".Activities.Classroom.Activities.Edit_Course_Activity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.Classroom.Activities.Module_Details_Activity"
             android:exported="false" />
         <activity

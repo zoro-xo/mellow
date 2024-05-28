@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,10 +23,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.looksmaxxing.mellow.Activities.Classroom.Activities.Classroom_Activity;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Edit_Course_Activity;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Course;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.Utility.UserUtils;
 import com.looksmaxxing.mellow.databinding.AddsetAlertdialogBinding;
 import com.looksmaxxing.mellow.databinding.DeleteAlertdialogBinding;
 
@@ -41,14 +44,20 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     DeleteAlertdialogBinding dialogBinding;
     SetClickListner setClickListener;
     private List<Course> courseList;
+   private   ActivityFinishListener activityFinishListener;
+
     private Course course;
-
-
+    public interface ActivityFinishListener {
+        void onBackButtonClicked();
+    }
     public CourseAdapter(List<Course> courseList, Context context, SetClickListner setClickListener, int progress) {
         this.courseList = courseList;
         this.context = context;
         this.setClickListener = setClickListener;
         CourseAdapter.progress = progress;
+    }
+    public void setActivityFinishListener(ActivityFinishListener listener) {
+        this.activityFinishListener = listener;
     }
 
     @NonNull
@@ -63,8 +72,20 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         course = courseList.get(position);
         holder.bind(course, setClickListener);
 
-//        String setid=course.getSets().get(position).getSetId();
+        holder.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Back button clicked in Adapter!", Toast.LENGTH_SHORT).show();
 
+                if (activityFinishListener != null) {
+                    Toast.makeText(context, "Back button clicked in Adapter!", Toast.LENGTH_SHORT).show();
+                    activityFinishListener.onBackButtonClicked();
+                }
+            }
+
+        });
+
+//        String setid=course.getSets().get(position).getSetId();
 
         holder.courseMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,7 +254,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         private final TextView courseName;
         private final TextView courseToolBarName;
         private final RecyclerView setsRecyclerView;
-        ImageView courseMenu, courseImage,search;
+        ImageView courseMenu, courseImage,back;
+        SearchView search;
 
         public CourseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -243,6 +265,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             courseImage = itemView.findViewById(R.id.course_image);
             progressBar = itemView.findViewById(R.id.progressBar);
             tvProgressBar = itemView.findViewById(R.id.tvProgressText);
+            back = itemView.findViewById(R.id.back);
              search=itemView.findViewById(R.id.search);
             setsRecyclerView = itemView.findViewById(R.id.sets_recycler_view);
         }
@@ -253,6 +276,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             Context context = itemView.getContext();
             progressBar.setProgress(progress);
             tvProgressBar.setText(progress+"");
+
             Glide.with(context).load(course.getImageUrl())
                     .into(courseImage);
               search.setOnClickListener(new View.OnClickListener() {
@@ -261,6 +285,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                       Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
                   }
               });
+
+            boolean isAdmin = UserUtils.isAdmin();
+            if (isAdmin) {
+                courseMenu.setVisibility(View.VISIBLE);
+            } else {
+                courseMenu.setVisibility(View.GONE);
+            }
 //            AdminChecker.checkIfUserIsAdmin(new AdminChecker.AdminCheckCallback() {
 //                @Override
 //                public void onAdminCheck(boolean isAdmin) {
