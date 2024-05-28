@@ -155,7 +155,7 @@ public class Notification_Activity extends AppCompatActivity {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
-//        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setStackFromEnd(true);
         rv_AllNotifications.setLayoutManager(linearLayoutManager);
 
         listGroupSTitle = new ArrayList<>();
@@ -445,6 +445,7 @@ public class Notification_Activity extends AppCompatActivity {
                         intent.putExtra("panelState", "close");
                         startActivity(intent);
                         break;
+                        /*
                     case R.id.bottom_nav_discover:
 //                          fragment = new FeedFragment();
 //                        fragment = new JoinGroupFragment();
@@ -453,6 +454,7 @@ public class Notification_Activity extends AppCompatActivity {
                         Notification_Activity.this.overridePendingTransition(0, 0);
 
                         break;
+                        */
                     case R.id.bottom_nav_class:
 //                          fragment = new FeedFragment();
 //                        fragment = new JoinGroupFragment();

@@ -1000,7 +1000,7 @@ public class Discover_Activity extends AppCompatActivity {
 //
 //            }
 //        });
-
+/*
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(R.id.bottom_nav_discover);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -1061,6 +1061,7 @@ public class Discover_Activity extends AppCompatActivity {
                 return true;
             }
         });
+        */
     }
 
 }
