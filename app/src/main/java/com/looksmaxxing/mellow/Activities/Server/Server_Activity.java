@@ -220,7 +220,9 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     Button btn_cAddGroup, btn_cJoinGroup, btn_lTeachResult, btn_lTeachExam;
 
     //Image Buttons
-    ImageButton ib_cattach, ib_csubmit, ib_doubtSubmit, ImageViewRecentChat, ib_FrndP_csubmit, swipe_left, swipe_right, ib_pdf_btn;
+    ImageButton ib_cattach, ib_csubmit, ib_doubtSubmit,  ib_FrndP_csubmit, swipe_left, swipe_right, ib_pdf_btn;
+
+    RelativeLayout ImageViewRecentChat;
 
     List<String> classStudentListMonday;
 
@@ -578,7 +580,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                     textViewSubjectName.setVisibility(View.GONE);
                     textViewGroupName.setVisibility(View.GONE);
                     rv_GrpMemberList.setVisibility(View.GONE);
-                    btn_lnotice.setVisibility(View.GONE);
+                    btn_lnotice.setVisibility(View.VISIBLE);
                     rv_GrpTeacherList.setVisibility(View.GONE);
                     groupSection.setVisibility(View.GONE);
                     tv_GroupMember.setVisibility(View.GONE);
@@ -759,7 +761,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             btn_routineStructure.setVisibility(View.GONE);
             btn_result.setVisibility(View.GONE);
             btn_subjectPriority.setVisibility(View.GONE);
-            btn_studentFees.setVisibility(View.VISIBLE);
+            btn_studentFees.setVisibility(View.GONE);
             btn_studentRoutine.setVisibility(View.GONE);
         }
     }
@@ -2571,9 +2573,9 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                 btn_lnotice.setVisibility(View.GONE);
                 friendSection.setVisibility(View.VISIBLE);
                 onlyAdminLayout.setVisibility(View.GONE);
-                btn_routineStructure.setVisibility(View.VISIBLE);
-                btn_result.setVisibility(View.VISIBLE);
-                btn_subjectPriority.setVisibility(View.VISIBLE);
+                btn_routineStructure.setVisibility(View.GONE);
+                btn_result.setVisibility(View.GONE);
+                btn_subjectPriority.setVisibility(View.GONE);
                 btn_studentFees.setVisibility(View.GONE);
                 btn_studentRoutine.setVisibility(View.GONE);
                 imageViewAddPanelAddGroup.setVisibility(View.GONE);

@@ -66,10 +66,10 @@ public class Adaptor_SearchGroup extends RecyclerView.Adapter<Adaptor_SearchGrou
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
 
-
+/*
         Glide.with(context.getApplicationContext()).load(R.drawable.explore_bg).into(holder.schoolLogoImg);
         Glide.with(context.getApplicationContext()).load(R.drawable.explore_bg).into(holder.schImg);
-
+*/
         float radius = 25f;
 
         View decorView = ((Discover_Activity) context).getWindow().getDecorView();
@@ -106,8 +106,10 @@ public class Adaptor_SearchGroup extends RecyclerView.Adapter<Adaptor_SearchGrou
                     Glide.with(context.getApplicationContext()).load(snapshot.getValue()).into(holder.schoolLogoImg);
                     Glide.with(context.getApplicationContext()).load(snapshot.getValue()).into(holder.schImg);
                 } else {
+                    /*
                     Glide.with(context.getApplicationContext()).load(R.drawable.explore_bg).into(holder.schoolLogoImg);
                     Glide.with(context.getApplicationContext()).load(R.drawable.explore_bg).into(holder.schImg);
+                    */
                 }
             }
 

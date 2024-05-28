@@ -7,12 +7,7 @@
         android:title="@string/home"
         android:icon="@drawable/ic_menu_home"
         app:cnb_iconColor="@color/purple"/>
-    <item
-        android:id="@+id/bottom_nav_discover"
-        android:title="@string/tab_explore"
-        android:visible="false"
-        android:icon="@drawable/ic_explore"
-        app:cnb_iconColor="@color/purple"/>
+
     <item
         android:id="@+id/bottom_nav_class"
         android:title="Classroom"
@@ -21,7 +16,6 @@
     <item
         android:id="@+id/bottom_nav_notification"
         android:title="@string/tab_notification"
-        android:visible="false"
         android:icon="@drawable/ic_menu_notifications"
         app:cnb_iconColor="@color/purple"/>
     <item
@@ -29,5 +23,12 @@
         android:title="@string/profile"
         android:icon="@drawable/ic_person_24"
         app:cnb_iconColor="@color/purple" />
+
+    <item
+        android:id="@+id/bottom_nav_discover"
+        android:title="@string/tab_explore"
+        android:visible="false"
+        android:icon="@drawable/ic_explore"
+        app:cnb_iconColor="@color/purple"/>
 
 </menu>

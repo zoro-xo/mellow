@@ -27,160 +27,180 @@
         <RelativeLayout
             android:id="@+id/start_panel"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="@color/page_color"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent">
 
-
-            <!--Recent chat and server name holding layout-->
-            <RelativeLayout
-                android:id="@+id/chatItemAndGroupName"
+            <ImageView
+                android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/_160sdp"
+                android:src="@drawable/community_thumbnail"
+                android:scaleType="centerCrop"
+                android:layout_alignParentTop="true"/>
 
-                <!--Recent chat switching ImageButton-->
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@color/page_color"
+                android:layout_below="@+id/thumbnail"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+
+
+
+
+                <!--Recent chat and server name holding layout-->
                 <RelativeLayout
-                    android:id="@+id/cardRecChatIMG"
-                    style="@style/SelectableItemBackground"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/chatItemAndGroupName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageButton
-                        android:id="@+id/ib_FrndsList"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/round_icon_background"
-                        android:contentDescription="@string/servers_contentDescription"
-                        android:elevation="2dp"
-                        android:scaleType="center"
-                        android:src="@drawable/ic_baseline_message_24" />
+                    <!--Recent chat switching ImageButton-->
+
+                    <!--Server name-->
+                    <TextView
+                        android:id="@+id/groupName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="20dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/inter_semibold"
+                        android:maxLines="2"
+                        android:paddingEnd="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/text_color"
+                        android:textSize="16sp" />
 
                 </RelativeLayout>
 
-                <!--Server name-->
-                <TextView
-                    android:id="@+id/groupName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_toEndOf="@+id/cardRecChatIMG"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/inter_semibold"
-                    android:maxLines="2"
-                    android:paddingStart="30dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="10dp"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/text_color"
-                    android:textSize="16sp" />
+                <RelativeLayout
+                    android:id="@+id/ib_FrndsList"
+                    style="@style/SelectableItemBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:background="@drawable/selector_subject"
+                    android:layout_below="@+id/chatItemAndGroupName"
+                    android:layout_height="wrap_content">
 
-            </RelativeLayout>
-
-
-            <!--Server icon recyclerview and Class/Subject recyclerview holder layout-->
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/chatItemAndGroupName"
-                android:orientation="horizontal">
-
-
-                <LinearLayout
-                    android:id="@+id/groupRVs"
-                    android:layout_width="80dp"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <!--Public server (Useless)-->
                     <TextView
-                        android:id="@+id/tv_UserPublicTitle"
+                        android:id="@+id/tv_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_UserPublicGroupTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <!--Others server (Useless)-->
-                    <TextView
-                        android:id="@+id/tv_OtherTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:fontFamily="@font/inter_medium"
-                        android:textColor="@color/text_color"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_OtherPublicGroupTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <!--Server create plus button -->
-                    <ImageView
-                        android:id="@+id/addNewTopicButton"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="2dp"
+                        android:layout_centerInParent="true"
+                        android:text="Chat with Aswan and Friends"
+                        android:gravity="center_horizontal"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/round_icon_background"
-                        android:contentDescription="@string/servers_contentDescription"
-                        android:elevation="2dp"
-                        android:padding="3dp"
-                        android:scaleType="center"
-                        android:src="@drawable/ic_plus_16" />
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
-                <!-- Friends Section -->
-                <LinearLayout
-                    android:id="@+id/friendsSection"
+
+                <!--Server icon recyclerview and Class/Subject recyclerview holder layout-->
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/groupRVs"
-                    android:paddingStart="1dp"
-                    android:paddingEnd="15dp">
+                    android:layout_below="@+id/ib_FrndsList"
+                    android:orientation="horizontal">
 
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewFriendsNameList"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/groupRVs"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <!--Public server (Useless)-->
+                        <TextView
+                            android:id="@+id/tv_UserPublicTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_UserPublicGroupTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <!--Others server (Useless)-->
+                        <TextView
+                            android:id="@+id/tv_OtherTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:fontFamily="@font/inter_medium"
+                            android:textColor="@color/text_color"
+                            android:textSize="16sp"
+                            android:visibility="gone" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_OtherPublicGroupTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <!--Server create plus button -->
+                        <ImageView
+                            android:id="@+id/addNewTopicButton"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/round_icon_background"
+                            android:contentDescription="@string/servers_contentDescription"
+                            android:elevation="2dp"
+                            android:padding="3dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_plus_16" />
+
+                    </LinearLayout>
+
+                    <!-- Friends Section -->
+                    <LinearLayout
+                        android:id="@+id/friendsSection"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="32dp"
-                        android:elevation="5dp" />
+                        android:layout_toEndOf="@+id/groupRVs"
+                        android:paddingStart="1dp"
+                        android:paddingEnd="15dp">
 
 
-                </LinearLayout>
-
-                <!-- Group Section-->
-                <LinearLayout
-                    android:id="@+id/groupSection"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/friendsSection"
-                    android:orientation="vertical">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewFriendsNameList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="32dp"
+                            android:elevation="5dp" />
 
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewClassList"
-                        android:layout_width="match_parent"
+                    </LinearLayout>
+
+                    <!-- Group Section-->
+                    <LinearLayout
+                        android:id="@+id/groupSection"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_marginBottom="32dp" />
+                        android:layout_toEndOf="@+id/friendsSection"
+                        android:orientation="vertical">
 
 
-                </LinearLayout>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewClassList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_marginBottom="32dp" />
 
+
+                    </LinearLayout>
+
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -659,7 +679,7 @@
                         android:paddingTop="10dp"
                         android:paddingEnd="20dp"
                         android:paddingBottom="20dp"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <!--Student routine option-->
                         <LinearLayout
@@ -822,6 +842,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:visibility="gone"
                         android:background="@color/view_divider" />
 
                     <!--Last options layout-->
@@ -833,8 +854,7 @@
                         android:paddingStart="20dp"
                         android:paddingTop="10dp"
                         android:paddingEnd="20dp"
-                        android:paddingBottom="20dp"
-                        android:visibility="visible">
+                        android:paddingBottom="20dp">
 
                         <!--Result option-->
                         <LinearLayout
