@@ -34,7 +34,8 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
     private final Context context;
     boolean isPrevsSetCompltd;
 
-     String courseId;
+    String courseId;
+
     public ModuleAdapter(List<Module> moduleList, SetClickListner setClickListner, Context context, String setId, boolean isPrvsSetCompltd, String courseId) {
         ModuleAdapter.moduleList = moduleList;
         this.context = context;
@@ -42,7 +43,6 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
         ModuleAdapter.setId = setId;
         this.isPrevsSetCompltd = isPrvsSetCompltd;
         this.courseId = courseId;
-
     }
 
     @NonNull
@@ -58,8 +58,6 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
         boolean isPreviousVideoWatched = position == 0 ? isPrevsSetCompltd : moduleList.get(position - 1).isWatched();
         holder.bind(module, isPreviousVideoWatched, holder);
 
-
-        if (!isPreviousVideoWatched) holder.moduleMenu.setEnabled(false);
         holder.moduleMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,7 +69,7 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.option1:
-                                deleteModule(courseId,setId,module.getModuleId());
+                                deleteModule(courseId, setId, module.getModuleId());
                                 return true;
                             default:
                                 return false;
@@ -129,6 +127,19 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
 
             boolean isAdmin = UserUtils.isAdmin();
 
+            // Set moduleMenu visibility and enabled state based on user's admin status
+            if (isAdmin) {
+                holder.moduleMenu.setVisibility(View.VISIBLE);
+                holder.moduleMenu.setEnabled(true);
+            } else {
+                holder.moduleMenu.setVisibility(View.VISIBLE);
+                if (!isPreviousVideoWatched) {
+                    holder.moduleMenu.setEnabled(false);
+                } else {
+                    holder.moduleMenu.setEnabled(true);
+                }
+            }
+
             moduleName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -139,32 +150,10 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
                         // For non-admins, check if module is locked
                         if (isPreviousVideoWatched) {
                             setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId());
-                        } else {
-                            // Module is locked for non-admins
-                            holder.moduleMenu.setEnabled(false);
                         }
                     }
                 }
             });
-
-            // Set moduleMenu visibility based on user's admin status
-            if (isAdmin) {
-                holder.moduleMenu.setVisibility(View.VISIBLE);
-            } else {
-                holder.moduleMenu.setVisibility(View.GONE);
-            }
-
-            // Set lockIcon visibility based on user's admin status and module lock status
-            if (isAdmin) {
-                holder.moduleMenu.setVisibility(View.VISIBLE);
-                holder.moduleMenu.setEnabled(true);
-            } else {
-                if (!isPreviousVideoWatched) {
-                    holder.moduleMenu.setEnabled(false);
-                } else {
-                    holder.moduleMenu.setEnabled(true);
-                }
-            }
 
             lockIcon.setVisibility(isPreviousVideoWatched ? View.GONE : View.VISIBLE);
         }
