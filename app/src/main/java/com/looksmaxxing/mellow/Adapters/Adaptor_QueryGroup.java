@@ -50,7 +50,6 @@ public class Adaptor_QueryGroup extends RecyclerView.Adapter<Adaptor_QueryGroup.
 //    public void setmDatalistNew(List<Class_Group> mDatalistNew) {
 //        this.mDatalistNew = mDatalistNew;
 //    }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

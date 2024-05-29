@@ -155,6 +155,7 @@
                             android:background="@drawable/round_icon_background"
                             android:contentDescription="@string/servers_contentDescription"
                             android:elevation="2dp"
+                            android:visibility="gone"
                             android:padding="3dp"
                             android:scaleType="center"
                             android:src="@drawable/ic_plus_16" />
