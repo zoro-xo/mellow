@@ -1,56 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/_5sdp"
-    style="@style/AppBottomSheetDialogThemeDark"
-    android:background="@drawable/bg_bottomsheet"
-    tools:context=".Activities.Classroom.fragments.PaymentBottomSheet">
+    android:background="@drawable/bg_bottomsheetdark">
 
-
-    <TextView
+    <LinearLayout
+        android:id="@+id/ll_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Course Fees"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:textSize="@dimen/_15ssp"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
 
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="You have to pay a fees to join community"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginBottom="@dimen/_15sdp"
-        android:textSize="@dimen/_15ssp"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp">
 
-        />
-    <TextView
-        android:id="@+id/amount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="₹ 79.00 "
-        android:gravity="center"
-        android:textSize="@dimen/_25ssp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_marginBottom="@dimen/_10sdp"
 
-        />
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pay"
-        android:id="@+id/btnPay"
-        android:background="@drawable/sign_enabled"
-        android:textColor="@color/black"
-        android:layout_margin="@dimen/_10sdp"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/dummy_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:foreground="@drawable/aswan_profile_pic"
+                app:cardCornerRadius="15dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toEndOf="@id/dummy_icon"
+                android:elevation="2dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/youtube_sans_dark_extrabold"
+                android:gravity="center_horizontal"
+                android:maxLines="2"
+                android:text="Join Aswan's Looksmaxxing Community"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:transitionName="name_shared" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/youtube_sans_dark_medium"
+            android:gravity="center_horizontal"
+            android:text="@string/pay_btm_sheet"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:transitionName="student_no_shared" />
         />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:fontFamily="@font/youtube_sans_dark_extrabold"
+            android:gravity="center"
+            android:text="@string/strike_line"
+            android:textColor="@color/bluegrey"
+            android:textSize="@dimen/_25ssp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:fontFamily="@font/youtube_sans_dark_extrabold"
+            android:gravity="center"
+            android:text="90% off \n Only at ₹79/month"
+            android:textColor="#C21807"
+            android:textSize="@dimen/_20ssp"
+            android:textStyle="bold"
+
+            />
+
+        <Button
+            android:id="@+id/btnPay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/button_solid_unfollow"
+            android:elevation="2dp"
+            android:text="Pay"
+            android:textColor="@color/black" />
+    </LinearLayout>
 </LinearLayout>

@@ -299,15 +299,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     public static class CourseViewHolder extends RecyclerView.ViewHolder {
         private final ProgressBar progressBar;
         private final TextView tvProgressBar;
-//        private final TextView courseName;
-//        private final TextView courseToolBarName;
+        private final TextView courseName;
+        //        private final TextView courseToolBarName;
         private final RecyclerView setsRecyclerView;
         ImageView courseMenu, courseImage,back;
         SearchView search;
 
         public CourseViewHolder(@NonNull View itemView) {
             super(itemView);
-//            courseName = itemView.findViewById(R.id.course_name);
+            courseName = itemView.findViewById(R.id.course_name);
 //            courseToolBarName = itemView.findViewById(R.id.courseToolBarName);
             courseMenu = itemView.findViewById(R.id.course_menu);
 //            courseImage = itemView.findViewById(R.id.course_image);
@@ -319,7 +319,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         }
 
         public void bind(Course course, SetClickListner setClickListener) {
-//            courseName.setText(course.getCourseName());
+            courseName.setText(course.getCourseDescription());
 //            courseToolBarName.setText(course.getCourseName());
             Context context = itemView.getContext();
             progressBar.setProgress(progress);

@@ -47,15 +47,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
-import com.looksmaxxing.mellow.Adapters.Adaptor_Friend_Chat;
-import com.looksmaxxing.mellow.ModelClasses.Class_Single_Friend;
-import com.looksmaxxing.mellow.Utility.Constant;
-import com.looksmaxxing.mellow.ModelClasses.FriendsListClass;
-import com.looksmaxxing.mellow.Activities.Server.PDFBACK.BaseBackPressedListener;
-import com.looksmaxxing.mellow.Activities.Server.PDFBACK.OnBackPressedListener;
-import com.looksmaxxing.mellow.R;
-import com.looksmaxxing.mellow.Utility.SharePref;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -71,6 +62,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.looksmaxxing.mellow.Activities.Server.PDFBACK.BaseBackPressedListener;
+import com.looksmaxxing.mellow.Activities.Server.PDFBACK.OnBackPressedListener;
+import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
+import com.looksmaxxing.mellow.Adapters.Adaptor_Friend_Chat;
+import com.looksmaxxing.mellow.ModelClasses.Class_Single_Friend;
+import com.looksmaxxing.mellow.ModelClasses.FriendsListClass;
+import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.Utility.Constant;
+import com.looksmaxxing.mellow.Utility.SharePref;
 
 import java.io.File;
 import java.text.ParseException;
@@ -404,13 +404,20 @@ public class Friend_Chat_Activity extends Fragment {
                     String userName = snapshot.child("Name").getValue().toString();
                     friendNameTv.setText(userName);
                 }
-                if (snapshot.child("profilePic").exists()) {
-                    String profilePicUrl = snapshot.child("profilePic").getValue().toString();
-                    Log.d("TSTNOTIFY", "MyViewHolder: " + profilePicUrl);
-                    Glide.with(Friend_Chat_Activity.this).load(profilePicUrl).into(friendImg);
+
+                if (snapshot.getValue() != null) {
+                    if (snapshot.child("profilePic").exists()) {
+                        String profilePicUrl = snapshot.child("profilePic").getValue().toString();
+                        Log.d("TSTNOTIFY", "MyViewHolder: " + profilePicUrl);
+                        Glide.with(Friend_Chat_Activity.this).load(profilePicUrl).into(friendImg);
+                    } else {
+                        Glide.with(Friend_Chat_Activity.this).load(R.drawable.maharaji).into(friendImg);
+                    }
                 } else {
                     Glide.with(Friend_Chat_Activity.this).load(R.drawable.maharaji).into(friendImg);
                 }
+
+
             }
 
             @Override
@@ -484,7 +491,7 @@ public class Friend_Chat_Activity extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
 
-        Toolbar toolbar = v.findViewById(R.id.toolbar);
+//        Toolbar toolbar = v.findViewById(R.id.toolbar);
         Log.d(TAG, "onCreate: friend name ->" + friendName);
 
         friendNameTv.setText(friendName);

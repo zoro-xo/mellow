@@ -92,13 +92,15 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
             }
         });
 
-
-
         // Handle item click to expand/collapse
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                expandedPosition = holder.getAdapterPosition();
+                if (expandedPosition == holder.getAdapterPosition()) {
+                    expandedPosition = -1; // collapse if already expanded
+                } else {
+                    expandedPosition = holder.getAdapterPosition(); // expand new item
+                }
                 notifyDataSetChanged();
             }
         });
@@ -115,7 +117,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
         String newModuleKey = setsRef.push().getKey();
         Map<String, Object> moduleMap = new HashMap<>();
         moduleMap.put("moduleId", newModuleKey);
-        moduleMap.put("moduleName", "ModuleName");
+        moduleMap.put("moduleName", ModuleName); // Corrected from "ModuleName"
         setsRef.child(newModuleKey).setValue(moduleMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -254,12 +256,9 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
 
             // Toggle visibility based on shouldExpand
 
-                modulesRecyclerView.setVisibility(View.VISIBLE);
-                arrowIcon.setRotation(0);
-
             if (isExpanded) {
                 modulesRecyclerView.setVisibility(View.VISIBLE);
-                ModuleAdapter moduleAdapter = new ModuleAdapter(set.getModules(), setClickListner, itemView.getContext(), set.getSetId(), isPrvsSetCompltd,courseid);
+                ModuleAdapter moduleAdapter = new ModuleAdapter(set.getModules(), setClickListner, itemView.getContext(), set.getSetId(), isPrvsSetCompltd, courseid);
                 modulesRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
                 modulesRecyclerView.setAdapter(moduleAdapter);
                 arrowIcon.setRotation(0);
