@@ -13,6 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.AdminChecker;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
@@ -22,19 +26,21 @@ import com.looksmaxxing.mellow.Utility.UserUtils;
 import java.util.List;
 
 public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleViewHolder> {
-    public static List<Module> moduleList;
-    private static String setId;
-    private static SetClickListner setClickListner;
-    private final Context context;
-    boolean isPrevsSetCompltd;
 
+    private List<Module> moduleList;
+    private String setId;
+    private SetClickListner setClickListener;
+    private Context context;
+    private boolean isPreviousSetCompleted;
+    private String courseId;
 
-    public ModuleAdapter(List<Module> moduleList, SetClickListner setClickListner, Context context, String setId, boolean isPrvsSetCompltd) {
-        ModuleAdapter.moduleList = moduleList;
+    public ModuleAdapter(List<Module> moduleList, SetClickListner setClickListener, Context context, String setId, boolean isPreviousSetCompleted, String courseId) {
+        this.moduleList = moduleList;
         this.context = context;
-        ModuleAdapter.setClickListner = setClickListner;
-        ModuleAdapter.setId = setId;
-        this.isPrevsSetCompltd = isPrvsSetCompltd;
+        this.setClickListener = setClickListener;
+        this.setId = setId;
+        this.isPreviousSetCompleted = isPreviousSetCompleted;
+        this.courseId = courseId;
     }
 
     @NonNull
@@ -47,39 +53,32 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
     @Override
     public void onBindViewHolder(@NonNull ModuleViewHolder holder, int position) {
         Module module = moduleList.get(position);
-        boolean isPreviousVideoWatched = position == 0 ? isPrevsSetCompltd : moduleList.get(position - 1).isWatched();
-        holder.bind(module, isPreviousVideoWatched, holder);
+        boolean isAdmin = UserUtils.isAdmin();
 
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent=new Intent(context, Module_Details_Activity.class);
-//                intent.putExtra("id",module.getModuleId());
-//                intent.putExtra("name",module.getModuleName());
-//                context.startActivity(intent);
-//            }
-//        });
-        if (!isPreviousVideoWatched) holder.moduleMenu.setEnabled(false);
-        holder.moduleMenu.setOnClickListener(new View.OnClickListener() {
+        holder.bind(module, position, isAdmin);
+
+        // Set the moduleMenu click listener for admins
+        if (isAdmin) {
+            holder.moduleMenu.setVisibility(View.VISIBLE);
+            holder.moduleMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopupMenu(view, position);
+                }
+            });
+        } else {
+            holder.moduleMenu.setVisibility(View.GONE);
+        }
+
+        // Set the moduleName click listener based on user's admin status and module lock status
+        holder.moduleName.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
-                popupMenu.getMenuInflater().inflate(R.menu.module_menu, popupMenu.getMenu());
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.option1:
-
-                                return true;
-                            default:
-                                return false;
-                        }
-                    }
-                });
-
-                popupMenu.show();
+            public void onClick(View v) {
+                if (setClickListener != null && (isAdmin || isPreviousSetCompleted)) {
+                    setClickListener.onSetClicked(setId, module.getModuleName(), module.getModuleId());
+                } else {
+                    Toast.makeText(context, "Module locked or admin access required", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -89,79 +88,70 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
         return moduleList.size();
     }
 
-    public static class ModuleViewHolder extends RecyclerView.ViewHolder {
+    private void showPopupMenu(View view, int position) {
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        popupMenu.getMenuInflater().inflate(R.menu.module_menu, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.option1:
+                        deleteModule(courseId, setId, moduleList.get(position).getModuleId());
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        popupMenu.show();
+    }
+
+    private void deleteModule(String courseId, String setId, String moduleIdToDelete) {
+        DatabaseReference moduleRef = FirebaseDatabase.getInstance().getReference()
+                .child("courses")
+                .child(courseId)
+                .child("sets")
+                .child(setId)
+                .child("modules")
+                .child(moduleIdToDelete);
+
+        moduleRef.removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "Module deleted successfully", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Failed to delete module: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public class ModuleViewHolder extends RecyclerView.ViewHolder {
         private final TextView moduleName;
-        ImageView lockIcon, moduleMenu;
+        private final ImageView lockIcon;
+        private final ImageView moduleMenu;
 
         public ModuleViewHolder(@NonNull View itemView) {
             super(itemView);
             moduleName = itemView.findViewById(R.id.module_name);
-            moduleMenu = itemView.findViewById(R.id.module_menu);
             lockIcon = itemView.findViewById(R.id.lock_icon);
-            moduleName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        Module module = moduleList.get(position);
-                        if (setClickListner != null) {
-                            setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId());
-                        }
-                    }
-                }
-            });
+            moduleMenu = itemView.findViewById(R.id.module_menu);
         }
 
-        public void bind(Module module, boolean isPreviousVideoWatched, ModuleViewHolder holder) {
+        public void bind(Module module, int position, boolean isAdmin) {
             moduleName.setText(module.getModuleName());
-//            moduleContent.setText(module.getModuleContent());
 
-            moduleName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (UserUtils.isAdmin()) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            Module module = moduleList.get(position);
-                            if (setClickListner != null) {
-                                setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId());
-                            }
-                        }
-                    } else {
-                        if (isPreviousVideoWatched) {
-                            int position = getAdapterPosition();
-                            if (position != RecyclerView.NO_POSITION) {
-                                Module module = moduleList.get(position);
-                                if (setClickListner != null) {
-                                    setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId());
-                                }
-                            }
-                        } else {
-                            holder.itemView.setEnabled(false);
-                            Toast.makeText(v.getContext(), "This video is locked", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            });
+            // Show or hide lock icon based on previous module's completion status
+            lockIcon.setVisibility(position == 0 || moduleList.get(position - 1).isWatched() ? View.GONE : View.VISIBLE);
 
-//            moduleContent.setText(module.getModuleContent());
-//            AdminChecker.checkIfUserIsAdmin(isAdmin -> {
-//                if (isAdmin) {
-//                    moduleMenu.setVisibility(View.VISIBLE);
-//                    // Perform additional actions for admin users
-//                } else {
-//                    moduleMenu.setVisibility(View.GONE);
-//                }
-//            });
-
-            boolean isAdmin = UserUtils.isAdmin();
-            if (isAdmin) {
-                    moduleMenu.setVisibility(View.VISIBLE);
-            } else {
-                    moduleMenu.setVisibility(View.GONE);
-            }
-
-            lockIcon.setVisibility(isPreviousVideoWatched ? View.GONE : View.VISIBLE);
+            // Show or hide menu icon based on admin status
+            moduleMenu.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
         }
     }
 }

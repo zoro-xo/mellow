@@ -2,6 +2,8 @@ package com.looksmaxxing.mellow.Activities.Classroom.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -9,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +39,8 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
     public List<Course> courseList;
     ModuleAdapter moduleAdapter;
     String clickedSetId;
+   private String courseName;
+   private String courseImage;
     int progress;
     String userID;
     List<Module> moduleList;
@@ -44,7 +49,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding=ActivityCourseListBinding.inflate(getLayoutInflater());
+        binding = ActivityCourseListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         courseRecyclerView = findViewById(R.id.course_recycler_view);
@@ -53,19 +58,47 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
         Intent intent = getIntent();
 
 
+        moduleAdapter = new ModuleAdapter(moduleList, this, this, clickedSetId, false, courseId);
 
+        binding.search.setVisibility(View.GONE);
+     binding.back.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+             onBackPressed();
+         }
+     });
+
+//        binding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                // Handle search when query is submitted (e.g., filter adapter data)
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                // Handle search text change (e.g., filter adapter data)
+//                filterSetsAndModules(newText);
+//                return true;
+//            }
+//        });
         if (intent.hasExtra("courseId")) {
             courseId = intent.getStringExtra("courseId");
             progress = intent.getIntExtra("progress", 0);
-            Toast.makeText(this, courseId, Toast.LENGTH_SHORT).show();
+
+
         } else {
-            // Handle case where courseId is missing
             Toast.makeText(this, "Course ID is missing", Toast.LENGTH_SHORT).show();
             return; // Exit the method
         }
+        courseName = intent.getStringExtra("courseName");
+        courseImage = intent.getStringExtra("courseImage");
 
 
-
+        binding.courseToolBarName.setText(courseName);
+        Glide.with(this)
+                .load(courseImage)
+                .into(binding.courseImage);
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference courseRef = rootRef.child("courses").child(courseId);
 
@@ -105,7 +138,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
                 }
 
                 // Add the retrieved data to courseList
-                courseList.add(new Course(courseId, title, description,imageUrl, sets));
+                courseList.add(new Course(courseId, title, description, imageUrl, sets));
 
                 // Create a new CourseAdapter with the updated courseList
                 courseAdapter = new CourseAdapter(courseList, Course_List.this, Course_List.this, progress);
@@ -125,26 +158,26 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
         });
     }
 
-        @Override
-        public void onSetClicked (String setId, String name, String moduleId){
-            clickedSetId = setId;
-            Intent sendIntent = new Intent(this, Module_Details_Activity.class);
-            sendIntent.putExtra("courseId", courseId);
-            sendIntent.putExtra("setId", clickedSetId);
-            sendIntent.putExtra("name", name);
-            if (moduleId != null)
-                sendIntent.putExtra("id", moduleId);
-            startActivity(sendIntent);
-        }
+    @Override
+    public void onSetClicked(String setId, String name, String moduleId) {
+        clickedSetId = setId;
+        Intent sendIntent = new Intent(this, Module_Details_Activity.class);
+        sendIntent.putExtra("courseId", courseId);
+        sendIntent.putExtra("setId", clickedSetId);
+        sendIntent.putExtra("name", name);
+        if (moduleId != null)
+            sendIntent.putExtra("id", moduleId);
+        startActivity(sendIntent);
+    }
 
-        @Override
-        public void onSetItemClicked (String setId, String itemId){
-            // Handle set item click
-        }
+    @Override
+    public void onSetItemClicked(String setId, String itemId) {
+        // Handle set item click
+    }
 
-        private void updateCourseData (List < Course > updatedCourseList) {
-            courseAdapter.updateDataSet(updatedCourseList);
-        }
+    private void updateCourseData(List<Course> updatedCourseList) {
+        courseAdapter.updateDataSet(updatedCourseList);
+    }
 
 
     @Override
@@ -154,102 +187,19 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
         startActivity(new Intent(Course_List.this, Classroom_Activity.class));
         finish();
     }
+    private void filterSetsAndModules(String query) {
+        if (courseAdapter != null) {
+            // Depending on your filtering logic in CourseAdapter, call the appropriate filter method
+            courseAdapter.filterSets(query); // Example: filtering sets
+            // Or
+            courseAdapter.filterModules(query); // Example: filtering modules
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
 
 
-
-
-//       courseRecyclerView = findViewById(R.id.course_recycler_view);
-//               courseList = new ArrayList<>();
-//
-//
-//
-//        Intent intent = getIntent();
-//        if (intent.hasExtra("courseId")) {
-//        courseId = intent.getStringExtra("courseId");
-//        Toast.makeText(this, "" + courseId, Toast.LENGTH_SHORT).show();
-//        }
-//
-//        if (intent.hasExtra("setID")) {
-//        setID = intent.getStringExtra("setID");
-//
-//        }
-//
-////        Intent sendIntent = new Intent(this, Module_Details_Activity.class);
-////        sendIntent.putExtra("courseId", courseId);
-////        sendIntent.putExtra("setId", setID);
-////        startActivity(sendIntent);
-//
-//
-//        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-//        DatabaseReference coursesRef = rootRef.child("courses");
-//
-//        coursesRef.addValueEventListener(new ValueEventListener() {
-//@Override
-//public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//        List<Course> courseList = new ArrayList<>();
-//
-//        for (DataSnapshot courseSnapshot : dataSnapshot.getChildren()) {
-//        String courseId = courseSnapshot.getKey();
-//        String description = courseSnapshot.child("description").getValue(String.class);
-//        String title = courseSnapshot.child("title").getValue(String.class);
-//        long progress = courseSnapshot.child("progress").getValue(Long.class);
-//        boolean published = courseSnapshot.child("published").getValue(Boolean.class);
-//        String selectedAccess = courseSnapshot.child("selectedAccess").getValue(String.class);
-//
-//        List<Set> sets = new ArrayList<>();
-//        for (DataSnapshot setSnapshot : courseSnapshot.child("sets").getChildren()) {
-//        String setId = setSnapshot.getKey();
-//        String setName = setSnapshot.child("setName").getValue(String.class);
-//
-//        List<Module> modules = new ArrayList<>();
-//        for (DataSnapshot moduleSnapshot : setSnapshot.child("modules").getChildren()) {
-//        String moduleId = moduleSnapshot.getKey();
-//        String moduleName = moduleSnapshot.child("moduleName").getValue(String.class);
-//        modules.add(new Module(moduleId, moduleName, false));
-//        }
-//
-//        sets.add(new Set(setId, setName, modules));
-//
-//
-//        }
-//
-//        courseList.add(new Course(courseId, title, description, sets));
-//        }
-//        courseAdapter = new CourseAdapter(courseList, Course_List.this, Course_List.this);
-//
-//        // Set up the RecyclerView
-//        courseRecyclerView.setLayoutManager(new LinearLayoutManager(Course_List.this));
-//        courseRecyclerView.setAdapter(courseAdapter);
-//        updateCourseData(courseList);
-//        courseAdapter.notifyDataSetChanged();
-//        }
-//
-//@Override
-//public void onCancelled(@NonNull DatabaseError databaseError) {
-//        Toast.makeText(Course_List.this, "flai", Toast.LENGTH_SHORT).show();
-//        }
-//        });
-//        }
-//
-//@Override
-//public void onSetClicked(String setId, String name, String moduleId) {
-//        clickedSetId = setId;
-//        Intent sendIntent = new Intent(this, Module_Details_Activity.class);
-//        sendIntent.putExtra("courseId", courseId);
-//        sendIntent.putExtra("setId", clickedSetId);
-//        sendIntent.putExtra("name", name);
-//        if (moduleId!=null)
-//        sendIntent.putExtra("id", moduleId);
-//        startActivity(sendIntent);
-//        Toast.makeText(this, "" + setId, Toast.LENGTH_SHORT).show();
-//        }
-//
-//@Override
-//public void onSetItemClicked(String setId, String itemId) {
-//
-//        }
-//
-//private void updateCourseData(List<Course> updatedCourseList) {
-//        courseAdapter.updateDataSet(updatedCourseList);
-//        }

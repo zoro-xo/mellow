@@ -53,6 +53,13 @@ public class Create_Course_Activity extends AppCompatActivity {
         progressDialog.setMessage("Uploading image...");
         progressDialog.setCancelable(false);
 
+
+        binding.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         String[] items = {"All Members Have Access", "Only Some Members Have Access", "Member of Certain Level"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -255,5 +262,8 @@ public class Create_Course_Activity extends AppCompatActivity {
                 });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

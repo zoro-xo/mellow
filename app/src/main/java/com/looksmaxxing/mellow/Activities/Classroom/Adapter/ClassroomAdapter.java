@@ -70,7 +70,6 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
         Glide.with(context)
                 .load(model.getImageUrl())
                 .into(holder.binding.ivCourseImage);
-
         boolean isAdmin = UserUtils.isAdmin();
         if (isAdmin) {
             holder.binding.menu.setVisibility(View.VISIBLE);
@@ -78,17 +77,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
             holder.binding.menu.setVisibility(View.GONE);
         }
 
-//        AdminChecker.checkIfUserIsAdmin(new AdminChecker.AdminCheckCallback() {
-//            @Override
-//            public void onAdminCheck(boolean isAdmin) {
-//                if (isAdmin) {
-//                    holder.binding.menu.setVisibility(View.VISIBLE);
-//                    // Perform additional actions for admin users
-//                } else {
-//                    holder.binding.menu.setVisibility(View.GONE);
-//                }
-//            }
-//        });
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +85,9 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
                 if (isPrevsCourseCompleted) {
                     Intent intent = new Intent(context, Course_List.class);
                     intent.putExtra("courseId", model.getCourseId());
+                    intent.putExtra("courseName", model.getTitle());
+                    Toast.makeText(context, "aa"+model.getTitle(), Toast.LENGTH_SHORT).show();
+                    intent.putExtra("courseImage", model.getImageUrl());
                     intent.putExtra("progress", model.getProgress());
                     context.startActivity(intent);
                 } else {

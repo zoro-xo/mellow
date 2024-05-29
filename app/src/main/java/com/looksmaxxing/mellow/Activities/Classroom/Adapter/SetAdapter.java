@@ -36,7 +36,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
     private final Context context;
     private final SetClickListner setClickListner;
     private final String courseid;
-    private int expandedPosition = -1; // Track currently expanded item position
+    private int expandedPosition = 0; // Track currently expanded item position
     private AlertDialog alertDialog;
     private DeleteAlertdialogBinding deleteAlertdialogBinding;
 
@@ -241,8 +241,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        // Update expanded position and notify data change
-                        expandedPosition = expandedPosition == position ? -1 : position;
+                        expandedPosition = position;
                         notifyDataSetChanged();
                     }
                 }
@@ -251,10 +250,16 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
 
         public void bind(Set set, boolean isPrvsSetCompltd, boolean isExpanded) {
             setName.setText(set.getSetName());
+            boolean shouldExpand = getAdapterPosition() == expandedPosition;
+
+            // Toggle visibility based on shouldExpand
+
+                modulesRecyclerView.setVisibility(View.VISIBLE);
+                arrowIcon.setRotation(0);
 
             if (isExpanded) {
                 modulesRecyclerView.setVisibility(View.VISIBLE);
-                ModuleAdapter moduleAdapter = new ModuleAdapter(set.getModules(), setClickListner, itemView.getContext(), set.getSetId(), isPrvsSetCompltd);
+                ModuleAdapter moduleAdapter = new ModuleAdapter(set.getModules(), setClickListner, itemView.getContext(), set.getSetId(), isPrvsSetCompltd,courseid);
                 modulesRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
                 modulesRecyclerView.setAdapter(moduleAdapter);
                 arrowIcon.setRotation(0);

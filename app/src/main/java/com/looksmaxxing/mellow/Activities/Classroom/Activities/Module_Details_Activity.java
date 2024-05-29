@@ -4,6 +4,7 @@ import static android.webkit.URLUtil.isValidUrl;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +40,9 @@ public class Module_Details_Activity extends AppCompatActivity  {
     private WebView webView;
     String userID;
 
+    String moduleContent;
+    String videoUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +62,21 @@ public class Module_Details_Activity extends AppCompatActivity  {
 
 //        }
 
+        binding.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        binding.incomplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.incomplete.setVisibility(View.GONE);
+                binding.complete.setVisibility(View.VISIBLE);
+
+            }
+        });
 
 
         binding.courseToolBarName.setText(moduleName);
@@ -69,6 +89,8 @@ public class Module_Details_Activity extends AppCompatActivity  {
                 editIntent.putExtra("moduleName", moduleName); // assuming moduleName is a variable holding the module name
                 editIntent.putExtra("setId", setId); // assuming setId is a variable holding the module name
                 editIntent.putExtra("courseId", courseId); // assuming courseId is a variable holding the module name
+                editIntent.putExtra("videoUrl", videoUrl); // assuming courseId is a variable holding the module name
+                editIntent.putExtra("moduleContent", moduleContent); // assuming courseId is a variable holding the module name
                 startActivity(editIntent);
             }
         });
@@ -131,25 +153,22 @@ public class Module_Details_Activity extends AppCompatActivity  {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String moduleContent = dataSnapshot.child("moduleContent").getValue(String.class);
-                    String moduleName = dataSnapshot.child("moduleName").getValue(String.class);
-                    String videoUrl = dataSnapshot.child("videoUrl").getValue(String.class);
+                     moduleContent = dataSnapshot.child("moduleContent").getValue(String.class);
+                     moduleName = dataSnapshot.child("moduleName").getValue(String.class);
+                     videoUrl = dataSnapshot.child("videoUrl").getValue(String.class);
 
                     if (moduleContent != null && moduleName != null && videoUrl != null && !videoUrl.isEmpty()) {
-                        binding.descryption.setText(moduleContent);
+                        displayTextWithClickableUrls(moduleContent);
                         binding.videoView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
                             @Override
                             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
                                 String videoId = extractVideoIdFromUrl(videoUrl);
-
                                 if (videoId != null && !videoId.isEmpty()) {
                                     youTubePlayer.loadVideo(videoId, 0);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Invalid Video URL", Toast.LENGTH_SHORT).show();
                                 }
                             }
-
-
                         });
                     } else {
                         showAddModuleMessage();
@@ -175,6 +194,15 @@ public class Module_Details_Activity extends AppCompatActivity  {
         // Optionally hide or show other UI elements as needed
     }
 
+    private void displayTextWithClickableUrls(String textWithUrls) {
+        if (textWithUrls != null) {
+            binding.descryption.setText(HtmlCompat.fromHtml(textWithUrls, HtmlCompat.FROM_HTML_MODE_COMPACT));
+            binding.descryption.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+    }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

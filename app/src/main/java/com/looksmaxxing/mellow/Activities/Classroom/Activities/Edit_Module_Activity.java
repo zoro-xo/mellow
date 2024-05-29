@@ -35,6 +35,8 @@ public class Edit_Module_Activity extends AppCompatActivity {
     private RichEditor mEditor;
     private TextView mPreview;
     ActivityEditModuleBinding binding;
+    String moduleContent;
+    String videoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,10 @@ public class Edit_Module_Activity extends AppCompatActivity {
             moduleName = intent.getStringExtra("moduleName");
             courseId = intent.getStringExtra("courseId");
             setId = intent.getStringExtra("setId");
+            moduleContent = intent.getStringExtra("moduleContent");
+            videoUrl = intent.getStringExtra("videoUrl");
+
+            binding.vidUrl.setText(videoUrl);
         }
 
         editTV();
@@ -68,7 +74,7 @@ public class Edit_Module_Activity extends AppCompatActivity {
         binding.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Edit_Module_Activity.this, Module_Details_Activity.class));
+                onBackPressed();
             }
         });
 
@@ -156,6 +162,7 @@ public class Edit_Module_Activity extends AppCompatActivity {
                 moduleRef.updateChildren(childUpdates)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(Edit_Module_Activity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(Edit_Module_Activity.this, "Something went wrong" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -410,4 +417,8 @@ public class Edit_Module_Activity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

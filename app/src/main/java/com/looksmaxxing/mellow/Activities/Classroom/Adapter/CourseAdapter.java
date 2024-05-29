@@ -3,6 +3,7 @@ package com.looksmaxxing.mellow.Activities.Classroom.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,12 +27,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Classroom_Activity;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Edit_Course_Activity;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Course;
+import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
+import com.looksmaxxing.mellow.Activities.Classroom.Models.Set;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.Utility.UserUtils;
 import com.looksmaxxing.mellow.databinding.AddsetAlertdialogBinding;
 import com.looksmaxxing.mellow.databinding.DeleteAlertdialogBinding;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +48,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     DeleteAlertdialogBinding dialogBinding;
     SetClickListner setClickListener;
     private List<Course> courseList;
-   private   ActivityFinishListener activityFinishListener;
+    private List<Course> filteredList; // Filtered list for search
+
+    private   ActivityFinishListener activityFinishListener;
 
     private Course course;
     public interface ActivityFinishListener {
@@ -54,6 +60,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         this.courseList = courseList;
         this.context = context;
         this.setClickListener = setClickListener;
+        this.filteredList = new ArrayList<>(courseList); // Initialize filtered list with all data
         CourseAdapter.progress = progress;
     }
     public void setActivityFinishListener(ActivityFinishListener listener) {
@@ -72,18 +79,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         course = courseList.get(position);
         holder.bind(course, setClickListener);
 
-        holder.back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "Back button clicked in Adapter!", Toast.LENGTH_SHORT).show();
 
-                if (activityFinishListener != null) {
-                    Toast.makeText(context, "Back button clicked in Adapter!", Toast.LENGTH_SHORT).show();
-                    activityFinishListener.onBackButtonClicked();
-                }
-            }
-
-        });
 
 //        String setid=course.getSets().get(position).getSetId();
 
@@ -108,7 +104,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
                             case R.id.option2:
                                 showAddSet(course.getCourseId());
-
                                 return true;
 //                            case R.id.option3:
 //
@@ -135,6 +130,59 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     public int getItemCount() {
         return courseList.size();
     }
+
+    public void filterSets(String query) {
+        filteredList.clear();
+        if (TextUtils.isEmpty(query)) {
+            filteredList.addAll(courseList);
+        } else {
+            for (Course course : courseList) {
+                List<Set> filteredSets = new ArrayList<>();
+                for (Set set : course.getSets()) {
+                    if (set.getSetName().toLowerCase().contains(query.toLowerCase())) {
+                        filteredSets.add(set);
+                    }
+                }
+                if (!filteredSets.isEmpty()) {
+                    Course filteredCourse = new Course(course.getCourseId(), course.getCourseName(), course.getCourseDescription(), course.getImageUrl(), filteredSets);
+                    filteredList.add(filteredCourse);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    // Method to filter modules based on query
+    public void filterModules(String query) {
+        filteredList.clear();
+        if (TextUtils.isEmpty(query)) {
+            filteredList.addAll(courseList);
+        } else {
+            for (Course course : courseList) {
+                List<Set> filteredSets = new ArrayList<>();
+                for (Set set : course.getSets()) {
+                    List<Module> filteredModules = new ArrayList<>();
+                    for (Module module : set.getModules()) {
+                        if (module.getModuleName().toLowerCase().contains(query.toLowerCase())) {
+                            filteredModules.add(module);
+                        }
+                    }
+                    if (!filteredModules.isEmpty()) {
+                        Set filteredSet = new Set(set.getSetId(), set.getSetName(), filteredModules);
+                        filteredSets.add(filteredSet);
+                    }
+                }
+                if (!filteredSets.isEmpty()) {
+                    Course filteredCourse = new Course(course.getCourseId(), course.getCourseName(), course.getCourseDescription(), course.getImageUrl(), filteredSets);
+                    filteredList.add(filteredCourse);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    // Method to update dataset with filtered list
+
 
     private void showAddSet(String courseId) {
         addsetAlertdialogBinding = AddsetAlertdialogBinding.inflate(LayoutInflater.from(context));
@@ -251,40 +299,40 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     public static class CourseViewHolder extends RecyclerView.ViewHolder {
         private final ProgressBar progressBar;
         private final TextView tvProgressBar;
-        private final TextView courseName;
-        private final TextView courseToolBarName;
+//        private final TextView courseName;
+//        private final TextView courseToolBarName;
         private final RecyclerView setsRecyclerView;
         ImageView courseMenu, courseImage,back;
         SearchView search;
 
         public CourseViewHolder(@NonNull View itemView) {
             super(itemView);
-            courseName = itemView.findViewById(R.id.course_name);
-            courseToolBarName = itemView.findViewById(R.id.courseToolBarName);
+//            courseName = itemView.findViewById(R.id.course_name);
+//            courseToolBarName = itemView.findViewById(R.id.courseToolBarName);
             courseMenu = itemView.findViewById(R.id.course_menu);
-            courseImage = itemView.findViewById(R.id.course_image);
+//            courseImage = itemView.findViewById(R.id.course_image);
             progressBar = itemView.findViewById(R.id.progressBar);
             tvProgressBar = itemView.findViewById(R.id.tvProgressText);
             back = itemView.findViewById(R.id.back);
-             search=itemView.findViewById(R.id.search);
+//             search=itemView.findViewById(R.id.search);
             setsRecyclerView = itemView.findViewById(R.id.sets_recycler_view);
         }
 
         public void bind(Course course, SetClickListner setClickListener) {
-            courseName.setText(course.getCourseName());
-            courseToolBarName.setText(course.getCourseName());
+//            courseName.setText(course.getCourseName());
+//            courseToolBarName.setText(course.getCourseName());
             Context context = itemView.getContext();
             progressBar.setProgress(progress);
             tvProgressBar.setText(progress+"");
 
-            Glide.with(context).load(course.getImageUrl())
-                    .into(courseImage);
-              search.setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View view) {
-                      Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
-                  }
-              });
+//            Glide.with(context).load(course.getImageUrl())
+//                    .into(courseImage);
+//              search.setOnClickListener(new View.OnClickListener() {
+//                  @Override
+//                  public void onClick(View view) {
+//                      Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
+//                  }
+//              });
 
             boolean isAdmin = UserUtils.isAdmin();
             if (isAdmin) {
