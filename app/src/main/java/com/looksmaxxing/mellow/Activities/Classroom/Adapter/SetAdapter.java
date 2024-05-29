@@ -59,8 +59,12 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
         Set set = setList.get(position);
         boolean isPrvsSetCompltd = position == 0 || setList.get(position - 1).getModules().get(setList.get(position - 1).getModules().size() - 1).isWatched();
         holder.bind(set, isPrvsSetCompltd, position == expandedPosition);
-        if (!isPrvsSetCompltd) holder.moduleMenu.setVisibility(View.GONE);
 
+        // Always show menu for all sets
+        boolean isAdmin = UserUtils.isAdmin();
+        if(isAdmin){
+            holder.moduleMenu.setVisibility(View.VISIBLE);
+        }
         holder.moduleMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,8 +95,6 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
                 popupMenu.show();
             }
         });
-
-
 
         // Handle item click to expand/collapse
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -235,7 +237,10 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
             modulesRecyclerView = itemView.findViewById(R.id.modules_recycler_view);
             arrowIcon = itemView.findViewById(R.id.arrow_Icon);
             moduleMenu = itemView.findViewById(R.id.menu_set);
-
+            boolean isAdmin = UserUtils.isAdmin();
+            if(isAdmin){
+                moduleMenu.setVisibility(View.VISIBLE);
+            }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -250,16 +255,12 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
 
         public void bind(Set set, boolean isPrvsSetCompltd, boolean isExpanded) {
             setName.setText(set.getSetName());
-            boolean shouldExpand = getAdapterPosition() == expandedPosition;
 
             // Toggle visibility based on shouldExpand
 
-                modulesRecyclerView.setVisibility(View.VISIBLE);
-                arrowIcon.setRotation(0);
-
             if (isExpanded) {
                 modulesRecyclerView.setVisibility(View.VISIBLE);
-                ModuleAdapter moduleAdapter = new ModuleAdapter(set.getModules(), setClickListner, itemView.getContext(), set.getSetId(), isPrvsSetCompltd,courseid);
+                ModuleAdapter moduleAdapter = new ModuleAdapter(set.getModules(), setClickListner, itemView.getContext(), set.getSetId(), isPrvsSetCompltd, courseid);
                 modulesRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
                 modulesRecyclerView.setAdapter(moduleAdapter);
                 arrowIcon.setRotation(0);
@@ -268,12 +269,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
                 arrowIcon.setRotation(180);
             }
 
-            boolean isAdmin = UserUtils.isAdmin();
-            if (isAdmin) {
-                moduleMenu.setVisibility(View.VISIBLE);
-            } else {
-                moduleMenu.setVisibility(View.GONE);
-            }
+
         }
     }
 }

@@ -73,8 +73,6 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
         boolean isAdmin = UserUtils.isAdmin();
         if (isAdmin) {
             holder.binding.menu.setVisibility(View.VISIBLE);
-        } else {
-            holder.binding.menu.setVisibility(View.GONE);
         }
 
 
@@ -99,21 +97,25 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
         holder.binding.courseLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isPrevsCourseCompleted) {
+
+                if (isAdmin) {
+                    // Start the Course_List activity for admins
                     Intent intent = new Intent(context, Course_List.class);
                     intent.putExtra("courseId", model.getCourseId());
                     intent.putExtra("progress", model.getProgress());
-//                Toast.makeText(context, ""+model.getCourseId(), Toast.LENGTH_SHORT).show();
                     context.startActivity(intent);
                 } else {
-                    Toast.makeText(context, "This course is Locked", Toast.LENGTH_SHORT).show();
+                    if (isPrevsCourseCompleted) {
+                        Intent intent = new Intent(context, Course_List.class);
+                        intent.putExtra("courseId", model.getCourseId());
+                        intent.putExtra("progress", model.getProgress());
+                        context.startActivity(intent);
+                    } else {
+                        Toast.makeText(context, "This course is Locked", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
-
-        if (!isPrevsCourseCompleted) {
-            holder.binding.lockIcon.setImageResource(R.drawable.ic_lock);
-        }
         holder.binding.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
