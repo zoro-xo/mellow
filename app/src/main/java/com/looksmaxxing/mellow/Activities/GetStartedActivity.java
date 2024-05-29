@@ -218,12 +218,12 @@ public class GetStartedActivity extends AppCompatActivity {
                                     submitLoginData();
                                 } else {
                                     Log.i("shitt22", task.getException().toString());
-                                    Toast.makeText(GetStartedActivity.this, "Authentication Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(GetStartedActivity.this, "Authentication Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
                     } else {
-                        Toast.makeText(GetStartedActivity.this, "Google account null", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(GetStartedActivity.this, "Google account null", Toast.LENGTH_SHORT).show();
 
                     }
 
