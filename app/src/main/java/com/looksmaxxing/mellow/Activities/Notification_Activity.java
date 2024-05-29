@@ -464,12 +464,12 @@ public class Notification_Activity extends AppCompatActivity {
                     case R.id.bottom_nav_notification:
 //                        fragment = new User_Notification_Frag();
 //                        tag = "notify";
-                        startActivity(new Intent(Notification_Activity.this, Notification_Activity.class));
+//                        startActivity(new Intent(Notification_Activity.this, Notification_Activity.class));
                         Notification_Activity.this.overridePendingTransition(0, 0);
 
                         break;
                     case R.id.bottom_nav_profile:
-//                        startActivity(new Intent(Notification_Activity.this, Profile_Activity.class));
+                        startActivity(new Intent(Notification_Activity.this, Profile_Activity.class));
                         Notification_Activity.this.overridePendingTransition(0, 0);
 
                         break;

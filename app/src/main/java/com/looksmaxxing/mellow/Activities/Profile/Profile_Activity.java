@@ -410,21 +410,20 @@ public class Profile_Activity extends AppCompatActivity {
                         startActivity(intent);
 
                         break;
-                        /*
-                    case R.id.bottom_nav_discover:
-                        startActivity(new Intent(Profile_Activity.this, Classroom_Activity.class));
-                        Profile_Activity.this.overridePendingTransition(0, 0);
+//                    case R.id.bottom_nav_discover:
+//                        startActivity(new Intent(Profile_Activity.this, Classroom_Activity.class));
+//                        Profile_Activity.this.overridePendingTransition(0, 0);
+//
+//                        break;
 
-                        break;
-                        */
-                    case R.id.bottom_nav_notification:
-                        startActivity(new Intent(Profile_Activity.this, Notification_Activity.class));
-                        Profile_Activity.this.overridePendingTransition(0, 0);
                     case R.id.bottom_nav_class:
                         startActivity(new Intent(Profile_Activity.this, Classroom_Activity.class));
                         Profile_Activity.this.overridePendingTransition(0, 0);
 
                         break;
+                    case R.id.bottom_nav_notification:
+                        startActivity(new Intent(Profile_Activity.this, Notification_Activity.class));
+                        Profile_Activity.this.overridePendingTransition(0, 0);
                     case R.id.bottom_nav_profile:
 //                        startActivity(new Intent(Profile_Activity.this, Profile_Activity.class));
                         Profile_Activity.this.overridePendingTransition(0, 0);
