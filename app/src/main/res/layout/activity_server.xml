@@ -368,7 +368,6 @@
                             app:tint="@color/iconSecondaryColor" />
                     </RelativeLayout>
 
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
@@ -376,11 +375,104 @@
                         android:background="@color/view_divider"
                         android:elevation="1dp" />
 
+                    <LinearLayout
+                        android:id="@+id/classroomAndNotifications"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_25sdp"
+                        android:layout_below="@id/action_bar"
+                        android:background="@color/page_color"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                        <RelativeLayout
+                            android:id="@+id/btn_Videos"
+                            style="@style/SelectableItemBackgroundBorderless"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_alignParentStart="true"
+                            android:layout_gravity="center"
+                            android:text="Classroom"
+                            android:contentDescription="@string/servers_contentDescription"
+                            android:src="@drawable/ic_swipe_menux"
+                            app:tint="@color/iconSecondaryColor" >
+
+
+                            <TextView
+                                style="@style/SelectableItemBackgroundBorderless"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="Aswan's videos"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:src="@drawable/ic_swipe_menux"
+                                app:tint="@color/iconSecondaryColor" />
+
+                        </RelativeLayout>
+
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/view_divider"/>
+
+                        <RelativeLayout
+                            android:id="@+id/btn_Notification"
+                            style="@style/SelectableItemBackgroundBorderless"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
+                            android:text="Classroom"
+                            android:contentDescription="@string/servers_contentDescription"
+                            android:src="@drawable/ic_swipe_menux"
+                            app:tint="@color/iconSecondaryColor" >
+
+
+                            <TextView
+                                android:id="@+id/notification"
+                                style="@style/SelectableItemBackgroundBorderless"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="Notifications"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:src="@drawable/ic_swipe_menux"
+                                app:tint="@color/iconSecondaryColor" />
+
+                            <TextView
+                                android:id="@+id/notificationBadge"
+                                style="@style/SelectableItemBackgroundBorderless"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/youtube_sans_bold"
+                                android:layout_toStartOf="@+id/notification"
+                                android:text="0"
+                                android:textSize="@dimen/_15sdp"
+                                android:layout_marginEnd="@dimen/_5sdp"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:src="@drawable/ic_swipe_menux"
+                                app:tint="@color/iconSecondaryColor" />
+
+                        </RelativeLayout>
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/classroomAndNotifications"
+                        android:background="@color/view_divider"
+                        android:elevation="1dp" />
+
                     <RelativeLayout
                         android:id="@+id/below_toolbar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/action_bar">
+                        android:layout_below="@id/classroomAndNotifications">
 
 
                         <com.facebook.shimmer.ShimmerFrameLayout
@@ -488,6 +580,7 @@
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
                                     android:layout_centerInParent="true"
+                                    android:visibility="gone"
                                     android:layout_marginTop="25dp"
                                     android:background="@color/transparent"
                                     android:contentDescription="@string/servers_contentDescription"
@@ -528,6 +621,7 @@
             </LinearLayout>
 
         </RelativeLayout>
+
 
         <!-- End Panel       -->
         <RelativeLayout

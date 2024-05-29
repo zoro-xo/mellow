@@ -24,12 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.looksmaxxing.mellow.Activities.Classroom.Activities.Classroom_Activity;
-import com.looksmaxxing.mellow.Activities.Notification_Activity;
-import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
-import com.looksmaxxing.mellow.Activities.GetStartedActivity;
-import com.looksmaxxing.mellow.R;
-import com.looksmaxxing.mellow.Utility.NetworkBroadcast;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
@@ -42,6 +36,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.looksmaxxing.mellow.Activities.Classroom.Activities.Classroom_Activity;
+import com.looksmaxxing.mellow.Activities.GetStartedActivity;
+import com.looksmaxxing.mellow.Activities.Notification_Activity;
+import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
+import com.looksmaxxing.mellow.R;
+import com.looksmaxxing.mellow.Utility.NetworkBroadcast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -410,20 +410,21 @@ public class Profile_Activity extends AppCompatActivity {
                         startActivity(intent);
 
                         break;
-//                    case R.id.bottom_nav_discover:
-//                        startActivity(new Intent(Profile_Activity.this, Classroom_Activity.class));
-//                        Profile_Activity.this.overridePendingTransition(0, 0);
-//
-//                        break;
+                        /*
+                    case R.id.bottom_nav_discover:
+                        startActivity(new Intent(Profile_Activity.this, Classroom_Activity.class));
+                        Profile_Activity.this.overridePendingTransition(0, 0);
 
+                        break;
+                        */
+                    case R.id.bottom_nav_notification:
+                        startActivity(new Intent(Profile_Activity.this, Notification_Activity.class));
+                        Profile_Activity.this.overridePendingTransition(0, 0);
                     case R.id.bottom_nav_class:
                         startActivity(new Intent(Profile_Activity.this, Classroom_Activity.class));
                         Profile_Activity.this.overridePendingTransition(0, 0);
 
                         break;
-                    case R.id.bottom_nav_notification:
-                        startActivity(new Intent(Profile_Activity.this, Notification_Activity.class));
-                        Profile_Activity.this.overridePendingTransition(0, 0);
                     case R.id.bottom_nav_profile:
 //                        startActivity(new Intent(Profile_Activity.this, Profile_Activity.class));
                         Profile_Activity.this.overridePendingTransition(0, 0);

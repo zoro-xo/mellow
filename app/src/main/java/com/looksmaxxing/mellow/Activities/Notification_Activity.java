@@ -445,14 +445,14 @@ public class Notification_Activity extends AppCompatActivity {
                         intent.putExtra("panelState", "close");
                         startActivity(intent);
                         break;
-//                    case R.id.bottom_nav_discover:
-////                          fragment = new FeedFragment();
-////                        fragment = new JoinGroupFragment();
-////                        tag = "joingroup";
-//                        startActivity(new Intent(Notification_Activity.this, Discover_Activity.class));
-//                        Notification_Activity.this.overridePendingTransition(0, 0);
-//
-//                        break;
+                    case R.id.bottom_nav_discover:
+//                          fragment = new FeedFragment();
+//                        fragment = new JoinGroupFragment();
+//                        tag = "joingroup";
+                        startActivity(new Intent(Notification_Activity.this, Discover_Activity.class));
+                        Notification_Activity.this.overridePendingTransition(0, 0);
+
+                        break;
                     case R.id.bottom_nav_class:
 //                          fragment = new FeedFragment();
 //                        fragment = new JoinGroupFragment();
@@ -464,7 +464,7 @@ public class Notification_Activity extends AppCompatActivity {
                     case R.id.bottom_nav_notification:
 //                        fragment = new User_Notification_Frag();
 //                        tag = "notify";
-//                        startActivity(new Intent(Notification_Activity.this, Notification_Activity.class));
+                        startActivity(new Intent(Notification_Activity.this, Notification_Activity.class));
                         Notification_Activity.this.overridePendingTransition(0, 0);
 
                         break;

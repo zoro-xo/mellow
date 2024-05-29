@@ -8,6 +8,16 @@
         android:icon="@drawable/ic_menu_home"
         app:cnb_iconColor="@color/purple"/>
 
+    <!--
+
+    <item
+        android:id="@+id/bottom_nav_discover"
+        android:title="@string/tab_explore"
+        android:visible="false"
+        android:icon="@drawable/ic_explore"
+        app:cnb_iconColor="@color/purple"/>
+-->
+
     <item
         android:id="@+id/bottom_nav_class"
         android:title="Classroom"
@@ -24,11 +34,5 @@
         android:icon="@drawable/ic_person_24"
         app:cnb_iconColor="@color/purple" />
 
-    <item
-        android:id="@+id/bottom_nav_discover"
-        android:title="@string/tab_explore"
-        android:visible="false"
-        android:icon="@drawable/ic_explore"
-        app:cnb_iconColor="@color/purple"/>
 
 </menu>

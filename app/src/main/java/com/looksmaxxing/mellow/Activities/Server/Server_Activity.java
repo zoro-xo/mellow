@@ -120,36 +120,6 @@ import com.looksmaxxing.mellow.Utility.Constant;
 import com.looksmaxxing.mellow.Utility.GroupJoinHelper;
 import com.looksmaxxing.mellow.Utility.NetworkBroadcast;
 import com.looksmaxxing.mellow.Utility.SharePref;
-import com.discord.panels.OverlappingPanelsLayout;
-import com.discord.panels.PanelState;
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.razorpay.ExternalWalletListener;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
@@ -163,7 +133,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -196,8 +168,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     List<Class_Group_Names> parentItemArrayListClassName;
     List<Subject_Details_Model> childItemArrayListClassName;
     ArrayList<Class_Group> chats, doubts;
-
-
     //Adapters
     Adaptor_QueryGroup showGroupAdaptor, showUserPrivateGroupAdaptor, showUserPublicGroupAdaptor;
     Adaptor_ShowGrpMember showGrpMemberList, showGrpTeacherList;
@@ -206,26 +176,17 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     Adaptor_ShowGroup showChatDashAdaptor;
     Adaptor_FriendsList adaptor_friendsList;
     Adapter_ClassGroup adapter_classGroup;
-
-
     //Relative Layouts
     LinearLayout ll_bottom_send;
-    RelativeLayout friendToolBar;
-
+    RelativeLayout friendToolBar, btn_Notification, btn_Videos;
     //Linear Layouts
     LinearLayout onlyAdminLayout, groupSection, ll_AddJoinGrp, ll_ChatDoubtDashboard, endPanelLinearLayout, friendSection, rightPanelMems, rightPanelMember, ib_servSettings, btn_lteachattend, FriendListText, btn_joinNotification, btn_lteachFees, btn_routineStructure, btn_result, btn_subjectPriority, btn_lnotice, btn_studentFees, btn_studentRoutine;
-
-
     //Buttons
     Button btn_cAddGroup, btn_cJoinGroup, btn_lTeachResult, btn_lTeachExam;
-
     //Image Buttons
-    ImageButton ib_cattach, ib_csubmit, ib_doubtSubmit,  ib_FrndP_csubmit, swipe_left, swipe_right, ib_pdf_btn;
-
+    ImageButton ib_cattach, ib_csubmit, ib_doubtSubmit, ib_FrndP_csubmit, swipe_left, swipe_right, ib_pdf_btn;
     RelativeLayout ImageViewRecentChat;
-
     List<String> classStudentListMonday;
-
     TabLayout tabLayout, tabL_ChatView;
     BottomNavigationView bottomNavigationView;
     TextView tv_GroupMember, adminListText, FriendListTextt;
@@ -257,6 +218,11 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     boolean flag = false;
     boolean flagFriend = false;
     boolean pdf_flag = false;
+    private TextView notificationBadge;
+    private BroadcastReceiver notificationReceiver;
+    private int pendingNotificationCount = 0;
+    private DatabaseReference refNotifications;
+    private final Map<String, String> notificationsMap = new HashMap<>();
     private BroadcastReceiver broadcastReceiver;
     private int currentProgress = 0;
     private ProgressBar uploadProgressBar;
@@ -265,9 +231,20 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     private Uri fileUri;
     private ShimmerFrameLayout shimmer_effect;
 
+
+    private void updateBadge() {
+        if (pendingNotificationCount > 0) {
+            notificationBadge.setText(String.valueOf(pendingNotificationCount));
+            notificationBadge.setVisibility(View.VISIBLE);
+        } else {
+            notificationBadge.setVisibility(View.GONE);
+        }
+    }
+
     public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
         this.onBackPressedListener = onBackPressedListener;
     }
+
 
     void init() {
 
@@ -304,6 +281,10 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         FriendListText = findViewById(R.id.FriendListText);
         FriendListTextt = findViewById(R.id.FriendListTextt);
         friendToolBar = findViewById(R.id.friendToolBar);
+        btn_Notification = findViewById(R.id.btn_Notification);
+        notificationBadge = findViewById(R.id.notificationBadge);
+        btn_Videos = findViewById(R.id.btn_Videos);
+
         endPanelAllFriendsRecyclerView = findViewById(R.id.endPanelAllFriendsRecyclerView);
         ll_AddJoinGrp = findViewById(R.id.ll_AddJoinGrp);
         rv_ChatDashboard = findViewById(R.id.rv_ChatDashboard);
@@ -2411,6 +2392,83 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                 }
             });
 
+
+            btn_Videos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Server_Activity.this, Classroom_Activity.class));
+                    Server_Activity.this.overridePendingTransition(0, 0);
+                }
+            });
+
+            btn_Notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Server_Activity.this, Notification_Activity.class));
+                    Server_Activity.this.overridePendingTransition(0, 0);
+                }
+            });
+
+
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            String userID = currentUser.getUid();
+
+            refNotifications = FirebaseDatabase.getInstance().getReference()
+                    .child("Notification").child("Received_Req").child(userID);
+
+            refNotifications.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+                    String notificationId = dataSnapshot.getKey();
+                    String status = dataSnapshot.child("grpJoiningStatus").getValue(String.class);
+                    notificationsMap.put(notificationId, status);
+
+                    if ("req_sent".equals(status)) {
+                        pendingNotificationCount++;
+                        updateBadge();
+                    }
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+                    String notificationId = dataSnapshot.getKey();
+                    String status = dataSnapshot.child("grpJoiningStatus").getValue(String.class);
+                    String previousStatus = notificationsMap.get(notificationId);
+
+                    notificationsMap.put(notificationId, status);
+
+                    if ("req_sent".equals(status) && !"req_sent".equals(previousStatus)) {
+                        pendingNotificationCount++;
+                    } else if (!"req_sent".equals(status) && "req_sent".equals(previousStatus)) {
+                        pendingNotificationCount--;
+                    }
+                    updateBadge();
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                    String notificationId = dataSnapshot.getKey();
+                    String status = notificationsMap.get(notificationId);
+
+                    if ("req_sent".equals(status)) {
+                        pendingNotificationCount--;
+                        updateBadge();
+                    }
+
+                    notificationsMap.remove(notificationId);
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+                    // Not needed for this use case
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle error if needed
+                }
+            });
+
             DatabaseReference dbSaveGroupPosition = FirebaseDatabase.getInstance().getReference().child("Groups").child("UserAddedOrJoinedGrp").child(userID);
 
             ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP, 0) {
@@ -2491,7 +2549,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
                     if (c.trim().isEmpty()) {
                         ib_doubtSubmit.setVisibility(View.VISIBLE);
-                        ib_pdf_btn.setVisibility(View.VISIBLE);
+                        ib_pdf_btn.setVisibility(View.GONE);
 
                         ib_csubmit.setVisibility(View.GONE);
                     } else {
@@ -4158,7 +4216,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
 //                                    Toast.makeText(Server_Activity.this, "Document uploading successful", Toast.LENGTH_SHORT).show();
                                             uploadPercentage.setVisibility(View.GONE);
-                                            ib_pdf_btn.setVisibility(View.VISIBLE);
+                                            ib_pdf_btn.setVisibility(View.GONE);
                                             uploadProgressBar.setVisibility(View.GONE);
                                         }
                                     });
@@ -4278,12 +4336,14 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
                         Server_Activity.this.overridePendingTransition(0, 0);
 */
                         break;
+                        /*-
                     case R.id.bottom_nav_discover:
 
                         startActivity(new Intent(Server_Activity.this, Discover_Activity.class));
                         Server_Activity.this.overridePendingTransition(0, 0);
 
                         break;
+                        */
                     case R.id.bottom_nav_class:
 
                         startActivity(new Intent(Server_Activity.this, Classroom_Activity.class));

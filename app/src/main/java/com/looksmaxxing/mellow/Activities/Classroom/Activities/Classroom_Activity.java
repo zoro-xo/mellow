@@ -95,8 +95,9 @@ public class Classroom_Activity extends AppCompatActivity {
                         Intent intent = new Intent(Classroom_Activity.this, Server_Activity.class);
                         intent.putExtra("panelState", "close");
                         startActivity(intent);
-
+                        Classroom_Activity.this.overridePendingTransition(0, 0);
                         break;
+                        /*
                     case R.id.bottom_nav_discover:
 //                          fragment = new FeedFragment();
 //                        fragment = new JoinGroupFragment();
@@ -105,6 +106,7 @@ public class Classroom_Activity extends AppCompatActivity {
                         Classroom_Activity.this.overridePendingTransition(0, 0);
 
                         break;
+                        */
                     case R.id.bottom_nav_class:
 //                          fragment = new FeedFragment();
 //                        fragment = new JoinGroupFragment();
