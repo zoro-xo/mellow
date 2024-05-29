@@ -3,7 +3,6 @@ package com.looksmaxxing.mellow.Activities.Classroom.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,8 +37,8 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
     public List<Course> courseList;
     ModuleAdapter moduleAdapter;
     String clickedSetId;
-   private String courseName;
-   private String courseImage;
+    private String courseName;
+    private String courseImage;
     int progress;
     String userID;
     List<Module> moduleList;
@@ -60,13 +58,13 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
 
         moduleAdapter = new ModuleAdapter(moduleList, this, this, clickedSetId, false, courseId);
 
-        binding.search.setVisibility(View.GONE);
-     binding.back.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View view) {
-             onBackPressed();
-         }
-     });
+//        binding.search.setVisibility(View.GONE);
+        binding.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
 //        binding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 //            @Override
@@ -95,10 +93,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
         courseImage = intent.getStringExtra("courseImage");
 
 
-        binding.courseToolBarName.setText(courseName);
-        Glide.with(this)
-                .load(courseImage)
-                .into(binding.courseImage);
+//        Glide.with(this).load(courseImage).into(binding.courseImage);
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference courseRef = rootRef.child("courses").child(courseId);
 
@@ -112,6 +107,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
                 // Retrieve course data
                 String description = dataSnapshot.child("description").getValue(String.class);
                 String title = dataSnapshot.child("title").getValue(String.class);
+                binding.courseToolBarName.setText(title);
 //                long progress = dataSnapshot.child("progress").getValue(Long.class);
                 String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
 
@@ -187,6 +183,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
         startActivity(new Intent(Course_List.this, Classroom_Activity.class));
         finish();
     }
+
     private void filterSetsAndModules(String query) {
         if (courseAdapter != null) {
             // Depending on your filtering logic in CourseAdapter, call the appropriate filter method

@@ -24,7 +24,6 @@
             android:paddingTop="10dp"
             android:paddingEnd="1dp"
             android:paddingBottom="15dp"
-            android:text="@string/theme"
             android:textColor="@color/text_color"
             android:textSize="16sp" />
 

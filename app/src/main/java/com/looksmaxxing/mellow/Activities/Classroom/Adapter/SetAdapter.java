@@ -100,7 +100,11 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                expandedPosition = holder.getAdapterPosition();
+                if (expandedPosition == holder.getAdapterPosition()) {
+                    expandedPosition = -1; // collapse if already expanded
+                } else {
+                    expandedPosition = holder.getAdapterPosition(); // expand new item
+                }
                 notifyDataSetChanged();
             }
         });
@@ -117,7 +121,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
         String newModuleKey = setsRef.push().getKey();
         Map<String, Object> moduleMap = new HashMap<>();
         moduleMap.put("moduleId", newModuleKey);
-        moduleMap.put("moduleName", "ModuleName");
+        moduleMap.put("moduleName", ModuleName); // Corrected from "ModuleName"
         setsRef.child(newModuleKey).setValue(moduleMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

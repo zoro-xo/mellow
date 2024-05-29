@@ -31,7 +31,6 @@
             android:ellipsize="end"
             android:fontFamily="@font/youtube_sans_dark_extrabold"
             android:maxLines="2"
-            android:text="Experimental school"
             android:textColor="@color/text_white"
             android:textSize="@dimen/_12sdp"/>
 
