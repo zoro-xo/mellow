@@ -154,7 +154,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (userId != null && userId.equals(currentUserId)) {
                         Boolean isAdmin = userSnapshot.child("Admin").getValue(Boolean.class);
                         if (isAdmin != null && isAdmin) {
-                            Toast.makeText(SplashScreenActivity.this, "User is Admin", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(SplashScreenActivity.this, "User is Admin", Toast.LENGTH_SHORT).show();
 
                             UserUtils.setAdmin(true);
                             // Save admin status to a static variable if needed

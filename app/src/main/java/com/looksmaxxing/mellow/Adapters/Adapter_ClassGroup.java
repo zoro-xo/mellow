@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -183,19 +184,18 @@ public class Adapter_ClassGroup extends RecyclerView.Adapter<Adapter_ClassGroup.
             adapter_topicList.setOnSubjectClickListener(new Adapter_TopicList.onSubjectClickListener() {
                 @Override
                 public void onSubjectClick() {
+                    if (!parentItemArrayListClassName.isEmpty()) {
+                        onAddSubjectClickListener.onSubClick(holder.getAdapterPosition(), parentItemArrayListClassName.get(holder.getAdapterPosition()).getClassName(), class_group_names.getUniPushClassId());
 
-                    if (parentItemArrayListClassName.size() != 0) {
-                            onAddSubjectClickListener.onSubClick(holder.getAdapterPosition(), parentItemArrayListClassName.get(holder.getAdapterPosition()).getClassName(), class_group_names.getUniPushClassId());
-
-                    DatabaseReference refSaveCurrentData = FirebaseDatabase.getInstance().getReference().child("Groups").child("Temp").child(userID);
-                    refSaveCurrentData.child("classPosition").setValue(holder.getAdapterPosition());
-                    refSaveCurrentData.child("clickedClassName").setValue(parentItemArrayListClassName.get(holder.getAdapterPosition()).getClassName());
-                    refSaveCurrentData.child("uniPushClassId").setValue(class_group_names.getUniPushClassId());
+                        DatabaseReference refSaveCurrentData = FirebaseDatabase.getInstance().getReference().child("Groups").child("Temp").child(userID);
+                        refSaveCurrentData.child("classPosition").setValue(holder.getAdapterPosition());
+                        refSaveCurrentData.child("clickedClassName").setValue(parentItemArrayListClassName.get(holder.getAdapterPosition()).getClassName());
+                        refSaveCurrentData.child("uniPushClassId").setValue(class_group_names.getUniPushClassId());
                     }
-
-
                 }
             });
+
+
 //            Log.d("TOP", "onBindViewHolder: "+parentItemArrayListClassName.get(position).getChildItemList().get(position).getSubjectName());
             adapter_topicList.setSubjectDetailsModelList(parentItemArrayListClassName.get(position).getChildItemList());
             adapter_topicList.notifyDataSetChanged();
@@ -220,7 +220,7 @@ public class Adapter_ClassGroup extends RecyclerView.Adapter<Adapter_ClassGroup.
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView classGroupName;
         ImageButton dropUpBtn, dropDownBtn;
-        ImageButton addTopicButton;
+        ImageView addTopicButton;
         RecyclerView subjectList;
 
         public ViewHolder(@NonNull View itemView) {
