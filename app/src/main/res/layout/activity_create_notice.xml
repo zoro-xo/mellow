@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/page_background_color">
+
+
+    <LinearLayout
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/page_color"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <ImageButton
+            android:id="@+id/btn_Back"
+            style="@style/SelectableItemBackgroundBorderless"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="1dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_arrow_left_24"
+            app:tint="@color/iconSecondaryColor"
+            android:contentDescription="@string/privacy_contentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/inter_semibold"
+            android:text="Create notice"
+            android:textColor="@color/text_color"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/action_bar"
+        android:background="@color/page_color">
+
+        <EditText
+            android:id="@+id/notesTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:padding="15dp"
+            android:hint="Title"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:fontFamily="@font/inter_medium"
+            android:textSize="18sp"
+            android:background="@null"/>
+
+
+
+        <EditText
+            android:id="@+id/noticeData"
+            android:layout_width="match_parent"
+            android:layout_height="300sp"
+            android:gravity="start"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:padding="15dp"
+            android:hint="Note"
+            android:textSize="16sp"
+            android:background="@null"
+            android:textCursorDrawable="@drawable/cursor_color"
+
+            android:focusable="true"
+            android:focusableInTouchMode="true"/>
+
+        <Button
+            android:id="@+id/uploadAttachmentsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:padding="15dp"
+            android:text="Upload attachments"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:fontFamily="@font/inter_medium"
+            android:background="@color/transparent"/>
+
+
+        <RelativeLayout
+            android:id="@+id/document"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:visibility="gone"
+            android:layout_below="@+id/attachment_btn"
+            android:layout_centerInParent="true"
+            android:background="@drawable/background_doubt"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/download_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_arrow_down_16"
+                android:visibility="gone" />
+
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/doc_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:background="@drawable/pdf_pic" />
+
+            <TextView
+                android:id="@+id/tv_pdfName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/doc_button"
+                android:ellipsize="end"
+                android:fontFamily="@font/inter_regular"
+                android:maxLines="2"
+                android:padding="5dp"
+                android:text="Result.pdf"
+                android:textColor="@color/text_color"
+                android:textSize="14sp" />
+
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/progress_layout"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/attachment_btn"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:layout_margin="20dp"
+            android:layout_toEndOf="@+id/document"
+            android:layout_height="wrap_content">
+            <ProgressBar
+                android:id="@+id/uploadProgress"
+                android:layout_width="wrap_content"
+                android:progressDrawable="@drawable/custom_progress_bg"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/percentage"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="25dp"
+                android:fontFamily="@font/inter_bold"
+                android:gravity="center"
+                android:text="0%"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/doneNotesBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="26dp"
+        android:src="@drawable/ic_right_black"
+        android:tint="@color/white_constant"
+        app:backgroundTint="@color/iconPrimaryColor"/>
+
+</RelativeLayout>

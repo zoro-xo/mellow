@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.Classroom.Activities.Edit_Course_Activity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_8sdp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/_8sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/backarrow"
+                android:layout_marginEnd="@dimen/_10sdp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                app:cardCornerRadius="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_10sdp">
+
+                <ImageView
+                    android:id="@+id/course_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/mellow_logo"/>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/courseToolBarName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CourseName"
+                android:textSize="@dimen/_12ssp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Course Details -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/_8sdp">
+
+            <!-- Course Name -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Course Name"
+                android:textSize="@dimen/_12ssp"
+                android:layout_marginBottom="@dimen/_5sdp"/>
+
+            <LinearLayout
+                android:id="@+id/Bio"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:background="@drawable/input_box_bg"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/courseName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:hint="Course Name"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_15sdp"
+                    android:paddingEnd="@dimen/_11sdp"
+                    android:textColorHint="#AAAAAB" />
+            </LinearLayout>
+
+            <!-- Course Description -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Course Description"
+                android:textSize="@dimen/_12ssp"
+                android:layout_marginBottom="@dimen/_5sdp"/>
+
+            <EditText
+                android:id="@+id/Coursedescription"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:background="@drawable/input_box_bg"
+                android:gravity="top"
+                android:hint="Course Descryption"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textColorHint="@color/icon_background"
+                android:padding="@dimen/_8sdp" />
+
+            <!-- Course Access -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Access"
+                android:textSize="@dimen/_12ssp"
+                android:layout_marginBottom="@dimen/_5sdp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:background="@drawable/input_box_bg"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:layout_weight="0.9"
+                    android:paddingStart="@dimen/_15sdp"
+                    android:paddingEnd="@dimen/_11sdp"
+                    android:spinnerMode="dropdown"
+                    android:textColorHint="@color/icon_background"
+                    android:textSize="@dimen/_15sdp" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="@dimen/_25sdp"
+                    android:src="@drawable/ic_arrow_down_24dp"/>
+            </LinearLayout>
+
+            <!-- Cover Image -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cover"
+                android:textSize="@dimen/_12ssp"
+                android:layout_marginBottom="@dimen/_5sdp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_15sdp"
+                app:cardCornerRadius="@dimen/_8sdp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_180sdp"
+                    android:layout_margin="@dimen/_5sdp">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/uploadButton"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/add_photo"
+                        android:visibility="visible" />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Publish Switch -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Publish"
+                android:textSize="@dimen/_12ssp"
+                android:layout_marginBottom="@dimen/_5sdp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:padding="@dimen/_10sdp"
+                android:background="@drawable/input_box_bg"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Published"
+                    android:checked="false" />
+            </LinearLayout>
+
+            <!-- Invite Users Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Invite Users"
+                android:textSize="@dimen/_12ssp"
+                android:layout_marginBottom="@dimen/_5sdp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/_15sdp">
+
+                <Button
+                    android:id="@+id/invite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Invite Users"
+                    android:background="@drawable/sign_enabled"
+                    android:visibility="gone"
+                    android:layout_marginEnd="@dimen/_5sdp"/>
+
+                <TextView
+                    android:id="@+id/selectedUsers"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="0"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_15sdp"
+                    android:paddingEnd="@dimen/_11sdp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#AAAAAB"
+                    android:textSize="@dimen/_15sdp" />
+            </LinearLayout>
+
+            <!-- Upload Button -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/upload"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_margin="@dimen/_15sdp"
+                android:background="@drawable/sign_enabled"
+                android:text="Update Course"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

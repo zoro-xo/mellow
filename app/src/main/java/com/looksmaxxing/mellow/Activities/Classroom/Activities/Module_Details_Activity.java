@@ -1,0 +1,216 @@
+package com.looksmaxxing.mellow.Activities.Classroom.Activities;
+
+import static android.webkit.URLUtil.isValidUrl;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.looksmaxxing.mellow.Utility.UserUtils;
+import com.looksmaxxing.mellow.databinding.ActivityModuleDetailsBinding;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Module_Details_Activity extends AppCompatActivity  {
+    ActivityModuleDetailsBinding binding;
+
+    private String moduleId;
+    private String moduleName;
+    private String courseId;
+    private String setId;
+    FirebaseDatabase database;
+    private WebView webView;
+    String userID;
+
+    String moduleContent;
+    String videoUrl;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityModuleDetailsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        Intent intent = getIntent();
+//        if (intent != null && intent.hasExtra("id")) {
+        moduleId = intent.getStringExtra("id");
+        moduleName = intent.getStringExtra("name");
+        courseId = intent.getStringExtra("courseId");
+        setId = intent.getStringExtra("setId");
+        binding.title.setText(moduleName);
+        database = FirebaseDatabase.getInstance();
+        userID = FirebaseAuth.getInstance().getUid();
+        fetchModuleDetails(moduleId);
+//            Toast.makeText(this, "set:" + setId+"course:"+courseId , Toast.LENGTH_SHORT).show();
+
+//        }
+
+
+        if(UserUtils.isAdmin()){
+            binding.courseMenu.setVisibility(View.VISIBLE);
+        }else {
+            binding.courseMenu.setVisibility(View.GONE);
+
+        }
+        binding.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        binding.incomplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.incomplete.setVisibility(View.GONE);
+                binding.complete.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+
+        binding.courseToolBarName.setText(moduleName);
+
+        binding.courseMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editIntent = new Intent(Module_Details_Activity.this, Edit_Module_Activity.class);
+                editIntent.putExtra("moduleId", moduleId); // assuming moduleId is a variable holding the module ID
+                editIntent.putExtra("moduleName", moduleName); // assuming moduleName is a variable holding the module name
+                editIntent.putExtra("setId", setId); // assuming setId is a variable holding the module name
+                editIntent.putExtra("courseId", courseId); // assuming courseId is a variable holding the module name
+                editIntent.putExtra("videoUrl", videoUrl); // assuming courseId is a variable holding the module name
+                editIntent.putExtra("moduleContent", moduleContent); // assuming courseId is a variable holding the module name
+                startActivity(editIntent);
+            }
+        });
+
+        getLifecycle().addObserver(binding.videoView);
+
+
+
+//        if (videoId != null) {
+//            System.out.println("Video ID: " + videoId);
+//            Toast.makeText(this, "Video ID: " + videoId, Toast.LENGTH_SHORT).show();
+//        } else {
+//            System.out.println("Invalid video URL");
+//            Toast.makeText(this, "Invalid video URL", Toast.LENGTH_SHORT).show();
+//        }
+
+    }
+
+    private void updateModuleCompletion() {
+        DatabaseReference historyRef = database.getReference("History").child(userID);
+        DatabaseReference courseRef = database.getReference("courses").child(courseId);
+        // Update module completion status
+        historyRef.child("course").child(courseId)
+                .child("sets").child(setId)
+                .child("modules").child(moduleId)
+                .child("watched").setValue(true);
+        // Update module completion status inside module
+        courseRef.child("sets").child(setId)
+                .child("modules").child(moduleId)
+                .child("watched_users")
+                .child(userID).child("watched").setValue(true);
+    }
+
+    private String extractVideoIdFromUrl(String videoUrl) {
+        String videoId = null;
+        String pattern = "(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%\u200C\u200B2F|youtu.be%2F|%2Fv%2F)[^#\\&\\?\\n]*";
+        Pattern compiledPattern = Pattern.compile(pattern);
+        Matcher matcher = compiledPattern.matcher(videoUrl);
+        if (matcher.find()) {
+            videoId = matcher.group();
+        }
+        System.out.println(videoId);
+        Toast.makeText(this, ""+videoId, Toast.LENGTH_SHORT).show();
+        return videoId;
+
+    }
+
+
+
+    private void fetchModuleDetails(String moduleId) {
+        DatabaseReference moduleRef = FirebaseDatabase.getInstance().getReference()
+                .child("courses")
+                .child(courseId)
+                .child("sets")
+                .child(setId)
+                .child("modules")
+                .child(moduleId);
+
+        moduleRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                     moduleContent = dataSnapshot.child("moduleContent").getValue(String.class);
+                     moduleName = dataSnapshot.child("moduleName").getValue(String.class);
+                     videoUrl = dataSnapshot.child("videoUrl").getValue(String.class);
+
+                    if (moduleContent != null && moduleName != null && videoUrl != null && !videoUrl.isEmpty()) {
+                        displayTextWithClickableUrls(moduleContent);
+                        binding.videoView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+                            @Override
+                            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                                String videoId = extractVideoIdFromUrl(videoUrl);
+                                if (videoId != null && !videoId.isEmpty()) {
+                                    youTubePlayer.loadVideo(videoId, 0);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Invalid Video URL", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } else {
+                        showAddModuleMessage();
+                    }
+
+                    Log.d("ModuleContent", "Module Content: " + moduleContent);
+                    Log.d("ModuleName", "Module Name: " + moduleName);
+                } else {
+                    showAddModuleMessage();
+                    Log.d("ModuleDetails", "Module with ID " + moduleId + " does not exist.");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("FirebaseError", "Error fetching module details: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void showAddModuleMessage() {
+        binding.descryption.setText("Add Module");
+        // Optionally hide or show other UI elements as needed
+    }
+
+    private void displayTextWithClickableUrls(String textWithUrls) {
+        if (textWithUrls != null) {
+            binding.descryption.setText(HtmlCompat.fromHtml(textWithUrls, HtmlCompat.FROM_HTML_MODE_COMPACT));
+            binding.descryption.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+}

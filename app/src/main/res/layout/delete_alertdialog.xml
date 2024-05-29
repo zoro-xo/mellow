@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/_8sdp"
+    app:cardElevation="@dimen/_3sdp"
+    android:layout_margin="@dimen/_5sdp"
+>
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:padding="@dimen/_10sdp"
+       android:orientation="vertical"
+     >
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Delete Course?"
+           android:gravity="start"
+           android:layout_marginStart="@dimen/_12sdp"
+           android:textStyle="bold"
+           android:textColor="@color/black"
+           android:textSize="@dimen/_18ssp"/>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Are you sure you want to delete the course you cant undo it"
+           android:gravity="start"
+           android:layout_marginStart="@dimen/_12sdp"
+           android:textColor="@color/black"
+           android:textSize="@dimen/_15ssp"
+           android:layout_marginBottom="@dimen/_10sdp"
+           android:layout_marginTop="@dimen/_12sdp"/>
+
+       <androidx.appcompat.widget.AppCompatButton
+           android:id="@+id/btnDelete"
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/_40sdp"
+           android:layout_marginStart="@dimen/_15sdp"
+           android:layout_marginEnd="@dimen/_15sdp"
+           android:layout_marginBottom="@dimen/_5sdp"
+           android:background="@drawable/sign_enabled"
+           android:backgroundTint="@color/red"
+           android:text="Delete"
+           android:textColor="@color/black" />
+
+
+       <androidx.appcompat.widget.AppCompatButton
+           android:id="@+id/BtnCancel"
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/_40sdp"
+           android:layout_marginStart="@dimen/_15sdp"
+           android:layout_marginTop="@dimen/_10sdp"
+           android:layout_marginEnd="@dimen/_15sdp"
+           android:layout_marginBottom="@dimen/_5sdp"
+           android:background="@drawable/sign_enabled"
+           android:text="Cancel"
+           android:backgroundTint="@color/black"
+           android:textColor="@color/white" />
+
+   </LinearLayout>
+
+</androidx.cardview.widget.CardView>

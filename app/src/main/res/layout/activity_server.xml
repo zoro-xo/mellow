@@ -1,0 +1,1086 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.Server.Server_Activity">
+
+    <!--swipeRefreshLayout we don't need as of now-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+
+    <com.discord.panels.OverlappingPanelsLayout
+        android:id="@+id/overlapping_panels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/page_background_color">
+
+        <!-- Start Panel-->
+        <RelativeLayout
+            android:id="@+id/start_panel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_160sdp"
+                android:src="@drawable/community_thumbnail"
+                android:scaleType="centerCrop"
+                android:layout_alignParentTop="true"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@color/page_color"
+                android:layout_below="@+id/thumbnail"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+
+
+
+
+                <!--Recent chat and server name holding layout-->
+                <RelativeLayout
+                    android:id="@+id/chatItemAndGroupName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!--Recent chat switching ImageButton-->
+
+                    <!--Server name-->
+                    <TextView
+                        android:id="@+id/groupName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="20dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/inter_semibold"
+                        android:maxLines="2"
+                        android:paddingEnd="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/text_color"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/ib_FrndsList"
+                    style="@style/SelectableItemBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:background="@drawable/selector_subject"
+                    android:layout_below="@+id/chatItemAndGroupName"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="Chat with Aswan and Friends"
+                        android:gravity="center_horizontal"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                </RelativeLayout>
+
+
+                <!--Server icon recyclerview and Class/Subject recyclerview holder layout-->
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ib_FrndsList"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:id="@+id/groupRVs"
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <!--Public server (Useless)-->
+                        <TextView
+                            android:id="@+id/tv_UserPublicTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_UserPublicGroupTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <!--Others server (Useless)-->
+                        <TextView
+                            android:id="@+id/tv_OtherTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:fontFamily="@font/inter_medium"
+                            android:textColor="@color/text_color"
+                            android:textSize="16sp"
+                            android:visibility="gone" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_OtherPublicGroupTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <!--Server create plus button -->
+                        <ImageView
+                            android:id="@+id/addNewTopicButton"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/round_icon_background"
+                            android:contentDescription="@string/servers_contentDescription"
+                            android:elevation="2dp"
+                            android:padding="3dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_plus_16" />
+
+                    </LinearLayout>
+
+                    <!-- Friends Section -->
+                    <LinearLayout
+                        android:id="@+id/friendsSection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/groupRVs"
+                        android:paddingStart="1dp"
+                        android:paddingEnd="15dp">
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewFriendsNameList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="32dp"
+                            android:elevation="5dp" />
+
+
+                    </LinearLayout>
+
+                    <!-- Group Section-->
+                    <LinearLayout
+                        android:id="@+id/groupSection"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/friendsSection"
+                        android:orientation="vertical">
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewClassList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_marginBottom="32dp" />
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <!-- Center Panel       -->
+        <RelativeLayout
+            android:id="@+id/center_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/page_color"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <!--add group join group button show when new user login-->
+            <LinearLayout
+                android:id="@+id/ll_AddJoinGrp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:elevation="50dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btn_caddgroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="7dp"
+                    android:background="@drawable/button_gradient"
+                    android:fontFamily="@font/inter_medium"
+                    android:letterSpacing="0.1"
+                    android:text="@string/servers_create_server"
+                    android:textColor="@color/btn_text_white"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/btn_cjoingroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="7dp"
+                    android:background="@drawable/button_gradient"
+                    android:fontFamily="@font/inter_medium"
+                    android:letterSpacing="0.1"
+                    android:text="@string/join_server"
+                    android:textColor="@color/btn_text_white"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <!--Upper heading-->
+            <LinearLayout
+                android:id="@+id/ll_ChatDoubtDashboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_ChatDashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/action_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?actionBarSize"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@color/page_color"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                        <ImageButton
+                            android:id="@+id/swipe_left"
+                            style="@style/SelectableItemBackgroundBorderless"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:contentDescription="@string/servers_contentDescription"
+                            android:src="@drawable/ic_swipe_menux"
+                            app:tint="@color/iconSecondaryColor" />
+
+                        <TextView
+                            android:id="@+id/subjectName"
+                            android:layout_width="250dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_toEndOf="@id/swipe_left"
+                            android:fontFamily="@font/inter_medium"
+                            android:textColor="@color/text_color"
+                            android:textSize="16sp" />
+
+                        <RelativeLayout
+                            android:id="@+id/friendToolBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="2dp"
+                            android:visibility="gone">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/friendImg"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:layout_marginStart="70dp"
+                                android:background="@android:color/transparent"
+                                android:paddingTop="2dp"
+                                android:src="@drawable/ic_account_24" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@+id/friendImg"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_friend_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/inter_medium"
+                                    android:text="Username"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_friend_online_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/inter_medium"
+                                    android:text="Online"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="10sp" />
+
+                            </LinearLayout>
+
+
+                        </RelativeLayout>
+
+                        <ImageButton
+                            android:id="@+id/swipe_right"
+                            style="@style/SelectableItemBackgroundBorderless"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:contentDescription="@string/servers_contentDescription"
+                            android:src="@drawable/ic_swipe_menu"
+                            app:tint="@color/iconSecondaryColor" />
+                    </RelativeLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/action_bar"
+                        android:background="@color/view_divider"
+                        android:elevation="1dp" />
+
+                    <RelativeLayout
+                        android:id="@+id/below_toolbar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/action_bar">
+
+
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                            android:id="@+id/shimmer_effect"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <include layout="@layout/shimmer_item"/>
+                                <include layout="@layout/shimmer_item"/>
+                                <include layout="@layout/shimmer_item"/>
+                                <include layout="@layout/shimmer_item"/>
+
+                            </LinearLayout>
+
+                        </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+                        <!--Chat showing RecyclerView-->
+
+                        <!--Chat box sending message layout-->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_ChatDashboard"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="gone"
+                            android:layout_above="@+id/ll_bottom_send"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="0dp"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="1dp" />
+
+
+                        <ProgressBar
+                            android:id="@+id/uploadProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:visibility="gone"
+                            android:progressDrawable="@drawable/custom_progress_bg"
+                            android:layout_above="@+id/ll_bottom_send"
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+                        <LinearLayout
+                            android:id="@+id/ll_bottom_send"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="15dp"
+                            android:visibility="gone"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/et_ctext"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_toStartOf="@+id/sendDoubt"
+                                android:layout_weight="2"
+                                android:background="@drawable/chat_input_background"
+                                android:focusable="true"
+                                android:hint="@string/hint_server_edittext"
+                                android:imeOptions="actionDone"
+                                android:importantForAutofill="no"
+                                android:inputType="textCapSentences|textMultiLine"
+                                android:maxHeight="140dp"
+                                android:paddingStart="30dp"
+                                android:paddingTop="10dp"
+                                android:paddingEnd="30dp"
+                                android:paddingBottom="10dp"
+                                android:textColor="@color/text_color"
+                                android:textColorHint="@color/text_background_color"
+                                android:textCursorDrawable="@drawable/cursor_color" />
+
+                            <RelativeLayout
+                                android:id="@+id/sendDoubt"
+                                style="@style/SelectableItemBackgroundBorderless"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginEnd="10dp">
+
+
+                                <TextView
+                                    android:id="@+id/percentage"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_marginTop="25dp"
+                                    android:fontFamily="@font/inter_bold"
+                                    android:gravity="center"
+                                    android:text="0%"
+                                    android:textColor="@color/black"
+                                    android:visibility="gone" />
+
+                                <ImageButton
+                                    android:id="@+id/ib_pdf_btn"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:layout_centerInParent="true"
+                                    android:layout_marginTop="25dp"
+                                    android:background="@color/transparent"
+                                    android:contentDescription="@string/servers_contentDescription"
+                                    android:elevation="2dp"
+                                    android:src="@drawable/pdf_pic" />
+
+                                <ImageButton
+                                    android:id="@+id/ib_csubmit"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_centerInParent="true"
+                                    android:background="@color/transparent"
+                                    android:contentDescription="@string/servers_contentDescription"
+                                    android:elevation="2dp"
+                                    android:src="@drawable/ic_send_24"
+                                    android:visibility="gone" />
+
+                            </RelativeLayout>
+
+
+                            <ImageButton
+                                android:id="@+id/ib_doubtSubmit"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:background="@color/transparent"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:elevation="2dp"
+                                android:src="@drawable/ic_question_24" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!-- End Panel       -->
+        <RelativeLayout
+            android:id="@+id/end_panel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@color/page_color">
+
+            <!-- End Panel scrollview   -->
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/endPanelLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!--primary options layout-->
+                    <LinearLayout
+                        android:id="@+id/onlyAdminLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="20dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="20dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:padding="10dp"
+                            android:text="@string/favorite"
+                            android:textColor="@color/text_color"
+                            android:textSize="15sp" />
+
+                        <!--server setting option-->
+                        <LinearLayout
+                            android:id="@+id/ib_servSettings"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/background_server_setting"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_settings_24"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="@string/server_setting"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <!--attendances option-->
+                        <LinearLayout
+                            android:id="@+id/btn_lteachattend"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/backgroud_attendances"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_edit"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="@string/server_attendance"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <!--notifications option-->
+                        <LinearLayout
+                            android:id="@+id/btn_joinNotification"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/backgroud_notification"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_menu_notifications"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="@string/server_notification"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <!--Border Border start for routine/routine/fees -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/view_divider" />
+
+                    <!--secondary options layout-->
+                    <LinearLayout
+                        android:id="@+id/onlyLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="20dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="20dp"
+                        android:visibility="gone">
+
+                        <!--Student routine option-->
+                        <LinearLayout
+                            android:id="@+id/btn_studentRoutine"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:padding="30dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/custom_progress_bg"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_empty_calendar_icon_12dp"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="Student's routine"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <!--subject priority option-->
+                        <LinearLayout
+                            android:id="@+id/btn_subjectPriority"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/backgroud_subjectp"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_filter_16"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="Subject Priority"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <!--routine structure option-->
+                        <LinearLayout
+                            android:id="@+id/btn_routineStructure"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/backgroud_routine"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_workflow_24"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="Routine Structure"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <!--Fees Structure option-->
+                        <LinearLayout
+                            android:id="@+id/btn_feesStructure"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/backgroud_fees"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_fees"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="@string/fees_structure"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <!--Pay fees option-->
+                        <LinearLayout
+                            android:id="@+id/btn_studentFees"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="30dp"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/custom_progress_bg"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_meter_16"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="Pay Fees"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!--Border start for result and notice-->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:visibility="gone"
+                        android:background="@color/view_divider" />
+
+                    <!--Last options layout-->
+                    <LinearLayout
+                        android:id="@+id/onlyL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="20dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="20dp">
+
+                        <!--Result option-->
+                        <LinearLayout
+                            android:id="@+id/btn_result"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/backgroud_result"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/result"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="Result"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <!--Notice option-->
+                        <LinearLayout
+                            android:id="@+id/btn_notice"
+                            style="@style/SelectableItemBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/backgroud_notice"
+                                android:contentDescription="@string/servers_contentDescription"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_saved"
+                                app:tint="@color/white_constant" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="Notice"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <!--Border end for result and notice-->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/view_divider" />
+
+
+
+                    <!--Friends list recyclerview use in recent chat right panel-->
+                    <LinearLayout
+                        android:id="@+id/FriendListText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="20dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/FriendListTextt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_semibold"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/server_friends"
+                            android:textColor="@color/text_color"
+                            android:textSize="15sp"
+                            android:visibility="gone" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/endPanelAllFriendsRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="20dp"
+                            android:layoutAnimation="@anim/layout_fall_down"
+                            android:nestedScrollingEnabled="false"
+                            android:visibility="gone"
+                            app:fastScrollEnabled="false" />
+
+                    </LinearLayout>
+
+                    <!--Teachers list recyclerview-->
+                    <LinearLayout
+                        android:id="@+id/rightPanelMembs"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:id="@+id/adminListText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_semibold"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/server_teachers"
+                            android:textColor="@color/text_color"
+                            android:textSize="15sp"
+                            android:visibility="gone" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/adminList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="20dp"
+                            android:layoutAnimation="@anim/layout_fall_down"
+                            android:nestedScrollingEnabled="false"
+                            app:fastScrollEnabled="false" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/view_divider" />
+
+                    <!--Student list recyclerview-->
+                    <LinearLayout
+                        android:id="@+id/rightPanelMember"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:id="@+id/tv_GroupMember"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_semibold"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/server_students"
+                            android:textColor="@color/text_color"
+                            android:textSize="15sp"
+                            android:visibility="gone" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_GrpMemberList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="20dp"
+                            android:layoutAnimation="@anim/layout_fall_down"
+                            android:nestedScrollingEnabled="false"
+                            app:fastScrollEnabled="false" />
+
+                    </LinearLayout>
+
+                    <!--Exam and result button ; don't need-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <Button
+                            android:id="@+id/btn_lteachexam"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_semibold"
+                            android:text="@string/exam"
+                            android:textColor="@color/text_color"
+                            android:textSize="16sp" />
+
+                        <Button
+                            android:id="@+id/btn_lteachresult"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_semibold"
+                            android:text="@string/result"
+                            android:textColor="@color/text_color"
+                            android:textSize="16sp" />
+
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </RelativeLayout>
+
+    </com.discord.panels.OverlappingPanelsLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/page_color"
+        android:visibility="gone"
+        app:itemIconTint="@color/bottom_navigation_color"
+        app:itemTextAppearanceActive="@style/BodyText.NavigationBar"
+        app:itemTextAppearanceInactive="@style/BodyText.NavigationBar"
+        app:itemTextColor="@color/bottom_navigation_color"
+        app:labelVisibilityMode="selected"
+        app:layout_constraintBaseline_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+</RelativeLayout>

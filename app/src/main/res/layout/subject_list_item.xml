@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/subListItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_subjectTopic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/inter_medium"
+        android:paddingStart="30dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:letterSpacing="0.02"
+        android:layout_marginBottom="7dp"
+        android:textColor="@color/text_color"
+        android:textAllCaps="false"
+        android:textSize="15sp"
+        app:drawableLeftCompat="@drawable/ic_hashtag_public" />
+</LinearLayout>

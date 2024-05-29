@@ -1,0 +1,122 @@
+{
+  "project_info": {
+    "project_number": "351525579518",
+    "firebase_url": "https://mellow-cd9a6-default-rtdb.firebaseio.com",
+    "project_id": "mellow-cd9a6",
+    "storage_bucket": "mellow-cd9a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351525579518:android:743ebca3b7db89fb0313af",
+        "android_client_info": {
+          "package_name": "com.cllasify.mellow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351525579518-a7jem1l4851hj5lhcl770pvg2gdhhhcv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cllasify.mellow",
+            "certificate_hash": "8174cfc12c0147488e0d8b769a74ebbda1e8bedd"
+          }
+        },
+        {
+          "client_id": "351525579518-d25phcu7mupuacvnq625fn8p9pk3firu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlDqrbrWjvQuKsa31BgWvzs4_WQgKyMag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351525579518-d25phcu7mupuacvnq625fn8p9pk3firu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351525579518:android:cbb1c19642f73ae20313af",
+        "android_client_info": {
+          "package_name": "com.looksmaxxing.mellow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351525579518-dmjv161dkipquprvnip6h3svpj0b4hgf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.looksmaxxing.mellow",
+            "certificate_hash": "8174cfc12c0147488e0d8b769a74ebbda1e8bedd"
+          }
+        },
+        {
+          "client_id": "351525579518-d25phcu7mupuacvnq625fn8p9pk3firu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlDqrbrWjvQuKsa31BgWvzs4_WQgKyMag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351525579518-d25phcu7mupuacvnq625fn8p9pk3firu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351525579518:android:1740682cb65d7e9b0313af",
+        "android_client_info": {
+          "package_name": "com.mellow.mellow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351525579518-5gcckbkggenpisphrfe1ggk49iiakkuf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mellow.mellow",
+            "certificate_hash": "8174cfc12c0147488e0d8b769a74ebbda1e8bedd"
+          }
+        },
+        {
+          "client_id": "351525579518-d25phcu7mupuacvnq625fn8p9pk3firu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlDqrbrWjvQuKsa31BgWvzs4_WQgKyMag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351525579518-d25phcu7mupuacvnq625fn8p9pk3firu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
