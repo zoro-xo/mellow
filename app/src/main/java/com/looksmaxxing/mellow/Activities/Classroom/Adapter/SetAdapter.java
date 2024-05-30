@@ -1,5 +1,6 @@
 package com.looksmaxxing.mellow.Activities.Classroom.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -54,7 +55,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SetViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SetViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Set set = setList.get(position);
         boolean isPrvsSetCompltd = position == 0 || setList.get(position - 1).getModules().get(setList.get(position - 1).getModules().size() - 1).isWatched();
         holder.bind(set, isPrvsSetCompltd, position == expandedPosition);
