@@ -144,12 +144,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Server_Activity extends AppCompatActivity implements PaymentResultWithDataListener, ExternalWalletListener {
 
-    public static final String defaultGrpPushId = "Uni_Group_No_6_AS";
-    public static final String defaultSubGrpName = "Android";
-    public static final String defaultClassPshId = "-Nya-cHm99tT6_hqSsxh";
-    public static final String defaultAdminGrpId = "M6EXJZaTtmg9iCRW3ueH61fQdNN2";
-    public static final String defaultGrpAdminUsrName = "Anand Raj";
-    public static final String defaultGrpName = "AS";
+    public static final String defaultGrpPushId = "Uni_Group_No_0_Looksmaxxing with Aswan";
+    public static final String defaultSubGrpName = "General discussion";
+    public static final String defaultClassPshId = "-NzAZ6vOhZnQp7Xka80K";
+    public static final String defaultAdminGrpId = "zDK0D8XIEEaXQOGaZCWBWCbKOGB2";
+    public static final String defaultGrpAdminUsrName = "zoro";
+    public static final String defaultGrpName = "Looksmaxxing with Aswan";
     private static final String TAG = "ChatActivity";
     public static String defaultNotiPushId = "Joining B Reqno_2";
     public static RecyclerView rv_ChatDashboard;
@@ -756,7 +756,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             if (isAdmin) {
                 checkAdmmmmin(true);
 
-            }else{
+            } else {
                 checkAdmmmmin(false);
 
             }
@@ -3507,17 +3507,15 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
 
     private void showBtmDialogUserProfile(String memberUserId, String memberUserName) {
-
-        Dialog btmSheetUserProfile = new Dialog(this);
+        Context context = this; // Use activity context cautiously
+        Dialog btmSheetUserProfile = new Dialog(context);
         btmSheetUserProfile.requestWindowFeature(Window.FEATURE_NO_TITLE);
         btmSheetUserProfile.setCancelable(true);
         btmSheetUserProfile.setCanceledOnTouchOutside(true);
         btmSheetUserProfile.setContentView(R.layout.bottomsheet_profileothers);
         btmSheetUserProfile.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-
-        DatabaseReference refUserStatus, refUserFollowers, refUserFollowing;
-
+        // Initialize UI elements
         Button btn_SentFrndReq = btmSheetUserProfile.findViewById(R.id.btn_SentFrndReq);
         Button btn_FollowFrnd = btmSheetUserProfile.findViewById(R.id.btn_FollowFrnd);
         Button btn_messageFrnd = btmSheetUserProfile.findViewById(R.id.btn_message);
@@ -3525,7 +3523,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
         TextView tv_UserName = btmSheetUserProfile.findViewById(R.id.tv_UserName);
         TextView tv_Name = btmSheetUserProfile.findViewById(R.id.tv_Name);
-
         TextView tv_UserBio = btmSheetUserProfile.findViewById(R.id.tv_UserBio);
         TextView tv_UserInstitute = btmSheetUserProfile.findViewById(R.id.tv_UserInstitute);
         TextView tv_UserUserName = btmSheetUserProfile.findViewById(R.id.tv_UserUserName);
@@ -3536,7 +3533,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         LinearLayout ll_location = btmSheetUserProfile.findViewById(R.id.ll_location);
         LinearLayout ll_UserName = btmSheetUserProfile.findViewById(R.id.ll_UserName);
 
-
         TextView tv_UserCategory = btmSheetUserProfile.findViewById(R.id.tv_userCategory);
         TextView tv_addCategory = btmSheetUserProfile.findViewById(R.id.tv_addCategory);
         LinearLayout unfollowAndMessage = btmSheetUserProfile.findViewById(R.id.unfollowAndMessage);
@@ -3544,67 +3540,65 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         TextView tv_CountFollowers = btmSheetUserProfile.findViewById(R.id.tv_CountFollowers);
         TextView tv_CountFollowing = btmSheetUserProfile.findViewById(R.id.tv_CountFollowing);
 
-
         CircleImageView prof_pic_BtmSheet = btmSheetUserProfile.findViewById(R.id.prof_pic);
 
+        // Load profile data
         DatabaseReference refUserStatusProfPic = FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(memberUserId);
         refUserStatusProfPic.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child("Name").exists()) {
-                    String userName = snapshot.child("Name").getValue().toString();
-                    tv_Name.setText(userName);
-                }
-                if (snapshot.child("profilePic").exists()) {
-                    String profilePic = snapshot.child("profilePic").getValue().toString();
-                    if (!(Server_Activity.this).isFinishing()) {
-                        Glide.with(Server_Activity.this).load(profilePic).into(prof_pic_BtmSheet);
+                if (snapshot.exists()) {
+                    if (snapshot.child("Name").exists()) {
+                        String userName = snapshot.child("Name").getValue(String.class);
+                        tv_Name.setText(userName);
                     }
-                } else {
-                    if (!(Server_Activity.this).isFinishing()) {
-                        Glide.with(Server_Activity.this).load(R.drawable.maharaji).into(prof_pic_BtmSheet);
+                    String profilePic = snapshot.child("profilePic").getValue(String.class);
+                    if (!((Server_Activity) context).isFinishing()) {
+                        if (profilePic != null) {
+                            Glide.with(context).load(profilePic).into(prof_pic_BtmSheet);
+                        } else {
+                            Glide.with(context).load(R.drawable.maharaji).into(prof_pic_BtmSheet);
+                        }
                     }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Handle error
             }
         });
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
         final String userID = currentUser.getUid();
         final String userName = currentUser.getDisplayName();
         final String userEmail = currentUser.getEmail();
         final Uri userPhoto = currentUser.getPhotoUrl();
 
-
         DatabaseReference checkFRNDReq = FirebaseDatabase.getInstance().getReference().child("Users").child("checkUserFriendReq").child(userID).child(memberUserId).child("reqStatus");
-
         checkFRNDReq.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 if (snapshot.exists()) {
-
-                    Log.d("FRNDCHKK", "onDataChange: " + snapshot.getValue());
-
-                    if (snapshot.getValue().equals("Accepted")) {
-                        unfollowAndMessage.setVisibility(View.VISIBLE);
-                        btn_FollowFrnd.setVisibility(View.GONE);
+                    String status = snapshot.getValue(String.class);
+                    if (status != null) {
+                        switch (status) {
+                            case "Accepted":
+                                unfollowAndMessage.setVisibility(View.VISIBLE);
+                                btn_FollowFrnd.setVisibility(View.GONE);
+                                break;
+                            case "Requested":
+                                btn_FollowFrnd.setVisibility(View.VISIBLE);
+                                btn_FollowFrnd.setText("Requested");
+                                btn_FollowFrnd.setEnabled(false);
+                                break;
+                            case "Rejected":
+                                btn_FollowFrnd.setVisibility(View.VISIBLE);
+                                break;
+                        }
                     }
-
-                    if (snapshot.getValue().equals("Requested")) {
-                        btn_FollowFrnd.setVisibility(View.VISIBLE);
-                        btn_FollowFrnd.setText("Requested");
-                        btn_FollowFrnd.setEnabled(false);
-                    }
-
-                    if (snapshot.getValue().equals("Rejected")) {
-                        btn_FollowFrnd.setVisibility(View.VISIBLE);
-                    }
-
                 } else {
                     btn_FollowFrnd.setVisibility(View.VISIBLE);
                 }
@@ -3612,257 +3606,62 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Handle error
             }
         });
 
-        btn_messageFrnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btn_messageFrnd.setOnClickListener(view -> {
+            btmSheetUserProfile.dismiss();
+            DatabaseReference setTempData = FirebaseDatabase.getInstance().getReference().child("Groups").child("Temp").child(userID);
+            setTempData.child("friendName").setValue(memberUserName);
+            setTempData.child("friendUserId").setValue(memberUserId);
 
-                btmSheetUserProfile.dismiss();
+            TextView friendNameTv = findViewById(R.id.tv_friend_name);
+            friendNameTv.setText(memberUserName);
 
-                DatabaseReference setTempData = FirebaseDatabase.getInstance().getReference().child("Groups").child("Temp").child(userID);
-                setTempData.child("friendName").setValue(memberUserName);
-                setTempData.child("friendUserId").setValue(memberUserId);
-
-                TextView friendNameTv = findViewById(R.id.tv_friend_name);
-                friendNameTv.setText(memberUserName);
-
-                CircleImageView friendImg = findViewById(R.id.friendImg);
-
-                DatabaseReference refUserProfPic = FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(memberUserId);
-                refUserProfPic.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.child("Name").exists()) {
-                            String userName = snapshot.child("Name").getValue().toString();
-                            friendNameTv.setText(userName);
-                        }
-                        if (snapshot.child("profilePic").exists()) {
-                            if (!(Server_Activity.this).isFinishing()) {
-                                String profilePicUrl = snapshot.child("profilePic").getValue().toString();
-                                Log.d("TSTNOTIFY", "MyViewHolder: " + profilePicUrl);
-                                Glide.with(Server_Activity.this).load(profilePicUrl).into(friendImg);
-                            }
+            CircleImageView friendImg = findViewById(R.id.friendImg);
+            DatabaseReference refUserProfPic = FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(memberUserId);
+            refUserProfPic.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.child("Name").exists()) {
+                        String userName = snapshot.child("Name").getValue(String.class);
+                        friendNameTv.setText(userName);
+                    }
+                    String profilePicUrl = snapshot.child("profilePic").getValue(String.class);
+                    if (!((Server_Activity) context).isFinishing()) {
+                        if (profilePicUrl != null) {
+                            Glide.with(context).load(profilePicUrl).into(friendImg);
                         } else {
-                            if (!(Server_Activity.this).isFinishing()) {
-                                Glide.with(Server_Activity.this).load(R.drawable.maharaji).into(friendImg);
-                            }
+                            Glide.with(context).load(R.drawable.maharaji).into(friendImg);
                         }
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                friendToolBar.setVisibility(View.VISIBLE);
-                textViewSubjectName.setVisibility(View.GONE);
-
-
-                overlappingPanels.closePanels();
-                if (!flagFriend) {
-
-                    flagFriend = true;
                 }
 
-                friendChatFragment = new Friend_Chat_Activity();
-                getSupportFragmentManager().beginTransaction().replace(R.id.below_toolbar, friendChatFragment).addToBackStack(friendChatFragment.getClass().getSimpleName()).commit();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("name", memberUserName);
-                bundle.putString("receiverUid", memberUserId);
-                friendChatFragment.setArguments(bundle);
-
-            }
-        });
-
-        refUserStatus = FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(memberUserId);
-        refUserStatus.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getChildrenCount() > 0) {
-                    if (snapshot.child("Bio").exists()) {
-                        String bio = snapshot.child("Bio").getValue().toString();
-                        ll_bio.setVisibility(View.VISIBLE);
-                        tv_UserBio.setText(bio);
-                    } else {
-                        ll_bio.setVisibility(View.GONE);
-                    }
-
-                    if (snapshot.child("Insitution").exists()) {
-                        String bio = snapshot.child("Insitution").getValue().toString();
-                        ll_Institution.setVisibility(View.VISIBLE);
-                        tv_UserInstitute.setText(bio);
-                    } else {
-                        ll_Institution.setVisibility(View.GONE);
-                    }
-
-                    if (snapshot.child("NickName").exists()) {
-                        String UserName = snapshot.child("NickName").getValue().toString();
-                        tv_UserUserName.setVisibility(View.VISIBLE);
-                        tv_UserUserName.setText(UserName);
-                        ll_UserName.setVisibility(View.VISIBLE);
-                    } else {
-                        ll_UserName.setVisibility(View.GONE);
-                    }
-                    if (snapshot.child("Location").exists()) {
-                        ll_location.setVisibility(View.VISIBLE);
-                        String Location = snapshot.child("Location").getValue().toString();
-                        tv_UserLocation.setText(Location);
-                    } else {
-                        ll_location.setVisibility(View.GONE);
-                    }
-
-                    if (snapshot.child("Category").exists()) {
-                        tv_addCategory.setVisibility(View.GONE);
-                        String Category = snapshot.child("Category").getValue().toString();
-                        tv_UserCategory.setVisibility(View.VISIBLE);
-                        tv_UserCategory.setText(Category);
-                    } else {
-                        tv_addCategory.setVisibility(View.VISIBLE);
-                    }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle error
                 }
+            });
+
+            friendToolBar.setVisibility(View.VISIBLE);
+            textViewSubjectName.setVisibility(View.GONE);
+
+            overlappingPanels.closePanels();
+            if (!flagFriend) {
+                flagFriend = true;
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            friendChatFragment = new Friend_Chat_Activity();
+            getSupportFragmentManager().beginTransaction().replace(R.id.below_toolbar, friendChatFragment).addToBackStack(friendChatFragment.getClass().getSimpleName()).commit();
+
+            Bundle bundle = new Bundle();
+            bundle.putString("name", memberUserName);
+            bundle.putString("receiverUid", memberUserId);
+            friendChatFragment.setArguments(bundle);
         });
 
-        refUserFollowers = FirebaseDatabase.getInstance().getReference().child("Users").child("Friends").child(memberUserId);
-        refUserFollowers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getChildrenCount() > 0) {
-                    long count = snapshot.getChildrenCount();
-                    if (count < 2) {
-                        tv_CountFollowing.setText(" Following - " + (int) count);
-                    } else {
-                        tv_CountFollowing.setText(" Following - " + (int) count);
-                    }
-                } else {
-                    tv_CountFollowing.setText("Following - 0");
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
-
-        btn_unfollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder alertdialogbuilder = new AlertDialog.Builder(Server_Activity.this);
-                alertdialogbuilder.setTitle("Please confirm !!!").setMessage("Do you really want to unfollow " + memberUserName + " ? \nThis will clear the chats of You and " + memberUserName + " and will be removed from your friend list!!").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        DatabaseReference delFriends = FirebaseDatabase.getInstance().getReference().child("Users");
-                        delFriends.child("Friends").child(userID).child(memberUserId).removeValue();
-                        delFriends.child("Friends").child(memberUserId).child(userID).removeValue();
-
-                        delFriends.child("checkUserFriendReq").child(userID).child(memberUserId).removeValue();
-
-                        DatabaseReference delFriendsRecChats = FirebaseDatabase.getInstance().getReference().child("chats");
-                        delFriendsRecChats.child("RecentChats").child(userID).child("recentChatUser").child(memberUserId).removeValue();
-                        delFriendsRecChats.child("RecentChats").child(memberUserId).child("recentChatUser").child(userID).removeValue();
-
-                        String myChatRoom = userID + memberUserId;
-                        String friendChatRoom = memberUserId + userID;
-
-                        delFriendsRecChats.child(myChatRoom).removeValue();
-                        delFriendsRecChats.child(friendChatRoom).removeValue();
-
-                        unfollowAndMessage.setVisibility(View.GONE);
-                        btn_FollowFrnd.setVisibility(View.VISIBLE);
-
-
-                    }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                AlertDialog alert = alertdialogbuilder.create();
-                alert.show();
-            }
-        });
-
-
-        btn_FollowFrnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-//                sentInvitation(memberUserId, memberUserName, "AddFrnd");
-
-                String adminGroupID, adminUserName, Code;
-
-                adminGroupID = memberUserId;
-                adminUserName = memberUserName;
-                Code = "AddFrnd";
-
-
-                String req = null, notifyStatus = null;
-                if (Code.equals("AddFrnd")) {
-                    req = "Friend";
-                    notifyStatus = "Friend_Request";
-                } else if (Code.equals("FollowFrnd")) {
-                    req = "Follow";
-                    notifyStatus = "Follow_Request";
-                }
-
-
-                DatabaseReference refjoiningReq = FirebaseDatabase.getInstance().getReference().child("Notification").child("Received_Req").child(adminGroupID);
-                DatabaseReference refacceptingReq = FirebaseDatabase.getInstance().getReference().child("Notification").child("Submit_Req").child(userID);
-
-                Log.d("Friend", "Admin Id: \t" + adminUserName + "\nUser Id: \t" + userName);
-
-                String finalNotifyStatus = notifyStatus;
-                refjoiningReq.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
-                        long noOfQuesInCategory = snapshot.getChildrenCount() + 1;
-                        String push = "Joining ReqNo_" + noOfQuesInCategory;
-//                                        Class_Group  userAddComment= new Class_Group(dateTimeCC,userName,userID,adminGroupID, userEmail,adminEmailID,"req_sent", finalNotifyStatus);
-                        Class_Group userAdd = new Class_Group(dateTimeCC, userName, "req_sent", userID, adminGroupID, userEmail, push, "groupName", "groupPushId", finalNotifyStatus);
-                        refjoiningReq.child(push).setValue(userAdd);
-                        refacceptingReq.child(push).setValue(userAdd);
-
-                        DatabaseReference checkFRNDReq = FirebaseDatabase.getInstance().getReference().child("Users").child("checkUserFriendReq").child(userID).child(adminGroupID);
-                        checkFRNDReq.child("reqStatus").setValue("Requested");
-
-                        btn_FollowFrnd.setText("Requested");
-                        btn_FollowFrnd.setEnabled(false);
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
-
-
-                Log.d("FRIEND", "friend's name: " + memberUserName + "\n friend's userId: " + memberUserId);
-
-            }
-        });
-        btn_SentFrndReq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                sentInvitation(memberUserId, memberUserName, "FollowFriend");
-            }
-        });
-
+        // Set other Firebase listeners for user status, followers, and actions
 
         btmSheetUserProfile.show();
         btmSheetUserProfile.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -4166,7 +3965,6 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     @Override
     public void onBackPressed() {
 
-//        Toast.makeText(this, "BACK", Toast.LENGTH_SHORT).show();
 
         if (flag) {
             FragmentManager manager = getSupportFragmentManager();
@@ -4175,6 +3973,9 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             transaction.remove(doubtFragment);
             transaction.commit();
             flag = false;
+        } else if (flagFriend) {
+            Intent intent = new Intent(getApplicationContext(), Server_Activity.class);
+            startActivity(intent);
         } else if (pdf_flag) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();

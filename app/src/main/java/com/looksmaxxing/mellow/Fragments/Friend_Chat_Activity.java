@@ -38,7 +38,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -237,11 +236,13 @@ public class Friend_Chat_Activity extends Fragment {
                 String c = String.valueOf(s);
 
                 if (c.trim().isEmpty()) {
-                    ib_pdf_btn.setVisibility(View.VISIBLE);
-                    ib_FrndP_csubmit.setVisibility(View.GONE);
+//                    ib_pdf_btn.setVisibility(View.VISIBLE);
+//                    ib_FrndP_csubmit.setVisibility(View.GONE);
+                    ib_FrndP_csubmit.setClickable(false);
                 } else {
-                    ib_pdf_btn.setVisibility(View.GONE);
-                    ib_FrndP_csubmit.setVisibility(View.VISIBLE);
+//                    ib_pdf_btn.setVisibility(View.GONE);
+//                    ib_FrndP_csubmit.setVisibility(View.VISIBLE);
+                    ib_FrndP_csubmit.setClickable(true);
                 }
             }
 

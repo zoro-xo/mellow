@@ -184,76 +184,8 @@ public class Adaptor_ShowGrpMember extends RecyclerView.Adapter<Adaptor_ShowGrpM
         });
 
 
-/*
-        holder.ib_present.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference databaseReference = firebaseDatabase.getReference("Groups").child("All_Universal_Group").child(Answers.getGroupName()).child("User_Subscribed_Groups").child(Answers.getUserId());
-                databaseReference.child("Attendance").setValue("Present");
-
-            }
-        });
-
-        holder.ib_absent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference databaseReference = firebaseDatabase.getReference("Groups").child("All_Universal_Group").child(Answers.getGroupName()).child("User_Subscribed_Groups").child(Answers.getUserId());
-                databaseReference.child("Attendance").setValue("Absent");
-
-            }
-        });
-*/
         refUserFollowing = FirebaseDatabase.getInstance().getReference().child("Users").child("Following").child(currUserID);
-//
-//        holder.ib_followFrnd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (!subsClick){
-//                    refUserFollowing.child(userID).setValue(true);
-//                subsClick=true;
-//                }else{
-//                    refUserFollowing.child(userID).setValue(null);
-//                    subsClick=false;
-//                }
-//
-//            }
-//        });
-//        holder.ib_AddFrnd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (!addFrndClick){
-//                    refUserFollowing.child(userID).setValue(true);
-//                    addFrndClick=true;
-//                }else{
-//                    refUserFollowing.child(userID).setValue(null);
-//                    addFrndClick=false;
-//                }
-//
-//            }
-//        });
-/*
-        DatabaseReference refUserStatus= FirebaseDatabase.getInstance().getReference().child("Users").child("Registration").child(userID);
-        refUserStatus.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getChildrenCount()>0){
 
-                    if (snapshot.child("profilePic").exists()){
-                        String profilePic=snapshot.child("profilePic").getValue().toString();
-                        Glide.with(context).load(profilePic).into(holder.civ_UserProfilePic);
-                    }
-//                    else{
-//                        Picasso.get().load(userPhoto).into(prof_pic);
-//                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-*/
 
 
     }
@@ -291,47 +223,6 @@ public class Adaptor_ShowGrpMember extends RecyclerView.Adapter<Adaptor_ShowGrpM
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
             assert currentUser != null;
             String currUserID = currentUser.getUid();
-/*
-            ib_AddFrnd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListener != null) {
-                        int position = getAdapterPosition();
-                        Class_Group user = mDatalistNew.get(getAdapterPosition());
-                        String adminGroupID=user.userId;
-                        String adminEmailID=user.userEmailId;
-                        String adminUserName=user.userName;
-                        String pushId=user.position;
-                        if (!currUserID.equals(adminGroupID)) {
-                        if (position != RecyclerView.NO_POSITION) {
-                            mListener.AddFrndDialog(adminGroupID, adminEmailID, adminUserName, pushId);
-                            //mListener.dislikeAns();
-                        }
-                        }
-                    }
-                }
-            });
-            ib_followFrnd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListener != null) {
-                        int position = getAdapterPosition();
-                        Class_Group user = mDatalistNew.get(getAdapterPosition());
-                        String adminGroupID=user.userId;
-                        String adminEmailID=user.userEmailId;
-                        String adminUserName=user.userName;
-                        String pushId=user.position;
-
-                        if (!currUserID.equals(adminGroupID)) {
-                            if (position != RecyclerView.NO_POSITION) {
-                                mListener.FollowFriendDialog(adminGroupID, adminEmailID, adminUserName, pushId);
-                                //mListener.dislikeAns();
-                            }
-                        }
-                    }
-                }
-            });
-            */
             ll_Group.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
