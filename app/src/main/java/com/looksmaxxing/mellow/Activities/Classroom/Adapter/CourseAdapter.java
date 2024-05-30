@@ -19,12 +19,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.looksmaxxing.mellow.Activities.Classroom.Activities.Classroom_Activity;
 import com.looksmaxxing.mellow.Activities.Classroom.Activities.Edit_Course_Activity;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Course;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
@@ -323,7 +321,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 //            courseToolBarName.setText(course.getCourseName());
             Context context = itemView.getContext();
             progressBar.setProgress(progress);
-            tvProgressBar.setText(progress+"");
+            tvProgressBar.setText(progress+"%");
 
 //            Glide.with(context).load(course.getImageUrl())
 //                    .into(courseImage);

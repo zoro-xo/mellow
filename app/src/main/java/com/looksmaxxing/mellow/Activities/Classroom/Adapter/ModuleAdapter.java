@@ -1,7 +1,6 @@
 package com.looksmaxxing.mellow.Activities.Classroom.Adapter;
 
 import android.content.Context;
-
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,14 +17,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.looksmaxxing.mellow.Activities.Classroom.Models.AdminChecker;
-
-import java.util.List;
-
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.Utility.UserUtils;
+
+import java.util.List;
 
 public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleViewHolder> {
     public static List<Module> moduleList;
@@ -124,7 +121,11 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
 
         public void bind(Module module, boolean isPreviousVideoWatched, ModuleViewHolder holder) {
             moduleName.setText(module.getModuleName());
-
+            lockIcon.setVisibility(isPreviousVideoWatched ? View.GONE : View.VISIBLE);
+            if (module.isWatched()){
+                lockIcon.setVisibility(View.VISIBLE);
+                lockIcon.setImageResource(R.drawable.green_check);
+            }
             boolean isAdmin = UserUtils.isAdmin();
 
             // Set moduleMenu visibility and enabled state based on user's admin status
@@ -132,12 +133,8 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
                 holder.moduleMenu.setVisibility(View.VISIBLE);
                 holder.moduleMenu.setEnabled(true);
             } else {
-                holder.moduleMenu.setVisibility(View.VISIBLE);
-                if (!isPreviousVideoWatched) {
-                    holder.moduleMenu.setEnabled(false);
-                } else {
-                    holder.moduleMenu.setEnabled(true);
-                }
+                holder.moduleMenu.setVisibility(View.GONE);
+                holder.moduleMenu.setEnabled(isPreviousVideoWatched);
             }
 
             moduleName.setOnClickListener(new View.OnClickListener() {
@@ -145,17 +142,16 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
                 public void onClick(View v) {
                     if (isAdmin) {
                         // Admins can click on modules regardless of lock status
-                        setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId());
+                        setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId(), module.isWatched());
                     } else {
                         // For non-admins, check if module is locked
                         if (isPreviousVideoWatched) {
-                            setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId());
+                            setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId(), module.isWatched());
                         }
                     }
                 }
             });
 
-            lockIcon.setVisibility(isPreviousVideoWatched ? View.GONE : View.VISIBLE);
         }
     }
 }

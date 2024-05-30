@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -156,12 +155,15 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
         });
     }
 
+    
     @Override
-    public void onSetClicked(String setId, String name, String moduleId) {
+    public void onSetClicked(String setId, String name, String moduleId, boolean watched) {
         clickedSetId = setId;
         Intent sendIntent = new Intent(this, Module_Details_Activity.class);
         sendIntent.putExtra("courseId", courseId);
         sendIntent.putExtra("setId", clickedSetId);
+        sendIntent.putExtra("isModuleCompleted", clickedSetId);
+        sendIntent.putExtra("isModuleWatched", watched);
         sendIntent.putExtra("name", name);
         if (moduleId != null)
             sendIntent.putExtra("id", moduleId);
