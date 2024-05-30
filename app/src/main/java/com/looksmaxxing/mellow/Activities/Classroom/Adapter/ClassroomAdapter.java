@@ -66,7 +66,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
         holder.binding.tvCourseTitle.setText(model.getTitle());
         holder.binding.tvCourseDesc.setText(model.getDescription());
         holder.binding.tvProgressText.setText(model.getProgress() + "%");
-        holder.binding.progressBar.setProgress(model.getProgress());git
+        holder.binding.progressBar.setProgress(model.getProgress());
         Glide.with(context)
                 .load(model.getImageUrl())
                 .into(holder.binding.ivCourseImage);
