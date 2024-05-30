@@ -1,13 +1,17 @@
 package com.looksmaxxing.mellow.Activities.Classroom.Activities;
 
-import static android.webkit.URLUtil.isValidUrl;
-
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,29 +24,27 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.looksmaxxing.mellow.R;
 import com.looksmaxxing.mellow.Utility.UserUtils;
 import com.looksmaxxing.mellow.databinding.ActivityModuleDetailsBinding;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Module_Details_Activity extends AppCompatActivity  {
+public class Module_Details_Activity extends AppCompatActivity {
     ActivityModuleDetailsBinding binding;
-
+    FirebaseDatabase database;
+    String userID;
+    String moduleContent;
+    String videoUrl;
     private String moduleId;
     private String moduleName;
     private String courseId;
     private String setId;
-    FirebaseDatabase database;
-    private WebView webView;
-    String userID;
-
-    String moduleContent;
-    String videoUrl;
+    private boolean isModuleWatched;
+    private View customView;
+    private WebChromeClient.CustomViewCallback customViewCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class Module_Details_Activity extends AppCompatActivity  {
         moduleName = intent.getStringExtra("name");
         courseId = intent.getStringExtra("courseId");
         setId = intent.getStringExtra("setId");
+        isModuleWatched = intent.getBooleanExtra("isModuleWatched", false);
+        setCompletionBtn();
         binding.title.setText(moduleName);
         database = FirebaseDatabase.getInstance();
         userID = FirebaseAuth.getInstance().getUid();
@@ -64,9 +68,9 @@ public class Module_Details_Activity extends AppCompatActivity  {
 //        }
 
 
-        if(UserUtils.isAdmin()){
+        if (UserUtils.isAdmin()) {
             binding.courseMenu.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             binding.courseMenu.setVisibility(View.GONE);
 
         }
@@ -80,9 +84,14 @@ public class Module_Details_Activity extends AppCompatActivity  {
         binding.incomplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.incomplete.setVisibility(View.GONE);
-                binding.complete.setVisibility(View.VISIBLE);
-
+//                binding.incomplete.setVisibility(View.GONE);
+//                binding.complete.setVisibility(View.VISIBLE);
+                String tag = (String) view.getTag();
+                if (Objects.equals(tag, "incomplete")) {
+                    updateCompletionBtn(R.drawable.green_check, "completed", true);
+                } else {
+                    updateCompletionBtn(R.drawable.btn_complete, "incomplete", false);
+                }
             }
         });
 
@@ -103,8 +112,7 @@ public class Module_Details_Activity extends AppCompatActivity  {
             }
         });
 
-        getLifecycle().addObserver(binding.videoView);
-
+//        getLifecycle().addObserver((LifecycleObserver) binding.videoView);
 
 
 //        if (videoId != null) {
@@ -117,19 +125,35 @@ public class Module_Details_Activity extends AppCompatActivity  {
 
     }
 
-    private void updateModuleCompletion() {
+    private void setCompletionBtn() {
+        int drawable = isModuleWatched ? R.drawable.green_check : R.drawable.btn_complete;
+        String tag = isModuleWatched ? "completed" : "incomplete";
+        updateCompletionBtn(drawable, tag, null);
+    }
+
+    private void updateCompletionBtn(int btn_complete, String incomplete, Boolean b) {
+        binding.incomplete.setImageResource(btn_complete);
+        binding.incomplete.setTag(incomplete);
+        if (b != null)
+            updateModuleCompletion(b);
+    }
+
+    private void updateModuleCompletion(boolean b) {
+
         DatabaseReference historyRef = database.getReference("History").child(userID);
         DatabaseReference courseRef = database.getReference("courses").child(courseId);
         // Update module completion status
         historyRef.child("course").child(courseId)
                 .child("sets").child(setId)
                 .child("modules").child(moduleId)
-                .child("watched").setValue(true);
+                .child("watched").setValue(b);
         // Update module completion status inside module
         courseRef.child("sets").child(setId)
                 .child("modules").child(moduleId)
                 .child("watched_users")
-                .child(userID).child("watched").setValue(true);
+                .child(userID).child("watched").setValue(b);
+
+//        Toast.makeText(this, "Updated Successfully", Toast.LENGTH_SHORT).show();
     }
 
     private String extractVideoIdFromUrl(String videoUrl) {
@@ -141,11 +165,10 @@ public class Module_Details_Activity extends AppCompatActivity  {
             videoId = matcher.group();
         }
         System.out.println(videoId);
-        Toast.makeText(this, ""+videoId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, videoId, Toast.LENGTH_SHORT).show();
         return videoId;
 
     }
-
 
 
     private void fetchModuleDetails(String moduleId) {
@@ -161,23 +184,38 @@ public class Module_Details_Activity extends AppCompatActivity  {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                     moduleContent = dataSnapshot.child("moduleContent").getValue(String.class);
-                     moduleName = dataSnapshot.child("moduleName").getValue(String.class);
-                     videoUrl = dataSnapshot.child("videoUrl").getValue(String.class);
+                    moduleContent = dataSnapshot.child("moduleContent").getValue(String.class);
+                    moduleName = dataSnapshot.child("moduleName").getValue(String.class);
+                    videoUrl = dataSnapshot.child("videoUrl").getValue(String.class);
 
                     if (moduleContent != null && moduleName != null && videoUrl != null && !videoUrl.isEmpty()) {
                         displayTextWithClickableUrls(moduleContent);
-                        binding.videoView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+
+                        WebView webView = binding.videoView;
+                        WebSettings webSettings = webView.getSettings();
+                        webSettings.setJavaScriptEnabled(true);
+
+                        webView.setWebViewClient(new WebViewClient());
+                        webView.setWebChromeClient(new WebChromeClient() {
                             @Override
-                            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-                                String videoId = extractVideoIdFromUrl(videoUrl);
-                                if (videoId != null && !videoId.isEmpty()) {
-                                    youTubePlayer.loadVideo(videoId, 0);
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Invalid Video URL", Toast.LENGTH_SHORT).show();
-                                }
+                            public void onShowCustomView(View view, CustomViewCallback callback) {
+                                // Enter full-screen mode
+                                customView = view;
+                                customViewCallback = callback;
+                                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                                webView.setVisibility(View.GONE);
+                                setContentView(view);
+                                super.onShowCustomView(view, callback);
+                            }
+
+                            @Override
+                            public void onHideCustomView() {
+                                onBackPressed();
                             }
                         });
+
+                        webView.loadUrl(videoUrl);
+
                     } else {
                         showAddModuleMessage();
                     }
@@ -204,7 +242,11 @@ public class Module_Details_Activity extends AppCompatActivity  {
 
     private void displayTextWithClickableUrls(String textWithUrls) {
         if (textWithUrls != null) {
-            binding.descryption.setText(HtmlCompat.fromHtml(textWithUrls, HtmlCompat.FROM_HTML_MODE_COMPACT));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                binding.descryption.setText(Html.fromHtml(textWithUrls, Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                binding.descryption.setText(HtmlCompat.fromHtml(textWithUrls, HtmlCompat.FROM_HTML_MODE_COMPACT));
+            }
             binding.descryption.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }

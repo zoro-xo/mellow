@@ -323,7 +323,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 //            courseToolBarName.setText(course.getCourseName());
             Context context = itemView.getContext();
             progressBar.setProgress(progress);
-            tvProgressBar.setText(progress+"");
+            tvProgressBar.setText(progress+"%");
 
 //            Glide.with(context).load(course.getImageUrl())
 //                    .into(courseImage);

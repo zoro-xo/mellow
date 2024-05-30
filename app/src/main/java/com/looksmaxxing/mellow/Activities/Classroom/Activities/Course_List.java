@@ -93,6 +93,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
         courseImage = intent.getStringExtra("courseImage");
 
 
+
 //        Glide.with(this).load(courseImage).into(binding.courseImage);
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference courseRef = rootRef.child("courses").child(courseId);
@@ -154,12 +155,15 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
         });
     }
 
+
     @Override
-    public void onSetClicked(String setId, String name, String moduleId) {
+    public void onSetClicked(String setId, String name, String moduleId, boolean watched) {
         clickedSetId = setId;
         Intent sendIntent = new Intent(this, Module_Details_Activity.class);
         sendIntent.putExtra("courseId", courseId);
         sendIntent.putExtra("setId", clickedSetId);
+        sendIntent.putExtra("isModuleCompleted", clickedSetId);
+        sendIntent.putExtra("isModuleWatched", watched);
         sendIntent.putExtra("name", name);
         if (moduleId != null)
             sendIntent.putExtra("id", moduleId);
@@ -198,5 +202,4 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
         super.onBackPressed();
     }
 }
-
 

@@ -25,8 +25,40 @@
             android:id="@+id/ivCourseImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:elevation="2dp"
             android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#74000000"
+            android:visibility="gone"> <!-- Semi-transparent black color -->
+
+            <!-- Lock Icon -->
+            <ImageView
+                android:id="@+id/lockIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="60dp"
+                android:src="@drawable/ic_lock" /> <!-- Replace with your lock icon -->
+
+            <!-- Text -->
+            <TextView
+                android:id="@+id/unlockText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lockIcon"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16dp"
+                android:fontFamily="@font/youtube_sans_dark_extrabold"
+                android:gravity="center"
+                android:text="Course unlocks after you finish the above"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp" />
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 
@@ -34,12 +66,12 @@
         android:id="@+id/menu"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
+        android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/_5sdp"
-        android:visibility="gone"
         android:gravity="center"
+        android:visibility="gone"
         app:cardBackgroundColor="#FFFFFF"
-        app:cardCornerRadius="1000dp"
-        android:layout_alignParentEnd="true">
+        app:cardCornerRadius="1000dp">
 
         <ImageView
             android:id="@+id/lock_icon"
@@ -79,9 +111,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:fontFamily="@font/inter_semibold"
             android:gravity="center"
             android:text="0%"
-            android:fontFamily="@font/inter_semibold"
             android:textColor="@android:color/white"
             android:textSize="8sp"
             app:layout_constraintBottom_toBottomOf="@+id/progressBar"

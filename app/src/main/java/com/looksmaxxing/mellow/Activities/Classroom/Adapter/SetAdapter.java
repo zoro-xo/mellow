@@ -19,7 +19,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.looksmaxxing.mellow.Activities.Classroom.Models.Module;
 import com.looksmaxxing.mellow.Activities.Classroom.Models.Set;
 import com.looksmaxxing.mellow.Activities.Classroom.SetClickListner;
 import com.looksmaxxing.mellow.R;
@@ -64,6 +63,9 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
         boolean isAdmin = UserUtils.isAdmin();
         if(isAdmin){
             holder.moduleMenu.setVisibility(View.VISIBLE);
+        }else{
+            holder.moduleMenu.setVisibility(View.GONE);
+
         }
         holder.moduleMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +105,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
                 if (expandedPosition == holder.getAdapterPosition()) {
                     expandedPosition = -1; // collapse if already expanded
                 } else {
-                    expandedPosition = holder.getAdapterPosition(); // expand new item
+                    expandedPosition = position; // expand new item
                 }
                 notifyDataSetChanged();
             }
@@ -244,6 +246,9 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.SetViewHolder> {
             boolean isAdmin = UserUtils.isAdmin();
             if(isAdmin){
                 moduleMenu.setVisibility(View.VISIBLE);
+            }else{
+                moduleMenu.setVisibility(View.GONE);
+
             }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

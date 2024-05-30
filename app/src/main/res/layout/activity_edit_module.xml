@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fillViewport="true"
     tools:context=".Activities.Classroom.Activities.Edit_Module_Activity">
 
     <RelativeLayout
@@ -25,16 +26,16 @@
         <EditText
             android:id="@+id/description"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/searchToolBar"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:background="@color/edittext_background"
+            android:selectAllOnFocus="true"
             android:hint="Module Name"
             android:inputType="text"
-            android:padding="5dp"
             android:textColor="@color/black"
             android:textColorHint="@color/icon_background"
             tools:ignore="DuplicateIds" />
@@ -42,315 +43,45 @@
         <EditText
             android:id="@+id/vid_url"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/description"
+            android:selectAllOnFocus="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@color/edittext_background"
             android:hint="Video Url"
             android:inputType="text"
             android:padding="5dp"
             android:textColor="@color/black"
+            android:background="@color/edittext_background"
             android:textColorHint="@color/icon_background"
             tools:ignore="TextFields" />
 
-        <RelativeLayout
-            android:id="@+id/CourseDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/page_background_color"
-            android:layout_margin="10dp"
-            android:layout_below="@+id/vid_url"
-            android:orientation="vertical">
 
-
-        <HorizontalScrollView
-            android:id="@+id/scrollview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageButton
-                    android:id="@+id/action_undo"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_redo"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_bold"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_italic"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_subscript"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_superscript"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_strikethrough"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_underline"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_heading1"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_heading2"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_heading3"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_heading4"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_heading5"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_heading6"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_txt_color"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_bg_color"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-
-                <ImageButton
-                    android:id="@+id/action_indent"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_outdent"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_align_left"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_align_center"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_align_right"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_insert_bullets"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_insert_numbers"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_blockquote"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_insert_image"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_insert_audio"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_insert_video"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_insert_youtube"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_insert_link"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/left_arrow" />
-
-                <ImageButton
-                    android:id="@+id/action_insert_checkbox"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@android:drawable/checkbox_on_background" />
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <jp.wasabeef.richeditor.RichEditor
+        <EditText
             android:id="@+id/editor"
-            android:layout_below="@+id/scrollview"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:gravity="top|start"
+            android:selectAllOnFocus="true"
+            android:overScrollMode="always"
+            android:scrollHorizontally="false"
+            android:padding="5dp"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
-
-        <TextView
-            android:id="@+id/html_preview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editor"
-            android:layout_marginTop="20dp"
-            android:text="HTML Preview"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/converted_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/html_preview"
-            android:layout_marginTop="15dp" />
-
-    </RelativeLayout>
+            android:layout_height="500dp"
+            android:layout_below="@+id/vid_url"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
+            android:background="@color/edittext_background"
+            android:textColorHint="@color/icon_background" />
 
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinner"
@@ -366,21 +97,22 @@
             android:id="@+id/swPublish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/CourseDescription"
+            android:layout_below="@+id/editor"
             android:layout_marginStart="@dimen/_10sdp"
             android:padding="@dimen/_5sdp"
-            android:text="Publish" />
+            android:text="Publish"
+            android:visibility="gone" />
 
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/Add"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
+            android:layout_below="@+id/swPublish"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_5sdp"
-            android:layout_below="@+id/swPublish"
             android:background="@drawable/sign_enabled"
             android:backgroundTint="@color/teal"
             android:text="Save"
@@ -390,9 +122,9 @@
             android:id="@+id/cancel"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
+            android:layout_below="@+id/Add"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_15sdp"
-            android:layout_below="@+id/Add"
             android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/sign_enabled"
             android:backgroundTint="@color/grey"
@@ -400,4 +132,4 @@
             android:textColor="@color/white" />
 
     </RelativeLayout>
-</androidx.core.widget.NestedScrollView>
+</ScrollView>

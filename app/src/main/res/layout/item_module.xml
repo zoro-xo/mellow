@@ -1,51 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/SelectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-
-    <LinearLayout
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:paddingStart="16dp">
+        android:background="#406200EE">
 
-        <TextView
-            android:id="@+id/module_name"
-            style="@style/SelectableItemBackground"
-            android:layout_width="0dp"
+        <RelativeLayout
+            android:id="@+id/lock_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:fontFamily="@font/inter_regular"
-            android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="1dp"
-            android:paddingBottom="15dp"
-            android:textColor="@color/text_color"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/lock_icon"
-            android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:layout_weight="0.1"
-            android:backgroundTint="@color/white"
-            android:src="@drawable/ic_lock" />
-
-        <ImageView
-            android:id="@+id/module_menu"
-            android:layout_width="33dp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_gravity="center"
-            android:layout_weight="0.1"
-            android:backgroundTint="@color/grey"
-            android:src="@drawable/option" />
-
-    </LinearLayout>
+            android:layout_centerInParent="true">
 
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/unlockText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/youtube_sans_dark_extrabold"
+                android:text="Module unlocks after you finish the above"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+
+            <ImageView
+                android:id="@+id/lock_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_lock" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp">
+
+            <TextView
+                android:id="@+id/module_name"
+                style="@style/SelectableItemBackground"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:alpha="0.3"
+                android:layout_weight="0.7"
+                android:fontFamily="@font/inter_regular"
+                android:layout_gravity="center_vertical"
+                android:text="sdf"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="1dp"
+                android:paddingBottom="15dp"
+                android:textColor="@color/text_color"
+                android:textSize="16sp" />
+
+
+            <ImageView
+                android:id="@+id/module_menu"
+                android:layout_width="33dp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="center"
+                android:layout_weight="0.1"
+                android:backgroundTint="@color/grey"
+                android:src="@drawable/option" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>

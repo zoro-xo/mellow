@@ -65,7 +65,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
         boolean isPrevsCourseCompleted = position == 0 || classroomModels.get(position - 1).getProgress() == 100;
         holder.binding.tvCourseTitle.setText(model.getTitle());
         holder.binding.tvCourseDesc.setText(model.getDescription());
-        holder.binding.tvProgressText.setText(model.getProgress() + "");
+        holder.binding.tvProgressText.setText(model.getProgress() + "%");
         holder.binding.progressBar.setProgress(model.getProgress());
         Glide.with(context)
                 .load(model.getImageUrl())
@@ -75,7 +75,11 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
             holder.binding.menu.setVisibility(View.VISIBLE);
         }
 
-
+        if (isPrevsCourseCompleted) {
+            holder.binding.overlay.setVisibility(View.GONE);
+        } else {
+            holder.binding.overlay.setVisibility(View.VISIBLE);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
