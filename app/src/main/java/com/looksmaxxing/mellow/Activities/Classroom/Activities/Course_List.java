@@ -150,7 +150,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle cancellation error
-                Toast.makeText(Course_List.this, "Failed to retrieve course data", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Course_List.this, "Failed to retrieve course data", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -182,7 +182,7 @@ public class Course_List extends AppCompatActivity implements SetClickListner, C
 
     @Override
     public void onBackButtonClicked() {
-        Toast.makeText(Course_List.this, "Back button clicked in Adapter!", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(Course_List.this, "Back button clicked in Adapter!", Toast.LENGTH_SHORT).show();
 
         startActivity(new Intent(Course_List.this, Classroom_Activity.class));
         finish();

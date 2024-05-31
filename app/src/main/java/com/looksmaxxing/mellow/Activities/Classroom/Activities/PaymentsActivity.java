@@ -47,7 +47,7 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentResult
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        addUserToGroup(userID,"Uni_Group_No_5_Looksmaxxing");
+        addUserToGroup(userID,"Uni_Group_No_1_Looksmaxxing with Aswan");
     }
 
     private void startSubscriptionFlow() {
@@ -101,11 +101,11 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentResult
             // Set the data in Realtime Database
             userGroupRef.setValue(userGroup)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "User added to group successfully!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, "User added to group successfully!", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "");
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Error adding user to group", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, "Error adding user to group", Toast.LENGTH_SHORT).show();
                         Log.w(TAG, "Error adding user to group", e);
                     });
         } else {

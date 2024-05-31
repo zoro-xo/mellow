@@ -209,7 +209,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void showToast() {
-        Toast.makeText(this, "Welcome back", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Welcome back", Toast.LENGTH_SHORT).show();
     }
 
     private void showPaymentSheet() {

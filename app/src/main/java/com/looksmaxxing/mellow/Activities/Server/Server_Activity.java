@@ -144,9 +144,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Server_Activity extends AppCompatActivity implements PaymentResultWithDataListener, ExternalWalletListener {
 
-    public static final String defaultGrpPushId = "Uni_Group_No_0_Looksmaxxing with Aswan";
+    public static final String defaultGrpPushId = "Uni_Group_No_1_Looksmaxxing with Aswan";
     public static final String defaultSubGrpName = "General discussion";
-    public static final String defaultClassPshId = "-NzAZ6vOhZnQp7Xka80K";
+    public static final String defaultClassPshId = "-NzDJRBOdq_JKqUdun9w";
     public static final String defaultAdminGrpId = "zDK0D8XIEEaXQOGaZCWBWCbKOGB2";
     public static final String defaultGrpAdminUsrName = "zoro";
     public static final String defaultGrpName = "Looksmaxxing with Aswan";
@@ -2467,7 +2467,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             });
 
             DatabaseReference dbSaveGroupPosition = FirebaseDatabase.getInstance().getReference().child("Groups").child("UserAddedOrJoinedGrp").child(userID);
-
+/*
             ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP, 0) {
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -2495,7 +2495,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
             itemTouchHelper.attachToRecyclerView(rv_OtherPublicGroupTitle);
-
+*/
             swipe_left.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
