@@ -129,14 +129,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/progressLayout"
         android:layout_gravity="center_vertical"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="20dp"
         android:elevation="2dp"
         android:ellipsize="end"
         android:fontFamily="@font/youtube_sans_dark_extrabold"
         android:maxLines="2"
-        android:text="Hello"
-        android:textColor="@color/text_white"
-        android:textSize="25sp"
+        android:textColor="#000000"
+        android:textSize="18sp"
         android:transitionName="name_shared" />
 
 
@@ -149,15 +149,14 @@
         android:elevation="2dp"
         android:fontFamily="@font/inter_semibold"
         android:orientation="horizontal"
-        android:text="@string/item_students"
-        android:textColor="@color/text_white"
-        android:textSize="15sp"
+        android:textColor="#000000"
+        android:textSize="12sp"
         android:transitionName="student_shared" />
 
     <ImageView
         android:id="@+id/schoolLogoImg"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="350dp"
         android:contentDescription="@string/item_contentDescription"
         android:scaleType="centerCrop" />
 

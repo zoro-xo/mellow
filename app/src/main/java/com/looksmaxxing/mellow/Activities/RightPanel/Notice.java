@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.looksmaxxing.mellow.Utility.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +121,16 @@ public class Notice extends AppCompatActivity {
             }
         };
 
+        boolean isAdmin = UserUtils.isAdmin();
+        if (isAdmin) {
+            newNoticeBtn.setVisibility(View.VISIBLE);
+            swipeHelper.dettachSwipe();
+
+        } else {
+            newNoticeBtn.setVisibility(View.GONE);
+            swipeHelper.attachSwipe();
+        }
+/*
         DatabaseReference databaseReferenceStudent = FirebaseDatabase.getInstance().getReference().child("Groups").child("All_GRPs").child(groupPushId).child(classUniPushId);
 
         databaseReferenceStudent.child("classStudentList").child(userID).child("admin").addValueEventListener(new ValueEventListener() {
@@ -144,7 +155,7 @@ public class Notice extends AppCompatActivity {
 
             }
         });
-
+*/
 
         noticeList = new ArrayList<>();
         notesAdapter = new NotesAdapter(Notice.this);

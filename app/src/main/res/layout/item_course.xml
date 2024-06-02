@@ -32,7 +32,7 @@
             android:fontFamily="@font/youtube_sans_dark_extrabold"
             android:maxLines="2"
             android:textColor="@color/text_white"
-            android:textSize="@dimen/_12sdp"/>
+            android:textSize="20dp"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/progressLayout"

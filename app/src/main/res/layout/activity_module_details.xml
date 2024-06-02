@@ -63,7 +63,7 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="@dimen/_10sdp"
                     android:textColor="@color/text_white"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textSize="22dp" />
             </LinearLayout>
 
             <!-- Search Icon -->
@@ -116,7 +116,7 @@
             android:paddingEnd="20dp"
             android:paddingBottom="15dp"
             android:textColor="@color/text_white"
-            android:textSize="@dimen/_18sdp" />
+            android:textSize="20dp" />
 
 
         <WebView
