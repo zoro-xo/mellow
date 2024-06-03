@@ -28,8 +28,8 @@ import java.util.Map;
 
 public class PaymentsActivity extends AppCompatActivity implements PaymentResultListener {
     ActivityPaymentsBinding binding;
-    private static final String RAZORPAY_KEY_ID = "rzp_test_Y302rVCUHyavmP";
-    private static final String SUBSCRIPTION_PLAN_ID = "sub_O9wRUAHFWESJQ1";
+    private static final String RAZORPAY_KEY_ID = "rzp_live_dcHv9S6F6BKaDY";
+    private static final String SUBSCRIPTION_PLAN_ID = "sub_O9tcWLkQPspZ00";
     String userID;
 
 

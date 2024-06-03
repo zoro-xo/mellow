@@ -109,6 +109,7 @@ import com.looksmaxxing.mellow.Adapters.Adapter_ClassGroup;
 import com.looksmaxxing.mellow.Adapters.Adaptor_FriendsList;
 import com.looksmaxxing.mellow.Adapters.Adaptor_QueryGroup;
 import com.looksmaxxing.mellow.Adapters.Adaptor_ShowGroup;
+import com.looksmaxxing.mellow.Adapters.Adaptor_ShowGrpAdmins;
 import com.looksmaxxing.mellow.Adapters.Adaptor_ShowGrpMember;
 import com.looksmaxxing.mellow.Adapters.MessageAdapter;
 import com.looksmaxxing.mellow.Fragments.DoubtFragment;
@@ -175,7 +176,8 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
     ArrayList<Class_Group> chats, doubts;
     //Adapters
     Adaptor_QueryGroup showGroupAdaptor, showUserPrivateGroupAdaptor, showUserPublicGroupAdaptor;
-    Adaptor_ShowGrpMember showGrpMemberList, showGrpTeacherList;
+    Adaptor_ShowGrpAdmins showGrpTeacherList;
+    Adaptor_ShowGrpMember showGrpMemberList;
     Adaptor_QueryGroup showOtherUserPublicGroupAdaptor;
     Adapter_All_Friends adapter_all_friends;
     Adaptor_ShowGroup showChatDashAdaptor;
@@ -368,7 +370,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
 
         adapter_classGroup = new Adapter_ClassGroup(getApplicationContext());
         showGrpMemberList = new Adaptor_ShowGrpMember(Server_Activity.this, listGrpMemberList);
-        showGrpTeacherList = new Adaptor_ShowGrpMember(Server_Activity.this, listGrpTeacherList);
+        showGrpTeacherList = new Adaptor_ShowGrpAdmins(Server_Activity.this, listGrpTeacherList);
         adapter_all_friends = new Adapter_All_Friends(this, allFriendsList);
         showChatDashAdaptor = new Adaptor_ShowGroup(this, list_ChatDashboard);
         showOtherUserPublicGroupAdaptor = new Adaptor_QueryGroup(this, list_OtherUserPublicGroupTitle);
@@ -402,7 +404,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         rv_ChatDashboard.setLayoutManager(linearLayout);
         rv_ChatDashboard.setAdapter(messageAdapter);
 
-        showGrpTeacherList.setOnItemClickListener(new Adaptor_ShowGrpMember.OnItemClickListener() {
+        showGrpTeacherList.setOnItemClickListener(new Adaptor_ShowGrpAdmins.OnItemClickListener() {
             @Override
             public void AddFrndDialog(String adminGroupID, String adminEmailID, String adminUserName, String pushId) {
 
@@ -2695,14 +2697,16 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
             }
         });
 
-//        webView.loadUrl(videoUrl);
+        String videoUrl = "https://firebasestorage.googleapis.com/v0/b/mellow-cd9a6.appspot.com/o/Looksmaxxing%20course%20videos%2F%23%23Chat_Help%2Fchat_help.html?alt=media&token=6fd3ced4-9cb6-4b99-84b5-c1707324d17e";
+
+        webView.loadUrl(videoUrl);
 
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
 
-        moveTaskToBack(false);
+//        moveTaskToBack(false);
 
     }
 
@@ -2977,7 +2981,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         bottomSheetDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         bottomSheetDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         bottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
-        moveTaskToBack(false);
+//        moveTaskToBack(false);
 
     }
 
@@ -3730,7 +3734,7 @@ public class Server_Activity extends AppCompatActivity implements PaymentResultW
         btmSheetUserProfile.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         btmSheetUserProfile.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         btmSheetUserProfile.getWindow().setGravity(Gravity.BOTTOM);
-        moveTaskToBack(false);
+//        moveTaskToBack(false);
     }
 
 

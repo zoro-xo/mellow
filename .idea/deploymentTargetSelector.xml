@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-05-30T18:33:37.665031200Z">
+        <DropdownSelection timestamp="2024-06-03T19:12:09.831698600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=8beb1985" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\zorov\.android\avd\zoros_pixel.avd" />
             </handle>
           </Target>
         </DropdownSelection>
