@@ -3,6 +3,7 @@ package com.looksmaxxing.mellow.Activities.Classroom.Activities;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,10 +14,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.looksmaxxing.mellow.Activities.Classroom.Models.SubscriptionDetails;
+import com.looksmaxxing.mellow.Activities.GetStartedActivity;
 import com.looksmaxxing.mellow.Activities.Server.Server_Activity;
 import com.looksmaxxing.mellow.databinding.ActivityPaymentsBinding;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
+import com.razorpay.RazorpayClient;
+import com.razorpay.Subscription;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,10 +34,9 @@ import java.util.Map;
 public class PaymentsActivity extends AppCompatActivity implements PaymentResultListener {
     ActivityPaymentsBinding binding;
     private static final String RAZORPAY_KEY_ID = "rzp_live_dcHv9S6F6BKaDY";
-    private static final String SUBSCRIPTION_PLAN_ID = "sub_O9tcWLkQPspZ00";
+    private static final String YOUR_KEY_SECRET = "Iwxci5njliV1G3wZCmEHrPei";
+    private static final String PLAN_ID = "plan_OIZZCoQHe272wA";
     String userID;
-
-
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -42,21 +46,79 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentResult
         binding = ActivityPaymentsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         this.userID = getIntent().getStringExtra("userId");
-        startSubscriptionFlow();
+//        startSubscriptionFlow();
+        new CreateSubscriptionTask().execute();
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        addUserToGroup(userID,"Uni_Group_No_1_Looksmaxxing with Aswan");
+        addUserToGroup(userID, "Uni_Group_No_1_Looksmaxxing with Aswan");
     }
 
-    private void startSubscriptionFlow() {
+    private class CreateSubscriptionTask extends AsyncTask<Void, Void, Subscription> {
+
+        @Override
+        protected Subscription doInBackground(Void... voids) {
+            try {
+                RazorpayClient razorpay = new RazorpayClient(RAZORPAY_KEY_ID, YOUR_KEY_SECRET);
+
+                JSONObject subscriptionRequest = new JSONObject();
+                subscriptionRequest.put("plan_id", PLAN_ID);
+                subscriptionRequest.put("total_count", 24);
+                subscriptionRequest.put("quantity", 1);
+                subscriptionRequest.put("customer_notify", 1);
+
+                Subscription subscription = razorpay.Subscriptions.create(subscriptionRequest);
+                Log.d("Subscription", "Subscription ID: " + subscription.get("id"));
+
+                saveSubscriptionDetailsToFirebase(subscription);
+
+                return subscription;
+            } catch (Exception e) {
+                Log.e("SubscriptionError", "Error creating subscription", e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Subscription subscription) {
+            if (subscription != null) {
+                startSubscriptionFlow(subscription.get("id"));
+            } else {
+                // Handle subscription creation failure
+                Toast.makeText(PaymentsActivity.this, "Failed to create subscription", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void saveSubscriptionDetailsToFirebase(Subscription subscription) {
+
+        SubscriptionDetails subscriptionDetails = new SubscriptionDetails(
+                subscription.get("id"),
+                subscription.get("plan_id"),
+                subscription.get("status"),
+                subscription.get("current_start").toString(),
+                subscription.get("current_end").toString(),
+                subscription.get("total_count").toString(),
+                subscription.get("paid_count").toString(),
+                subscription.get("customer_notify").toString()
+        );
+
+        DatabaseReference userSubscriptionsRef = mDatabase.child("Users").child("Subscriptions").child(userID);
+        userSubscriptionsRef.setValue(subscriptionDetails)
+                .addOnSuccessListener(aVoid -> Log.d("PAYY01", "Subscription details saved successfully!"))
+                .addOnFailureListener(e -> Log.e("PAYY02", "Failed to save subscription details", e));
+
+    }
+
+
+    private void startSubscriptionFlow(String subscriptionID) {
         Checkout checkout = new Checkout();
         checkout.setKeyID(RAZORPAY_KEY_ID);
 
         JSONObject options = new JSONObject();
         try {
-            options.put("subscription_plan_id", SUBSCRIPTION_PLAN_ID);
+            options.put("subscription_plan_id", subscriptionID);
             options.put("amount", 7900);
             checkout.open(PaymentsActivity.this, options);
         } catch (JSONException e) {
@@ -83,6 +145,7 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentResult
     public void onPaymentError(int code, String response) {
         // Handle failed subscription payment
         Toast.makeText(this, "failed", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(PaymentsActivity.this, GetStartedActivity.class));
     }
 
     private void addUserToGroup(String userId, String groupId) {
