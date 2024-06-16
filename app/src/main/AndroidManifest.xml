@@ -246,7 +246,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.firstproject.provider"
+            android:authorities="com.example.mellow.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
