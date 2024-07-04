@@ -127,6 +127,10 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
 
         public void bind(Module module, boolean isPreviousVideoWatched, ModuleViewHolder holder) {
             moduleName.setText(module.getModuleName());
+
+//            lock_bg.setBackground(null);
+
+            /*
             lockIcon.setVisibility(isPreviousVideoWatched ? View.GONE : View.VISIBLE);
             unlockText.setVisibility(isPreviousVideoWatched ? View.GONE : View.VISIBLE);
 
@@ -139,6 +143,7 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
                 lockIcon.setImageResource(R.drawable.green_check);
 
             }
+            */
             boolean isAdmin = UserUtils.isAdmin();
 
             // Set moduleMenu visibility and enabled state based on user's admin status
@@ -153,6 +158,11 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
             moduleName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    //Course locked removed
+                    setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId(), module.isWatched());
+
+                    /*
                     if (isAdmin) {
                         // Admins can click on modules regardless of lock status
                         setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId(), module.isWatched());
@@ -162,6 +172,7 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleView
                             setClickListner.onSetClicked(setId, module.getModuleName(), module.getModuleId(), module.isWatched());
                         }
                     }
+                    */
                 }
             });
 

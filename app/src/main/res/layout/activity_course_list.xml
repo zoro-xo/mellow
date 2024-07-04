@@ -59,7 +59,7 @@
                 android:maxLines="1"
                 android:paddingEnd="@dimen/_10sdp"
                 android:textColor="@color/text_white"
-                android:textSize="22dp" />
+                android:textSize="15dp"/>
         </LinearLayout>
 
         <!-- Search Icon

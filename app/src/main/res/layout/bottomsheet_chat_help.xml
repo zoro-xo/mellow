@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/inter_semibold"
-            android:text="@string/set_username"
+            android:text="@string/chat_help"
             android:textColor="@color/text_color"
             android:textSize="18sp" />
 

@@ -74,16 +74,28 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
         if (isAdmin) {
             holder.binding.menu.setVisibility(View.VISIBLE);
         }
-
+/*
         if (isPrevsCourseCompleted) {
             holder.binding.overlay.setVisibility(View.GONE);
         } else {
             holder.binding.overlay.setVisibility(View.VISIBLE);
         }
-
+*/
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Intent intent = new Intent(context, Course_List.class);
+                intent.putExtra("courseId", model.getCourseId());
+                intent.putExtra("courseName", model.getTitle());
+                Toast.makeText(context, "aa" + model.getTitle(), Toast.LENGTH_SHORT).show();
+                intent.putExtra("courseImage", model.getImageUrl());
+                intent.putExtra("progress", model.getProgress());
+                context.startActivity(intent);
+
+                //Course locked removed
+
+                /*
                 if (isPrevsCourseCompleted) {
                     Intent intent = new Intent(context, Course_List.class);
                     intent.putExtra("courseId", model.getCourseId());
@@ -95,12 +107,21 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
                 } else {
                     Toast.makeText(context, "This course is Locked", Toast.LENGTH_SHORT).show();
                 }
+                */
             }
         });
 
         holder.binding.courseLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //Course locked removed
+                Intent intent = new Intent(context, Course_List.class);
+                intent.putExtra("courseId", model.getCourseId());
+                intent.putExtra("progress", model.getProgress());
+                context.startActivity(intent);
+
+                /*
 
                 if (isAdmin) {
                     // Start the Course_List activity for admins
@@ -118,6 +139,8 @@ public class ClassroomAdapter extends RecyclerView.Adapter<ClassroomAdapter.View
                         Toast.makeText(context, "This course is Locked", Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                */
             }
         });
         holder.binding.menu.setOnClickListener(new View.OnClickListener() {

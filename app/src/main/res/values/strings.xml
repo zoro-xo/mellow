@@ -364,8 +364,11 @@
     <!--BottomSheet chat help-->
     <string name="chat_help_text">* Follow the admin or user first to chat with them</string>
 
-    <!--BottomSheet username-->
 
+    <string name="chat_help">Chat with Aswan and Friends</string>
+
+
+    <!--BottomSheet username-->
     <string name="set_username">Change your username</string>
     <string name="username_save">Save</string>
     <string name="sheet_username">Username</string>

@@ -3,6 +3,7 @@
     style="@style/SelectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
     android:orientation="horizontal">
 
     <RelativeLayout
@@ -26,19 +27,21 @@
                 android:fontFamily="@font/youtube_sans_dark_extrabold"
                 android:text="Module unlocks after you finish the above"
                 android:textColor="#FFFFFF"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:visibility="gone" />
 
 
             <ImageView
                 android:id="@+id/lock_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/_25sdp"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/_25sdp"
                 android:backgroundTint="@color/white"
-                android:src="@drawable/ic_lock" />
+                android:src="@drawable/ic_lock"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <LinearLayout
@@ -52,15 +55,15 @@
                 style="@style/SelectableItemBackground"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:alpha="0.3"
-                android:layout_weight="0.7"
-                android:fontFamily="@font/inter_regular"
                 android:layout_gravity="center_vertical"
-                android:text="sdf"
+                android:layout_weight="0.7"
+                android:alpha="0.3"
+                android:fontFamily="@font/inter_regular"
                 android:paddingStart="20dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="1dp"
                 android:paddingBottom="15dp"
+                android:text="sdf"
                 android:textColor="@color/text_color"
                 android:textSize="16sp" />
 
