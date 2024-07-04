@@ -486,7 +486,7 @@
                                 android:fontFamily="@font/youtube_sans_bold"
                                 android:layout_toStartOf="@+id/notification"
                                 android:text="0"
-                                android:textSize="@dimen/_15sdp"
+                                android:textSize="15dp"
                                 android:layout_marginEnd="@dimen/_5sdp"
                                 android:contentDescription="@string/servers_contentDescription"
                                 android:src="@drawable/ic_swipe_menux"
